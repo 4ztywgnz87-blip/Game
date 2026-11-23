@@ -332,14 +332,59 @@ const chapterOf=id=>Math.floor((id-1)/10);
 
 /* ---------- progress state ---------- */
 const KEY='game.progress.v1';
-let state={solved:{},hints:{},spent:{},last:1,vibrate:true,theme:'dark',updatedAt:0};
-try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)state=Object.assign(state,s)}catch(e){}
-let remote=null, saveTimer=null;
-function save(){
-  state.updatedAt=Date.now();
-  try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{if(remote)remote.set(JSON.parse(JSON.stringify(state))).catch(()=>{})},400);
+const blankState=()=>({solved:{},hints:{},hintAt:{},spent:{},last:1,vibrate:true,theme:'dark',updatedAt:0,resetAt:0});
+let state=blankState();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)state=Object.assign(blankState(),s)}catch(e){}
+const clone=o=>JSON.parse(JSON.stringify(o));
+/* Merge two saved states without ever losing a solved level.
+   Settings come from the newer copy; solved levels and hints are combined;
+   anything recorded before the latest "Reset progress" is dropped. */
+function merge(x,y){
+  x=Object.assign(blankState(),x||{});y=Object.assign(blankState(),y||{});
+  const newer=(y.updatedAt||0)>(x.updatedAt||0)?y:x;
+  const resetAt=Math.max(x.resetAt||0,y.resetAt||0);
+  const out=Object.assign(blankState(),{vibrate:newer.vibrate,theme:newer.theme,last:newer.last,
+    updatedAt:Math.max(x.updatedAt||0,y.updatedAt||0),resetAt});
+  for(const src of [x,y]){
+    for(const [id,v] of Object.entries(src.solved||{})){
+      if(!v||(v.at||0)<resetAt)continue;
+      const cur=out.solved[id];
+      if(!cur||(v.at||0)<(cur.at||0))out.solved[id]=v;
+    }
+    for(const [id,n] of Object.entries(src.hints||{})){
+      const at=(src.hintAt||{})[id]||0;if(at<resetAt)continue;
+      if(!out.hints[id]||n>out.hints[id]){out.hints[id]=n;out.hintAt[id]=at}
+    }
+    if((src.updatedAt||0)>=resetAt)for(const [id,ms] of Object.entries(src.spent||{}))out.spent[id]=Math.max(out.spent[id]||0,ms);
+  }
+  return out;
+}
+let remote=null,remoteData=null,writing=false,dirty=false,retryT=null;
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function save(){state.updatedAt=Date.now();saveLocal();push()}
+/* One write at a time. Every write first folds in the latest copy from the account,
+   so another open copy of the game can never erase progress made here. */
+async function push(){
+  if(!remote)return;
+  if(writing){dirty=true;return}
+  writing=true;
+  try{
+    do{dirty=false;
+      if(remoteData)state=merge(state,remoteData);
+      const out=clone(state);
+      await remote.set(out);
+      remoteData=out;
+    }while(dirty);
+    $('#saveWhere').textContent='Saved to your Claude account.';
+  }catch(e){
+    $('#saveWhere').textContent='Saved on this device. Syncing to your account will retry.';
+    clearTimeout(retryT);retryT=setTimeout(push,4000);
+  }finally{writing=false}
+}
+function adopt(r){
+  const before=JSON.stringify(state.solved)+state.theme;
+  remoteData=r;state=merge(state,r);saveLocal();
+  if(JSON.stringify(state.solved)+state.theme!==before){applyTheme();if(current===null)renderAll()}
 }
 (async()=>{
   try{
@@ -350,17 +395,14 @@ function save(){
     const ref=db.doc('data/users/'+id+'/progress');
     const snap=await ref.get();
     remote=ref;
-    $('#saveWhere').textContent='Saved to your Claude account.';
-    const r=snap.exists?snap.data():null;
-    if(r&&(r.updatedAt||0)>(state.updatedAt||0)){
-      state=Object.assign({solved:{},hints:{},spent:{}},r);
-      try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
-      applyTheme(); if(current===null)renderAll();
-    }else if(!r||(state.updatedAt||0)>(r.updatedAt||0)){
-      ref.set(JSON.parse(JSON.stringify(state))).catch(()=>{});
-    }
+    adopt(snap.exists?snap.data():null);
+    push();
+    // keep in step with copies of the game open elsewhere
+    ref.onSnapshot(sn=>{if(sn.exists&&!sn.metadata?.hasPendingWrites&&!writing)adopt(sn.data())},()=>{});
   }catch(e){}
 })();
+addEventListener('pagehide',()=>{saveLocal()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveLocal()});
 
 function buzz(p){if(!state.vibrate)return;try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 function applyTheme(){document.documentElement.classList.toggle('light',state.theme==='light')}
@@ -416,7 +458,7 @@ $('#resetAll').onclick=e=>{
   const b=e.currentTarget;
   if(!resetArm){b.classList.add('arm');b.textContent='Tap again to erase';resetArm=setTimeout(()=>{resetArm=null;b.classList.remove('arm');b.textContent='Reset'},3000);return}
   clearTimeout(resetArm);resetArm=null;b.classList.remove('arm');b.textContent='Reset';
-  state.solved={};state.hints={};state.spent={};state.last=1;save();renderAll();
+  state.solved={};state.hints={};state.hintAt={};state.spent={};state.last=1;state.resetAt=Date.now();remoteData=null;save();renderAll();
 };
 
 /* ---------- level runtime ---------- */
@@ -463,7 +505,7 @@ const api={
     const id=current;
     const time=(state.spent[id]||0)+(Date.now()-enteredAt);
     const hints=state.hints[id]||0;
-    if(!state.solved[id])state.solved[id]={hints,time};
+    if(!state.solved[id])state.solved[id]={hints,time,at:Date.now()};
     state.spent[id]=0;enteredAt=Date.now();
     save();buzz([20,40,30]);
     const s=Math.floor(time/1000);
@@ -510,7 +552,7 @@ function renderHints(){
   document.querySelectorAll('#hintList button').forEach(b=>b.onclick=()=>{
     const i=+b.dataset.i;
     if(armed!==i){armed=i;buzz(8);renderHints();return}
-    armed=null;state.hints[id]=i+1;save();buzz(12);
+    armed=null;state.hints[id]=i+1;state.hintAt[id]=Date.now();save();buzz(12);
     $('#hintBtn').classList.add('has-hint');renderHints();
   });
 }
