@@ -151,6 +151,95 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   transition:all .6s var(--ease);font-variant-numeric:tabular-nums}
 .chev{position:absolute;width:0;height:0;border:6px solid transparent;opacity:.0;animation:chev 2.4s infinite}
 @keyframes chev{30%,70%{opacity:.55}}
+/* grid pieces */
+.wall{background:var(--muted)}
+.target{border:3px solid var(--accent)}
+.target.round{border-radius:50%}
+.switch{border:3px solid var(--fg);border-radius:50%}
+.switch.flash{animation:flash .5s}
+@keyframes flash{50%{transform:scale(1.35);border-color:var(--accent)}}
+.gate{border:2px dashed var(--line);transition:background .2s,border-color .2s}
+.gate.closed{background:var(--fg);border:2px solid var(--fg)}
+.sdot{position:absolute;border-radius:50%;background:var(--accent);transition:left .2s,top .2s}
+.sdot.sq{border-radius:3px}
+.box{background:var(--fg);transition:left .12s,top .12s,background .2s}
+.box.on{background:var(--accent);box-shadow:inset 0 0 0 4px var(--fg)}
+.hole{border:3px solid var(--accent);border-radius:50%;transition:background .3s}
+.hole.full{background:var(--accent)}
+.rot-ctr{left:50%;transform:translateX(-50%);display:flex;gap:16px}
+.big-btn{width:64px;height:64px}
+.big-btn svg{width:28px;height:28px}
+.dials{left:50%;transform:translateX(-50%);display:flex;gap:10px}
+.dial-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.dial-label{height:18px}
+.dial{width:62px;height:76px;border:2px solid var(--line);font-family:var(--display);font-stretch:125%;font-weight:900;font-size:40px;font-variant-numeric:tabular-nums}
+.dial:active{background:var(--surface)}
+.dial.bump{animation:bump .18s}
+@keyframes bump{50%{transform:translateY(-4px)}}
+.pipe{display:block}
+.pipe{transition:transform .2s var(--ease);cursor:pointer}
+.pipe svg path{stroke:var(--line);stroke-width:16;fill:none;transition:stroke .2s}
+.pipe.lit svg path{stroke:var(--accent)}
+.lamp{border-radius:50%;background:var(--surface);transition:background .05s}
+.lamp.on{background:var(--accent);box-shadow:0 0 60px var(--accent)}
+.marks{left:0;right:0;display:flex;justify-content:center;align-items:center;gap:10px;height:16px}
+.marks i{display:block;height:12px;background:var(--fg)}
+.marks i.dot{width:12px;border-radius:50%}
+.marks i.dash{width:36px}
+.marks.nope i{background:var(--ch2);animation:wiggle .3s}
+.pad{border:2px solid var(--line);transition:background .1s}
+.pad.down{background:var(--surface)}
+.hidden-digit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.hidden-digit .big{font-size:72px;color:var(--fg)}
+.hidden-digit .pips{display:flex;gap:5px}
+.hidden-digit .pips i,.pipsrow i{display:block;width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dark{background:var(--bg);
+  -webkit-mask-image:radial-gradient(circle var(--r,0px) at var(--x,-999px) var(--y,-999px),transparent 0,transparent 55%,#000 100%);
+  mask-image:radial-gradient(circle var(--r,0px) at var(--x,-999px) var(--y,-999px),transparent 0,transparent 55%,#000 100%)}
+.crystal{border:3px solid var(--fg);transform:rotate(45deg);transition:background .2s}
+.crystal.on{background:var(--accent);border-color:var(--accent)}
+.mirror{cursor:pointer}
+.mirror i{position:absolute;left:12%;right:12%;top:50%;height:5px;margin-top:-2.5px;background:var(--fg);transform:rotate(45deg);transition:transform .2s var(--ease)}
+.mirror.fwd i{transform:rotate(-45deg)}
+.emitter{width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:12px solid var(--accent)}
+.door{border:3px solid var(--fg);overflow:hidden}
+.door .leaf{position:absolute;inset:0;background:var(--surface);transform-origin:left;transition:transform .6s var(--ease)}
+.door .knob{position:absolute;right:14%;top:50%;width:12px;height:12px;border-radius:50%;background:var(--fg)}
+.door.nope{animation:wiggle .3s}
+.pipsrow{left:0;right:0;display:flex;justify-content:center;align-items:center;gap:10px}
+.pipsrow i{width:14px;height:14px;background:var(--line)}
+.pipsrow i.on{background:var(--accent)}
+.cb-rows{display:flex;flex-direction:column;gap:12px;justify-content:flex-end;overflow:hidden}
+.cb-row{display:flex;align-items:center;justify-content:center;gap:18px}
+.cb-slots{display:flex;gap:8px}
+.cb-slot{border:2px solid var(--line);display:grid;place-items:center}
+.cb-row:last-child .cb-slot{border-color:var(--muted)}
+.cb-fb{display:grid;grid-template-columns:repeat(2,12px);gap:5px}
+.cb-fb i{display:block;width:12px;height:12px;border-radius:50%;border:2px solid var(--line)}
+.cb-fb i.hit{background:var(--accent);border-color:var(--accent)}
+.cb-fb i.near{border-color:var(--fg)}
+.cb-pal{left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.cb-key{width:56px;height:56px;border:2px solid var(--line);display:grid;place-items:center}
+.cb-key:active{background:var(--surface)}
+.mx-cell{display:grid;place-items:center;background:var(--surface)}
+.mx-cell.q{background:none;border:3px dashed var(--muted);font-family:var(--display);font-weight:900;color:var(--muted)}
+.mx-opt{border:2px solid var(--line);display:grid;place-items:center}
+.mx-opt.nope{animation:wiggle .3s;border-color:var(--ch2)}
+.beam{height:6px;background:var(--fg);transform-origin:center;transition:transform .5s var(--ease)}
+.post{width:6px;background:var(--line)}
+.pan{height:5px;background:var(--fg);transition:left .5s var(--ease),top .5s var(--ease)}
+.string{width:2px;background:var(--muted);transition:left .5s var(--ease),top .5s var(--ease)}
+.weight{display:grid;place-items:center;background:var(--accent);color:var(--on-accent);font-family:var(--display);font-stretch:125%;font-weight:900;font-size:16px;
+  cursor:grab;transition:left .5s var(--ease),top .5s var(--ease);touch-action:none}
+.weight.fixed{background:var(--fg);color:var(--bg);font-size:20px;cursor:default}
+.weight.drag{transition:none;z-index:2;transform:scale(1.08)}
+.nclue{box-sizing:border-box;display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:0 8px;font-family:var(--mono);font-weight:700;font-size:15px;color:var(--fg)}
+.nclue.ncol{flex-direction:column;justify-content:flex-end;padding:0 0 8px;gap:2px}
+.ncell{background:var(--surface);transition:background .15s;cursor:pointer}
+.ncell.on{background:var(--accent)}
+.pcell{background:var(--surface);transition:background .1s}
+.pcell.on{background:var(--accent)}
+.pend{border:3px solid var(--fg);border-radius:50%;z-index:1;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -211,9 +300,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">Chapter I · in progress</span>
-    <div class="big">That’s all<br>for now.</div>
-    <p id="endText">You solved every level that exists so far. New levels will show up here as they are added.</p>
+    <span class="label">30 / 30</span>
+    <div class="big">All<br>solved.</div>
+    <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
   </section>
 </div>
@@ -349,13 +438,13 @@ function startLevel(id){
   $('#hintBtn').classList.toggle('has-hint',(state.hints[id]||0)>0);
   requestAnimationFrame(()=>runLevel());
 }
-function runLevel(){
+function runLevel(restart=false){
   if(cleanup)try{cleanup()}catch(e){}
-  stage.innerHTML='';headerTap=null;
+  stage.innerHTML='';headerTap=null;api.restart=restart;
   const L=LEVELS[current-1];
   cleanup=L.init(api)||null;
 }
-$('#resetBtn').onclick=()=>{if(current!==null&&!solving){buzz(8);runLevel()}};
+$('#resetBtn').onclick=()=>{if(current!==null&&!solving){buzz(8);runLevel(true)}};
 $('#lvlnum').onclick=()=>{
   if(headerTap){headerTap()}else{const n=$('#lvlnum');n.classList.remove('wiggle');void n.offsetWidth;n.classList.add('wiggle')}
 };
@@ -442,6 +531,170 @@ function swipes(el,fn){
 }
 const rectCenter=el=>{const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]};
 
+/* ---------- shared level building blocks ---------- */
+const DIRS={U:[-1,0],D:[1,0],L:[0,-1],R:[0,1]};
+function grid(a,R,C,{pad=16,below=0}={}){
+  const cell=Math.floor(Math.min((a.w-pad*2)/C,(a.h-pad*2-below)/R));
+  const W=cell*C,H=cell*R;
+  const b=a.el('div','abs');
+  Object.assign(b.style,{width:W+'px',height:H+'px',left:Math.round((a.w-W)/2)+'px',top:Math.round((a.h-below-H)/2)+'px'});
+  const at=(el,r,c,inset=0)=>{Object.assign(el.style,{position:'absolute',left:c*cell+inset+'px',top:r*cell+inset+'px',width:cell-2*inset+'px',height:cell-2*inset+'px'});return el};
+  const put=(cls,r,c,inset=0,parent=b)=>at(a.el('div',cls,parent),r,c,inset);
+  return{b,cell,at,put,W,H};
+}
+function dials(a,n,{onChange,bottom=28}={}){
+  const wrap=a.el('div','abs dials');wrap.style.bottom=`calc(${bottom}px + env(safe-area-inset-bottom,0px))`;
+  const values=Array(n).fill(0);
+  const els=values.map((v,i)=>{const col=a.el('div','dial-col',wrap);const d=a.el('button','dial',col);d.textContent='0';
+    d.onclick=()=>{values[i]=(values[i]+1)%10;d.textContent=values[i];d.classList.remove('bump');void d.offsetWidth;d.classList.add('bump');a.buzz(6);onChange&&onChange(values.slice())};
+    return col});
+  return{wrap,values,cols:els};
+}
+const SHAPES={
+  circle:'<circle cx="12" cy="12" r="9"/>',
+  square:'<rect x="3.5" y="3.5" width="17" height="17"/>',
+  triangle:'<path d="M12 3 L21.5 20 L2.5 20 Z"/>',
+  diamond:'<path d="M12 2 L22 12 L12 22 L2 12 Z"/>',
+  cross:'<path d="M4 9h5V4h6v5h5v6h-5v5H9v-5H4z"/>'
+};
+const shapeSvg=(k,{fill=true,size=24,color='var(--fg)'}={})=>`<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="display:block;overflow:visible" fill="${fill?color:'none'}" stroke="${color}" stroke-width="${fill?0:2.2}" stroke-linejoin="round">${SHAPES[k]}</svg>`;
+
+/* slide engine: # wall, a/b gates (a closed first), * switch, T target, S dot. Every dot slides until blocked. */
+function slideLevel(a,map,{chevrons=false}={}){
+  const R=map.length,C=map[0].length,g=grid(a,R,C);
+  g.b.style.background='var(--surface)';
+  const dots=[],targets=[],gates=[],switches=[];let gs=0;
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='T'){targets.push(r+','+c);g.put('target',r,c,Math.max(4,Math.round(g.cell*.1)))}
+    if(ch==='*')switches.push({r,c,el:g.put('switch',r,c,Math.round(g.cell*.28))});
+    if(ch==='a'||ch==='b')gates.push({ch,el:g.put('gate',r,c,2)});
+    if(ch==='S')dots.push([r,c]);
+  }));
+  const inset=Math.round(g.cell*.16);
+  const els=dots.map(()=>a.el('div','sdot',g.b));
+  let chev=null;
+  if(chevrons){chev=a.el('div','abs',g.b);chev.style.transition='opacity .3s';
+    [['borderBottomColor',0,-1],['borderTopColor',0,1],['borderRightColor',-1,0],['borderLeftColor',1,0]].forEach(([side,dx,dy])=>{
+      const c=a.el('div','chev',chev);c.style[side]='var(--fg)';c.style.left=(g.cell/2-6+dx*g.cell*.62)+'px';c.style.top=(g.cell/2-6+dy*g.cell*.62)+'px'})}
+  const place=()=>{dots.forEach((p,i)=>g.at(els[i],p[0],p[1],inset));if(chev){chev.style.left=dots[0][1]*g.cell+'px';chev.style.top=dots[0][0]*g.cell+'px'}};
+  const solid=(r,c,s)=>{if(r<0||c<0||r>=R||c>=C)return true;const ch=map[r][c];return ch==='#'||(ch==='a'&&s===0)||(ch==='b'&&s===1)};
+  const paint=()=>gates.forEach(x=>x.el.classList.toggle('closed',(x.ch==='a')===(gs===0)));
+  place();paint();
+  let busy=false,done=false;
+  return swipes(a.stage,d=>{
+    if(busy||done)return;
+    const[dr,dc]=DIRS[d];const cur=dots.map(p=>p.slice());let moved=true,steps=0;
+    while(moved){moved=false;for(let i=0;i<cur.length;i++){const nr=cur[i][0]+dr,nc=cur[i][1]+dc;
+      if(solid(nr,nc,gs)||cur.some((p,j)=>j!==i&&p[0]===nr&&p[1]===nc))continue;cur[i]=[nr,nc];moved=true}if(moved)steps++}
+    if(!steps){a.buzz(5);return}
+    if(chev)chev.style.opacity=0;
+    busy=true;els.forEach(e=>e.style.transitionDuration=(.05*steps+.08)+'s');
+    cur.forEach((p,i)=>dots[i]=p);place();a.buzz(8);
+    setTimeout(()=>{busy=false;
+      let ng=gs;dots.forEach(p=>{const sw=switches.find(s=>s.r===p[0]&&s.c===p[1]);if(sw){ng^=1;sw.el.classList.remove('flash');void sw.el.offsetWidth;sw.el.classList.add('flash')}});
+      if(!dots.some(p=>solid(p[0],p[1],ng))&&ng!==gs){gs=ng;paint();a.buzz(14)}
+      if(dots.map(p=>p+'').sort().join('|')===targets.slice().sort().join('|')){done=true;const r=els[0].getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)}
+    },50*steps+90);
+  });
+}
+
+/* push engine: P you, B box, T target. One step per swipe. */
+function pushLevel(a,map){
+  const R=map.length,C=map[0].length,g=grid(a,R,C);
+  g.b.style.background='var(--surface)';
+  let P,boxes=[];const targets=new Set();
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='T'){targets.add(r+','+c);g.put('target',r,c,Math.max(4,Math.round(g.cell*.1)))}
+    if(ch==='P')P=[r,c];if(ch==='B')boxes.push([r,c]);
+  }));
+  const bi=Math.round(g.cell*.14),pi=Math.round(g.cell*.2);
+  const bEls=boxes.map(()=>{const e=a.el('div','box',g.b);return e});
+  const pEl=a.el('div','sdot',g.b);
+  const place=()=>{g.at(pEl,P[0],P[1],pi);boxes.forEach((b,i)=>{g.at(bEls[i],b[0],b[1],bi);bEls[i].classList.toggle('on',targets.has(b+''))})};
+  place();
+  const wall=(r,c)=>r<0||c<0||r>=R||c>=C||map[r][c]==='#';
+  let done=false;
+  return swipes(a.stage,d=>{
+    if(done)return;const[dr,dc]=DIRS[d];const np=[P[0]+dr,P[1]+dc];
+    if(wall(...np)){a.buzz(5);return}
+    const k=boxes.findIndex(b=>b[0]===np[0]&&b[1]===np[1]);
+    if(k>=0){const nb=[np[0]+dr,np[1]+dc];if(wall(...nb)||boxes.some(b=>b[0]===nb[0]&&b[1]===nb[1])){a.buzz(5);return}boxes[k]=nb;a.buzz(10)}
+    P=np;place();
+    if(boxes.every(b=>targets.has(b+''))){done=true;setTimeout(()=>{const r=g.b.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)},250)}
+  });
+}
+
+/* lights: tapping a tile flips it and its 4 neighbours. pattern string of 0/1 */
+function lightsLevel(a,N,pattern){
+  const gap=8,size=Math.floor(Math.min(96,(Math.min(a.w,a.h)-48-gap*(N-1))/N));
+  const g=a.el('div','abs center');Object.assign(g.style,{display:'grid',gridTemplateColumns:`repeat(${N},${size}px)`,gap:gap+'px'});
+  const on=[...pattern].map(Number);
+  const tiles=on.map((v,i)=>{const t=a.el('div','tile',g);Object.assign(t.style,{width:size+'px',height:size+'px'});
+    t.onclick=()=>{if(on.every(Boolean))return;a.buzz(10);
+      const r=Math.floor(i/N),c=i%N;
+      [[r,c],[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([rr,cc])=>{if(rr>=0&&cc>=0&&rr<N&&cc<N)on[rr*N+cc]^=1});
+      paint();if(on.every(Boolean)){const[x,y]=rectCenter(g);setTimeout(()=>a.solve(x,y),300)}};return t});
+  const paint=()=>tiles.forEach((t,i)=>t.classList.toggle('on',!!on[i]));
+  paint();
+}
+
+/* gravity: square board that rotates; o balls, O holes. Gravity always points down the screen. */
+function gravityLevel(a,map){
+  const N=map.length,below=88,g=grid(a,N,N,{below});
+  g.b.style.background='var(--surface)';g.b.style.transition='transform .45s var(--ease)';
+  let balls=[],holes=[];
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='O')holes.push({r,c,el:g.put('hole',r,c,Math.round(g.cell*.14)),full:false});
+    if(ch==='o')balls.push({p:[r,c]});
+  }));
+  const ins=Math.round(g.cell*.16);
+  balls.forEach(b=>{b.el=a.el('div','sdot',g.b);b.el.style.transition='left .12s linear,top .12s linear,transform .3s'});
+  const G=[[1,0],[0,1],[-1,0],[0,-1]];let gi=0,turns=0,busy=false,done=false;
+  const wall=(r,c)=>r<0||c<0||r>=N||c>=N||map[r][c]==='#';
+  const place=()=>balls.forEach(b=>{if(b.p)g.at(b.el,b.p[0],b.p[1],ins)});
+  function settle(cb){
+    const[dr,dc]=G[gi];let steps=0,moved=true;
+    while(moved){moved=false;for(const b of balls){if(!b.p)continue;const nr=b.p[0]+dr,nc=b.p[1]+dc;
+      if(wall(nr,nc)||balls.some(o=>o!==b&&o.p&&o.p[0]===nr&&o.p[1]===nc))continue;
+      b.p=[nr,nc];moved=true;const h=holes.find(h=>!h.full&&h.r===nr&&h.c===nc);
+      if(h){h.full=true;b.dropAt=h;b.p=null;g.at(b.el,nr,nc,ins)}}if(moved)steps++}
+    balls.forEach(b=>b.el.style.transitionDuration=`${.05*steps+.06}s,${.05*steps+.06}s,.3s`);
+    place();
+    setTimeout(()=>{balls.forEach(b=>{if(b.dropAt){b.dropAt.el.classList.add('full');b.el.style.transform='scale(0)';b.dropAt=null;a.buzz(14)}});cb&&cb()},50*steps+80);
+  }
+  place();settle();
+  const ctr=a.el('div','abs rot-ctr');ctr.style.bottom=`calc(18px + env(safe-area-inset-bottom,0px))`;
+  const mk=(dir,label,path)=>{const btn=a.el('button','icon-btn big-btn',ctr);btn.setAttribute('aria-label',label);
+    btn.innerHTML=`<svg viewBox="0 0 24 24">${path}</svg>`;btn.onclick=()=>turn(dir);return btn};
+  mk(-1,'Rotate left','<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/>').style.transform='scaleX(-1)';
+  mk(1,'Rotate right','<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/>');
+  function turn(dir){if(busy||done)return;busy=true;turns+=dir;gi=((gi+dir)%4+4)%4;a.buzz(8);
+    g.b.style.transform=`rotate(${turns*90}deg)`;
+    setTimeout(()=>settle(()=>{busy=false;if(balls.every(b=>!b.p)){done=true;const r=g.b.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)}}),460)}
+  const key=e=>{if(e.key==='ArrowLeft')turn(-1);if(e.key==='ArrowRight')turn(1)};
+  addEventListener('keydown',key);return()=>removeEventListener('keydown',key);
+}
+
+/* hold ring used by levels 3 and 7 */
+function holdRing(a,parent,size,{fill=1500,drain=500}={}){
+  const box=a.el('div','abs',parent);Object.assign(box.style,{width:size+'px',height:size+'px'});
+  const r=size/2-8,L=2*Math.PI*r;
+  box.innerHTML=`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="position:absolute;inset:0;transform:rotate(-90deg)">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--line)" stroke-width="4"/>
+    <circle class="prog" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--accent)" stroke-width="6" stroke-dasharray="${L}" stroke-dashoffset="${L}"/></svg>`;
+  const core=a.el('div','orb abs center',box);Object.assign(core.style,{width:size*.58+'px',height:size*.58+'px',transition:'transform .2s'});
+  const prog=box.querySelector('.prog');
+  const st={p:0,held:false,box,core};
+  st.step=dt=>{st.p=st.held?Math.min(1,st.p+dt/fill):Math.max(0,st.p-dt/drain);prog.setAttribute('stroke-dashoffset',L*(1-st.p))};
+  core.onpointerdown=e=>{try{core.setPointerCapture(e.pointerId)}catch(_){}st.held=true;core.style.transform='translate(-50%,-50%) scale(.92)';a.buzz(8)};
+  const rel=()=>{st.held=false;core.style.transform='translate(-50%,-50%)'};
+  core.onpointerup=rel;core.onpointercancel=rel;core.oncontextmenu=e=>e.preventDefault();
+  return st;
+}
+
 /* ---------- levels ---------- */
 const LEVELS=[
 /* 1 — tap to grow */
@@ -503,37 +756,9 @@ const LEVELS=[
   const paint=()=>tiles.forEach((t,i)=>t.classList.toggle('on',!!on[i]));
   paint();
  }},
-/* 5 — slide on ice */
-{hints:['The dot does not stop until something stops it.','Swipe anywhere. Grey blocks and the edges stop the dot.','Swipe up, right, down, left, up, right.'],
- init(a){
-  const map=['.......','....#..','#.#....','.......','.#..#..','......T','S..#...'];
-  const N=7,cell=Math.floor(Math.min(a.w-32,a.h-48,392)/N);
-  const board=a.el('div','abs center');Object.assign(board.style,{width:cell*N+'px',height:cell*N+'px',background:'var(--surface)'});
-  let pos,target;
-  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
-    if(ch==='#'){const b=a.el('div','abs',board);Object.assign(b.style,{left:c*cell+'px',top:r*cell+'px',width:cell+'px',height:cell+'px',background:'var(--muted)'})}
-    if(ch==='T'){target=[r,c];const t=a.el('div','abs',board);Object.assign(t.style,{left:c*cell+4+'px',top:r*cell+4+'px',width:cell-8+'px',height:cell-8+'px',border:'3px solid var(--accent)'})}
-    if(ch==='S')pos=[r,c];
-  }));
-  const dot=a.el('div','abs',board);
-  Object.assign(dot.style,{width:cell-14+'px',height:cell-14+'px',borderRadius:'50%',background:'var(--accent)',transition:'left .2s,top .2s'});
-  const chevs=a.el('div','abs',board);chevs.style.transition='opacity .3s';
-  [['U','borderBottomColor',0,-1],['D','borderTopColor',0,1],['L','borderRightColor',-1,0],['R','borderLeftColor',1,0]].forEach(([k,side,dx,dy])=>{
-    const c=a.el('div','chev',chevs);c.style[side]='var(--fg)';c.style.left=(cell/2-6+dx*cell*.62)+'px';c.style.top=(cell/2-6+dy*cell*.62)+'px'});
-  const place=()=>{dot.style.left=pos[1]*cell+7+'px';dot.style.top=pos[0]*cell+7+'px';chevs.style.left=pos[1]*cell+'px';chevs.style.top=pos[0]*cell+'px'};
-  place();
-  const wall=(r,c)=>r<0||c<0||r>=N||c>=N||map[r][c]==='#';
-  let busy=false,done=false;
-  const off=swipes(a.stage,d=>{if(busy||done)return;
-    chevs.style.opacity=0;
-    const [dr,dc]={U:[-1,0],D:[1,0],L:[0,-1],R:[0,1]}[d];
-    let [r,c]=pos,steps=0;while(!wall(r+dr,c+dc)){r+=dr;c+=dc;steps++}
-    if(!steps){a.buzz(5);return}
-    busy=true;dot.style.transitionDuration=(.06*steps+.08)+'s';pos=[r,c];place();a.buzz(8);
-    setTimeout(()=>{busy=false;if(r===target[0]&&c===target[1]){done=true;const[x,y]=rectCenter(dot);a.solve(x,y)}},(60*steps+90));
-  });
-  return off;
- }},
+/* 5 — slide */
+{hints:['The dot does not stop until something stops it.','Swipe anywhere. Grey blocks and the edges stop the dot.','Swipe up, right, up, left, down, right.'],
+ init(a){return slideLevel(a,['.......','....##.','.T#....','#......','..#..##','.......','..#....','.....#.','...#...','.#....#','S...#..'],{chevrons:true})}},
 /* 6 — the missing number (uses the header) */
 {hints:['Something is missing. It is not far away.','Not everything you can tap is inside the play field.','Tap the level number at the top of the screen.'],
  init(a){
@@ -553,6 +778,362 @@ const LEVELS=[
   });
   return()=>{a.headerNumber().style.color='';document.querySelectorAll('.fly').forEach(f=>f.remove())};
  }},
+/* 7 — two hands */
+{hints:['One circle alone will not do it.','Each ring only stays full while it is held.','Hold both circles at the same time, with two fingers.'],
+ init(a){
+  const size=Math.min(170,a.h*.3);
+  const A=holdRing(a,a.stage,size,{fill:1300,drain:450}),B=holdRing(a,a.stage,size,{fill:1300,drain:450});
+  Object.assign(A.box.style,{left:(a.w-size)/2+'px',top:a.h*.27-size/2+'px'});
+  Object.assign(B.box.style,{left:(a.w-size)/2+'px',top:a.h*.73-size/2+'px'});
+  let last=performance.now(),raf;
+  const tick=t=>{const dt=t-last;last=t;A.step(dt);B.step(dt);
+    if(A.p>=1&&B.p>=1){a.solve();return}raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  return()=>cancelAnimationFrame(raf);
+ }},
+/* 8 — patience */
+{hints:['Something is happening, even when you do nothing.','Watch the line at the bottom. What happens to it when you touch the screen?','Put the phone down and do not touch anything for 15 seconds.'],
+ init(a){
+  const orb=a.el('div','orb abs center');Object.assign(orb.style,{width:'120px',height:'120px'});
+  const track=a.el('div','abs');Object.assign(track.style,{left:'16px',right:'16px',bottom:'calc(28px + env(safe-area-inset-bottom,0px))',height:'6px',background:'var(--surface)'});
+  const fill=a.el('div','',track);Object.assign(fill.style,{height:'100%',width:'0',background:'var(--accent)'});
+  let p=0,last=performance.now(),raf;
+  const tick=t=>{const dt=t-last;last=t;if(!document.hidden)p=Math.min(1,p+dt/15000);fill.style.width=p*100+'%';
+    if(p>=1){const[x,y]=rectCenter(orb);a.solve(x,y);return}raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  const touch=e=>{p=0;a.buzz(6);if(e.target===orb){orb.style.transform='translate(-50%,-50%) scale(1.12)';setTimeout(()=>orb.style.transform='',160)}};
+  a.stage.addEventListener('pointerdown',touch);
+  return()=>{cancelAnimationFrame(raf);a.stage.removeEventListener('pointerdown',touch)};
+ }},
+/* 9 — pipes */
+{hints:['The flow starts at the top left and wants to leave at the bottom right.','Tap a piece to turn it. Lit pieces are connected to the start.','Follow the lit pipe and turn the first dark piece it touches until it lights up. Repeat until you reach the exit.'],
+ init(a){
+  const R=8,C=5,types='ssscscscsccsccsccccssssccccsccsccsscccsc',init='1002322333202113301013002021113212012120';
+  const g=grid(a,R,C,{pad:28});
+  const ROT=['U','R','D','L'],rot=[...init].map(Number);
+  const tiles=[...types].map((ty,i)=>{const t=g.put('pipe',Math.floor(i/C),i%C,1);
+    t.innerHTML=`<svg viewBox="0 0 100 100" width="100%" height="100%">${ty==='s'?'<path d="M50 0V100"/>':'<path d="M50 0V35A15 15 0 0 0 65 50H100"/>'}</svg>`;
+    t.style.transform=`rotate(${rot[i]*90}deg)`;
+    t.onclick=()=>{if(done)return;rot[i]++;t.style.transform=`rotate(${rot[i]*90}deg)`;a.buzz(6);check()};return t});
+  const src=a.el('div','abs',g.b);Object.assign(src.style,{left:g.cell/2-5+'px',top:'-28px',width:'10px',height:'28px',background:'var(--accent)'});
+  const sink=a.el('div','abs',g.b);Object.assign(sink.style,{left:(C-1)*g.cell+g.cell/2-5+'px',top:g.H+'px',width:'10px',height:'28px',background:'var(--line)'});
+  const open=i=>(types[i]==='s'?['U','D']:['U','R']).map(d=>ROT[(ROT.indexOf(d)+rot[i])%4]);
+  let done=false;
+  function check(){
+    const lit=new Set();const q=[];if(open(0).includes('U')){lit.add(0);q.push(0)}
+    while(q.length){const i=q.shift(),r=Math.floor(i/C),c=i%C;
+      for(const d of open(i)){const[dr,dc]=DIRS[d];const nr=r+dr,nc=c+dc;if(nr<0||nc<0||nr>=R||nc>=C)continue;
+        const j=nr*C+nc;if(lit.has(j))continue;const back={U:'D',D:'U',L:'R',R:'L'}[d];if(open(j).includes(back)){lit.add(j);q.push(j)}}}
+    tiles.forEach((t,i)=>t.classList.toggle('lit',lit.has(i)));
+    const end=R*C-1;const win=lit.has(end)&&open(end).includes('D');
+    sink.style.background=win?'var(--accent)':'var(--line)';
+    if(win){done=true;const[x,y]=rectCenter(sink);setTimeout(()=>a.solve(x,y),350)}
+  }
+  check();
+ }},
+/* 10 — morse */
+{hints:['The light is saying something. Watch it for a while.','The big pad below copies the light. Short and long presses count.','The light blinks short, short, long, short. Tap, tap, hold, tap on the pad.'],
+ init(a){
+  const pattern=[0,0,1,0];
+  const lamp=a.el('div','abs lamp');const ls=Math.min(110,a.h*.16);
+  Object.assign(lamp.style,{width:ls+'px',height:ls+'px',left:(a.w-ls)/2+'px',top:a.h*.12+'px'});
+  const marks=a.el('div','abs marks');marks.style.top=a.h*.12+ls+36+'px';
+  const pad=a.el('div','abs pad');Object.assign(pad.style,{left:'16px',right:'16px',bottom:'calc(24px + env(safe-area-inset-bottom,0px))',height:a.h*.36+'px'});
+  let input=[],pressAt=0,userBusy=false,evalT=null,playT=null,alive=true,done=false;
+  const light=on=>lamp.classList.toggle('on',on);
+  function play(i=0){if(!alive||userBusy)return;
+    if(i>=pattern.length){playT=setTimeout(()=>play(0),1600);return}
+    light(true);playT=setTimeout(()=>{light(false);playT=setTimeout(()=>play(i+1),300)},pattern[i]?720:220)}
+  playT=setTimeout(()=>play(0),700);
+  const renderMarks=()=>{marks.innerHTML=input.map(v=>`<i class="${v?'dash':'dot'}"></i>`).join('')};
+  pad.onpointerdown=e=>{if(done)return;try{pad.setPointerCapture(e.pointerId)}catch(_){}userBusy=true;clearTimeout(playT);clearTimeout(evalT);light(true);pad.classList.add('down');pressAt=performance.now();a.buzz(10)};
+  const up=()=>{if(!pressAt)return;const d=performance.now()-pressAt;pressAt=0;light(false);pad.classList.remove('down');
+    input.push(d<330?0:1);if(input.length>8)input.shift();renderMarks();
+    evalT=setTimeout(()=>{
+      if(input.join()===pattern.join()){done=true;const[x,y]=rectCenter(lamp);a.solve(x,y);return}
+      marks.classList.add('nope');a.buzz([30,40,30]);
+      setTimeout(()=>{marks.classList.remove('nope');input=[];renderMarks();userBusy=false;play(0)},600)},1100)};
+  pad.onpointerup=up;pad.onpointercancel=up;pad.oncontextmenu=e=>e.preventDefault();
+  return()=>{alive=false;clearTimeout(playT);clearTimeout(evalT)};
+ }},
+/* 11 — count the shapes */
+{hints:['Each wheel at the bottom has a shape above it.','Tap a wheel to change its number. Count every shape of that kind on the screen.','There are 7 triangles, 2 squares and 4 circles: 7, 2, 4.'],
+ init(a){
+  const want=[7,2,4],order=['triangle','square','circle'];
+  const counts={triangle:7,square:2,circle:4};
+  const area=a.el('div','abs');Object.assign(area.style,{left:0,right:0,top:0,bottom:'150px'});
+  let s=11;const rr=()=>{s=(s*16807)%2147483647;return s/2147483647};
+  const W=a.w-48,H=a.h-150-40,placed=[];
+  const list=[];Object.entries(counts).forEach(([k,n])=>{for(let i=0;i<n;i++)list.push(k)});
+  list.sort(()=>rr()-.5);
+  list.forEach((k,i)=>{let x,y,sz,tries=0;
+    do{sz=22+rr()*34;x=24+rr()*(W-sz);y=24+rr()*(H-sz);tries++}while(tries<200&&placed.some(p=>Math.hypot(p.x-x,p.y-y)<(p.sz+sz)/2+18));
+    placed.push({x,y,sz});const d=a.el('div','abs',area);Object.assign(d.style,{left:x+'px',top:y+'px',transform:`rotate(${Math.floor(rr()*4)*15-20}deg)`});
+    d.innerHTML=shapeSvg(k,{fill:i%3!==0,size:sz,color:i%2?'var(--accent)':'var(--fg)'})});
+  const dl=dials(a,3,{onChange:v=>{if(v.join()===want.join()){a.solve()}}});
+  dl.cols.forEach((c,i)=>{const lab=document.createElement('div');lab.className='dial-label';lab.innerHTML=shapeSvg(order[i],{fill:false,size:18,color:'var(--muted)'});c.prepend(lab)});
+ }},
+/* 12 — push */
+{hints:['The dot can push the white block. It can not pull it.','Swipe to step. A block against a wall is stuck there, so plan before you push.','The block takes a detour: push it right twice, back left once, down three rows, left once, up twice, and finally left twice onto the target.'],
+ init(a){return pushLevel(a,['..#...','#.B...','T...#.','#.....','P....#','.#....'])}},
+/* 13 — binary */
+{hints:['The big number counts the lit squares in its own way.','Each square is worth double the one to its right: 16, 8, 4, 2, 1. But which number do you need?','Make 13, the level number: light the 2nd, 3rd and 5th square (8 + 4 + 1).'],
+ init(a){
+  const n=5,gap=8,size=Math.floor(Math.min(80,(a.w-32-gap*(n-1))/n));
+  const row=a.el('div','abs');Object.assign(row.style,{display:'flex',gap:gap+'px',left:'50%',top:'38%',transform:'translate(-50%,-50%)'});
+  const out=a.el('div','abs big');Object.assign(out.style,{left:0,right:0,top:'58%',textAlign:'center',fontSize:'84px',fontVariantNumeric:'tabular-nums',color:'var(--muted)'});
+  const on=Array(n).fill(0);let done=false;
+  const val=()=>on.reduce((s,v)=>s*2+v,0);
+  const tiles=on.map((_,i)=>{const t=a.el('div','tile',row);Object.assign(t.style,{width:size+'px',height:size+'px'});
+    t.onclick=()=>{if(done)return;on[i]^=1;t.classList.toggle('on',!!on[i]);a.buzz(8);paint()};return t});
+  const paint=()=>{out.textContent=val();if(val()===13){done=true;out.style.color='var(--accent)';setTimeout(()=>{const[x,y]=rectCenter(out);a.solve(x,y)},500)}};
+  paint();
+ }},
+/* 14 — rotate the world */
+{hints:['The ball always falls down the screen.','Turn the whole board with the buttons and watch where the ball ends up.','Turn: right, right, left, right, left, right, right.'],
+ init(a){return gravityLevel(a,['......#O.','.....##..','.....##..','#..#.....','.#...#.##','...#...#.','...o..#..','...#....#','..#..#...'])}},
+/* 15 — flashlight */
+{hints:['It is dark here. Try touching the dark.','Your finger is a light. Four digits are hidden. The dots under each digit tell you its position in the code.','The code is 3 8 1 6.'],
+ init(a){
+  const area=a.el('div','abs');Object.assign(area.style,{left:0,right:0,top:0,bottom:'150px',background:'var(--surface)'});
+  const H=a.h-150;
+  [['8',2,.18,.12],['6',4,.26,.62],['1',3,.8,.34],['3',1,.72,.78]].forEach(([d,n,x,y])=>{
+    const e=a.el('div','abs hidden-digit',area);e.style.left=x*a.w-28+'px';e.style.top=y*H-40+'px';
+    e.innerHTML=`<span class="big">${d}</span><span class="pips">${'<i></i>'.repeat(n)}</span>`});
+  const dark=a.el('div','abs dark',area);dark.style.inset='0';
+  const setL=(x,y,r)=>{dark.style.setProperty('--x',x+'px');dark.style.setProperty('--y',y+'px');dark.style.setProperty('--r',r+'px')};
+  setL(-999,-999,0);
+  const mv=e=>{const b=area.getBoundingClientRect();setL(e.clientX-b.left,e.clientY-b.top,95)};
+  area.onpointerdown=e=>{mv(e);area.onpointermove=mv};
+  const off=()=>{area.onpointermove=null;setL(-999,-999,0)};
+  area.onpointerup=off;area.onpointercancel=off;area.onpointerleave=off;
+  dials(a,4,{onChange:v=>{if(v.join('')==='3816')a.solve()}});
+ }},
+/* 16 — mirror */
+{hints:['Watch both shapes closely when you swipe.','The square moves left when you swipe right, and right when you swipe left. Up and down are the same. A shape that hits a wall stays put while the other keeps moving.','Swipe: down, right ×4, up ×6, left ×3, down ×3, right.'],
+ init(a){
+  const map=['...U..#','#...#..','.......','..#..#.','....##.','...##B.','.......','A......','....#..','.T.....','.#.#..#'];
+  const R=map.length,C=map[0].length,g=grid(a,R,C);g.b.style.background='var(--surface)';
+  let A,B,TA,TB;
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='#')g.put('wall',r,c);if(ch==='A')A=[r,c];if(ch==='B')B=[r,c];
+    if(ch==='T'){TA=[r,c];g.put('target round',r,c,Math.round(g.cell*.1))}if(ch==='U'){TB=[r,c];g.put('target',r,c,Math.round(g.cell*.1))}}));
+  const ins=Math.round(g.cell*.18);const aEl=a.el('div','sdot',g.b),bEl=a.el('div','sdot sq',g.b);
+  const place=()=>{g.at(aEl,A[0],A[1],ins);g.at(bEl,B[0],B[1],ins)};place();
+  const wall=(r,c)=>r<0||c<0||r>=R||c>=C||map[r][c]==='#';
+  let done=false;
+  return swipes(a.stage,d=>{if(done)return;
+    const da=DIRS[d],db=DIRS[{U:'U',D:'D',L:'R',R:'L'}[d]];
+    let na=[A[0]+da[0],A[1]+da[1]],nb=[B[0]+db[0],B[1]+db[1]];
+    if(wall(...na))na=A;if(wall(...nb))nb=B;if(na+''===nb+''){a.buzz(5);return}
+    if(na===A&&nb===B){a.buzz(5);return}
+    A=na;B=nb;place();a.buzz(8);
+    if(A+''===TA+''&&B+''===TB+''){done=true;setTimeout(()=>a.solve(),220)}});
+ }},
+/* 17 — rings */
+{hints:['The ball wants to leave through the line at the top.','Tap a ring to turn it a quarter. Watch carefully: some rings take their inner neighbour with them.','Tap the outer ring 3 times, then the middle ring 2 times.'],
+ init(a){
+  const S=Math.min(a.w-32,a.h-80),cx=S/2,cy=S/2;
+  const box=a.el('div','abs center');Object.assign(box.style,{width:S+'px',height:S+'px'});
+  const radii=[S*.44,S*.32,S*.2];const st=[1,3,2],turns=st.slice();
+  const ring=(r)=>{const L=2*Math.PI*r;return `stroke-dasharray="${L*300/360} ${L*60/360}"`};
+  box.innerHTML=`<svg viewBox="0 0 ${S} ${S}" width="${S}" height="${S}" style="overflow:visible">
+    <line x1="${cx}" y1="${-a.h}" x2="${cx}" y2="${cy-radii[0]-10}" stroke="var(--line)" stroke-width="4" stroke-dasharray="2 8"/>
+    ${radii.map((r,i)=>`<g class="ring" data-i="${i}" style="transform-origin:${cx}px ${cy}px;transition:transform .4s var(--ease)"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${i===0?'var(--fg)':i===1?'var(--muted)':'var(--fg)'}" stroke-width="${S*.045}" ${ring(r)} transform="rotate(-60 ${cx} ${cy})"/></g>`).join('')}
+    <circle class="ball" cx="${cx}" cy="${cy}" r="${S*.06}" fill="var(--accent)" style="transition:transform .7s var(--ease)"/></svg>`;
+  const gs=[...box.querySelectorAll('.ring')],ball=box.querySelector('.ball');
+  const paint=()=>gs.forEach((g,i)=>g.style.transform=`rotate(${turns[i]*90}deg)`);paint();
+  let done=false;
+  box.onpointerdown=e=>{if(done)return;const b=box.getBoundingClientRect();const d=Math.hypot(e.clientX-b.left-cx,e.clientY-b.top-cy);
+    let i=radii.findIndex(r=>Math.abs(d-r)<S*.06);if(i<0)return;a.buzz(8);
+    const link=[[0,1],[1,2],[2]][i];link.forEach(k=>{st[k]=(st[k]+1)%4;turns[k]++});paint();
+    if(st.every(v=>v===0)){done=true;setTimeout(()=>{ball.style.transform=`translateY(${-a.h}px)`;setTimeout(()=>a.solve(b.left+cx,b.top+20),380)},420)}};
+ }},
+/* 18 — laser */
+{hints:['The light enters at the bottom left. All three diamonds have to be lit at once.','Tap a mirror to flip it. Mirrors bounce the beam a quarter turn.','Flip the bottom-left, top-left and bottom-right mirrors, so the beam goes up the left side, across the top, down the right and back along the bottom.'],
+ init(a){
+  const map=['M..C.M.','.......','.#.....','.#.....','..M.#..','.......','.......','.#.....','C...#MM','MC....M'];
+  const R=map.length,C=map[0].length,g=grid(a,R,C,{pad:26});g.b.style.background='var(--surface)';
+  const mir={},crys={};
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{const k=r+','+c;
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='C'){const e=g.put('crystal',r,c,Math.round(g.cell*.27));crys[k]=e}
+    if(ch==='M'){mir[k]='\\';const e=g.put('mirror',r,c,0);e.innerHTML='<i></i>';
+      e.onclick=()=>{if(done)return;mir[k]=mir[k]==='/'?'\\':'/';e.classList.toggle('fwd',mir[k]==='/');a.buzz(6);trace()};}
+  }));
+  const em=a.el('div','abs emitter',g.b);Object.assign(em.style,{left:'-20px',top:(R-1)*g.cell+g.cell/2-8+'px'});
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','laser');svg.setAttribute('width',g.W);svg.setAttribute('height',g.H);
+  svg.style.cssText='position:absolute;left:0;top:0;overflow:visible;pointer-events:none';g.b.appendChild(svg);
+  let done=false;
+  function trace(){
+    let r=R-1,c=-1,dr=0,dc=1;const pts=[[-12,(R-1)*g.cell+g.cell/2]];const hit=new Set(),seen=new Set();
+    for(let s=0;s<300;s++){r+=dr;c+=dc;
+      if(r<0||c<0||r>=R||c>=C){pts.push([(c+.5)*g.cell-dc*g.cell/2,(r+.5)*g.cell-dr*g.cell/2]);break}
+      const k=r+','+c+','+dr+','+dc;if(seen.has(k))break;seen.add(k);const ch=map[r][c];
+      if(ch==='#'){pts.push([(c+.5)*g.cell-dc*g.cell/2,(r+.5)*g.cell-dr*g.cell/2]);break}
+      if(ch==='C')hit.add(r+','+c);
+      if(ch==='M'){pts.push([(c+.5)*g.cell,(r+.5)*g.cell]);if(mir[r+','+c]==='/')[dr,dc]=[-dc,-dr];else[dr,dc]=[dc,dr]}}
+    svg.innerHTML=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round"/>`;
+    Object.entries(crys).forEach(([k,e])=>e.classList.toggle('on',hit.has(k)));
+    if(hit.size===3){done=true;setTimeout(()=>a.solve(),500)}
+  }
+  trace();
+ }},
+/* 19 — try again */
+{hints:['This door counts something. Five dots, one is filled.','Look at the small symbol next to the dots. You have seen it somewhere else on this screen.','Press the restart button (top right) four times.'],
+ init(a){
+  const cnt=a.restart?(this._n=(this._n||1)+1):(this._n=1);
+  const n=Math.min(5,cnt);
+  const door=a.el('div','abs door');const dh=Math.min(280,a.h*.46),dw=dh*.5;
+  Object.assign(door.style,{width:dw+'px',height:dh+'px',left:(a.w-dw)/2+'px',top:a.h*.52-dh/2+'px'});
+  const leaf=a.el('div','leaf',door);
+  const row=a.el('div','abs pipsrow');row.style.top=a.h*.52-dh/2-58+'px';
+  row.innerHTML=`<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="2.4" stroke-linecap="square"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v5h5"/></svg>`+
+    [1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('');
+  const knob=a.el('div','knob',door);
+  door.onclick=()=>{if(n<5){door.classList.remove('nope');void door.offsetWidth;door.classList.add('nope');a.buzz([20,30,20])}};
+  if(n>=5){setTimeout(()=>{leaf.style.transform='scaleX(0)';a.buzz(14);setTimeout(()=>{const[x,y]=rectCenter(door);a.solve(x,y)},600)},400)}
+ }},
+/* 20 — gates */
+{hints:['The white blocks are gates. Some gates are open (outlined), some are closed.','Stopping on a ring flips every gate: open ones close, closed ones open.','Swipe: up, left, down, right, down, left, up, down, left.'],
+ init(a){return slideLevel(a,['.*.a...','T..#b..','.b..aa#','...#...','#..##..','.*.....','.....a.','#b.....','....#..','.......','.#.S...'])}},
+/* 21 — codebreaker */
+{hints:['Guess the hidden row of four shapes. The marks on the right of each guess tell you how close you are.','A filled mark: right shape in the right spot. An open mark: right shape, wrong spot. The code uses four different shapes. Tap a shape in your current row to remove it.','The code is: square, diamond, circle, triangle.'],
+ init(a){
+  const code=['square','diamond','circle','triangle'],keys=Object.keys(SHAPES);
+  const sz=Math.min(44,(a.w-32-60)/4-8);
+  const rows=a.el('div','abs cb-rows');Object.assign(rows.style,{left:'16px',right:'16px',top:'8px',bottom:'110px'});
+  const pal=a.el('div','abs cb-pal');pal.style.bottom=`calc(24px + env(safe-area-inset-bottom,0px))`;
+  let cur=[],done=false;const maxRows=Math.max(4,Math.floor((a.h-130)/(sz+12)));
+  function newRow(){const r=a.el('div','cb-row',rows);r.innerHTML=`<div class="cb-slots">${'<button class="cb-slot"></button>'.repeat(4)}</div><div class="cb-fb">${'<i></i>'.repeat(4)}</div>`;
+    r.querySelectorAll('.cb-slot').forEach((s,i)=>{s.style.width=s.style.height=sz+'px';s.onclick=()=>{if(r!==rows.lastChild||done)return;if(cur[i]){cur[i]=null;s.innerHTML='';a.buzz(5)}}});
+    while(rows.children.length>maxRows)rows.firstChild.remove();return r}
+  let row=newRow();
+  keys.forEach(k=>{const b=a.el('button','cb-key',pal);b.innerHTML=shapeSvg(k,{size:26});b.setAttribute('aria-label',k);
+    b.onclick=()=>{if(done)return;const i=[0,1,2,3].find(j=>!cur[j]);if(i===undefined)return;cur[i]=k;row.querySelectorAll('.cb-slot')[i].innerHTML=shapeSvg(k,{size:sz*.55});a.buzz(6);
+      if([0,1,2,3].every(j=>cur[j]))setTimeout(check,250)}});
+  function check(){
+    let exact=0,near=0;const rc=[],gc=[];
+    cur.forEach((k,i)=>{if(k===code[i])exact++;else{rc.push(code[i]);gc.push(k)}});
+    gc.forEach(k=>{const j=rc.indexOf(k);if(j>=0){near++;rc.splice(j,1)}});
+    const fb=row.querySelectorAll('.cb-fb i');for(let i=0;i<exact;i++)fb[i].className='hit';for(let i=exact;i<exact+near;i++)fb[i].className='near';
+    a.buzz(10);
+    if(exact===4){done=true;setTimeout(()=>{const[x,y]=rectCenter(row);a.solve(x,y)},500);return}
+    cur=[];row=newRow();
+  }
+ }},
+/* 22 — push two */
+{hints:['Two blocks, two targets. The order matters.','Blocks can not be pulled, and you can not push two blocks at once. Keep space to walk around.','Swipe: left ×3, up ×2, right, up, left, up, left ×2, down, right, up, right, down ×3, left, down, right ×2, down, right, up, right, up ×2, left ×2, up, left, down ×2, left, down, right ×3, down, right, up.'],
+ init(a){return pushLevel(a,['...#..','....#.','##BB..','...#TT','.....P','......'])}},
+/* 23 — the matrix */
+{hints:['Every row and every column follows a rule.','Look at three things: the shape, how many there are, and whether they are filled.','Shapes rotate through each row, the count grows to the right, and only the diagonal is filled: three filled squares.'],
+ init(a){
+  const shapes=['circle','square','triangle'];const S=Math.min(a.w-32,(a.h-150)),cs=Math.floor(S/3)-8;
+  const wrap=a.el('div','abs');Object.assign(wrap.style,{display:'grid',gridTemplateColumns:`repeat(3,${cs}px)`,gap:'8px',left:'50%',top:'12px',transform:'translateX(-50%)'});
+  const cell=(k,n,fill)=>`<div style="display:flex;gap:${cs*.06}px">${Array(n).fill(shapeSvg(k,{fill,size:cs*.24})).join('')}</div>`;
+  for(let r=0;r<3;r++)for(let c=0;c<3;c++){const d=a.el('div','mx-cell',wrap);Object.assign(d.style,{width:cs+'px',height:cs+'px'});
+    if(r===2&&c===2){d.classList.add('q');d.textContent='?';d.style.fontSize=cs*.4+'px'}else d.innerHTML=cell(shapes[(r+c)%3],c+1,r===c)}
+  const opts=[['square',3,false],['triangle',3,true],['square',3,true],['square',2,true]];
+  const os=Math.min(76,(a.w-32-24)/4);
+  const pal=a.el('div','abs cb-pal');pal.style.bottom=`calc(24px + env(safe-area-inset-bottom,0px))`;
+  let done=false;
+  opts.forEach(([k,n,f],i)=>{const b=a.el('button','mx-opt',pal);Object.assign(b.style,{width:os+'px',height:os+'px'});
+    b.innerHTML=`<div style="display:flex;gap:2px">${Array(n).fill(shapeSvg(k,{fill:f,size:os*.24})).join('')}</div>`;
+    b.onclick=()=>{if(done)return;if(i===2){done=true;const q=wrap.lastChild;q.classList.remove('q');q.innerHTML=cell(k,n,f);a.buzz(12);setTimeout(()=>{const[x,y]=rectCenter(q);a.solve(x,y)},500)}
+      else{b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');a.buzz([20,30,20])}}});
+ }},
+/* 24 — lights, bigger */
+{hints:['Same rule as before, bigger board.','Work from the top down: fix a tile in one row by tapping the tile directly below it.','Tap: the first three tiles of row 1, the last tile of row 2, the first tile of row 3 and the first tile of row 4.'],
+ init(a){lightsLevel(a,4,'1011101010101011')}},
+/* 25 — balance */
+{hints:['Make the scale level. The weights can be dragged.','You do not have to put every weight on the empty side.','Put 9 and 1 on the right pan, and 3 on the left pan next to the 7 (7 + 3 = 9 + 1).'],
+ init(a){
+  const cx=a.w/2,py=a.h*.26,arm=Math.min(a.w*.36,150),hang=a.h*.16;
+  const beam=a.el('div','abs beam');Object.assign(beam.style,{left:cx-arm+'px',top:py-3+'px',width:arm*2+'px'});
+  const post=a.el('div','abs post');Object.assign(post.style,{left:cx-3+'px',top:py+'px',height:a.h*.5+'px'});
+  const pans=[0,1].map(()=>{const p=a.el('div','abs pan');p.style.width=arm*.9+'px';const s=a.el('div','abs string');return{p,s}});
+  const tray=a.h*.86;
+  const items=[{w:7,fixed:true,side:0},{w:1,side:-1},{w:3,side:-1},{w:9,side:-1}];
+  items.forEach(it=>{it.size=it.fixed?46:26+Math.sqrt(it.w)*8;it.el=a.el('div','abs weight'+(it.fixed?' fixed':''));it.el.textContent=it.w;
+    Object.assign(it.el.style,{width:it.size+'px',height:it.size+'px'})});
+  let angle=0,done=false,balT=null;
+  function layout(){
+    const L=items.filter(i=>i.side===0).reduce((s,i)=>s+i.w,0),Rw=items.filter(i=>i.side===1).reduce((s,i)=>s+i.w,0);
+    angle=Math.max(-14,Math.min(14,(Rw-L)*2.2));const rad=angle*Math.PI/180;
+    beam.style.transform=`rotate(${angle}deg)`;
+    const ends=[[cx-arm*Math.cos(rad),py-arm*Math.sin(rad)],[cx+arm*Math.cos(rad),py+arm*Math.sin(rad)]];
+    pans.forEach(({p,s},k)=>{const[x,y]=ends[k];Object.assign(p.style,{left:x-arm*.45+'px',top:y+hang+'px'});Object.assign(s.style,{left:x-1+'px',top:y+'px',height:hang+'px'});pans[k].x=x;pans[k].y=y+hang});
+    [0,1].forEach(k=>{let off=0;const on=items.filter(i=>i.side===k);const tot=on.reduce((s,i)=>s+i.size+4,0)-4;
+      on.forEach(i=>{if(i.drag)return;i.el.style.left=pans[k].x-tot/2+off+'px';i.el.style.top=pans[k].y-i.size+'px';off+=i.size+4})});
+    const tr=items.filter(i=>i.side===-1);const tt=tr.reduce((s,i)=>s+i.size+28,0)-28;let off=0;
+    tr.forEach(i=>{if(i.drag)return;i.el.style.left=cx-tt/2+off+'px';i.el.style.top=tray-i.size+'px';off+=i.size+28});
+    clearTimeout(balT);
+    if(L===Rw&&!done&&items.some(i=>i.side===1)){balT=setTimeout(()=>{done=true;a.solve(cx,py)},700)}
+  }
+  items.filter(i=>!i.fixed).forEach(it=>{let ox,oy;
+    it.el.onpointerdown=e=>{if(done)return;it.el.setPointerCapture(e.pointerId);it.drag=true;it.el.classList.add('drag');ox=e.clientX-it.el.offsetLeft;oy=e.clientY-it.el.offsetTop;a.buzz(6)};
+    it.el.onpointermove=e=>{if(!it.drag)return;it.el.style.left=e.clientX-ox+'px';it.el.style.top=e.clientY-oy+'px'};
+    it.el.onpointerup=()=>{if(!it.drag)return;it.drag=false;it.el.classList.remove('drag');
+      const x=it.el.offsetLeft+it.size/2,y=it.el.offsetTop+it.size/2;let best=-1,bd=arm*.75;
+      [0,1].forEach(k=>{const d=Math.hypot(x-pans[k].x,y-(pans[k].y-20));if(d<bd){bd=d;best=k}});
+      it.side=best;layout()}});
+  layout();
+  return()=>clearTimeout(balT);
+ }},
+/* 26 — how many squares */
+{hints:['Count the squares. All of them.','Squares come in four sizes here: 1×1, 2×2, 3×3 and the big one.','16 + 9 + 4 + 1 = 30.'],
+ init(a){
+  const S=Math.min(a.w-64,a.h-200);const box=a.el('div','abs');Object.assign(box.style,{left:(a.w-S)/2+'px',top:(a.h-150-S)/2+'px'});
+  let p='';for(let i=0;i<=4;i++){const t=i*S/4;p+=`M${t} 0V${S}M0 ${t}H${S}`}
+  box.innerHTML=`<svg width="${S}" height="${S}" style="overflow:visible"><path d="${p}" stroke="var(--fg)" stroke-width="4" stroke-linecap="square" fill="none"/></svg>`;
+  dials(a,2,{onChange:v=>{if(v.join('')==='30')a.solve()}});
+ }},
+/* 27 — nonogram */
+{hints:['The numbers say how many filled squares sit next to each other in that row or column.','"2 2" means a group of two, a gap of at least one, then another group of two. Start with the rows and columns that leave no choice.','Row by row (x = filled): ..x... / .xxx.. / xx.xx. / .xxx.x / ..x.xx / .x..x.'],
+ init(a){
+  const pic=['..#...','.###..','##.##.','.###.#','..#.##','.#..#.'];const N=6;
+  const clue=l=>{const o=[];let n=0;for(const v of l){if(v)n++;else if(n){o.push(n);n=0}}if(n)o.push(n);return o.length?o:[0]};
+  const sol=pic.map(r=>[...r].map(ch=>ch==='#'?1:0));
+  const rc=sol.map(clue),cc=[...Array(N)].map((_,c)=>clue(sol.map(r=>r[c])));
+  const lab=Math.min(64,a.w*.16),cell=Math.floor(Math.min((a.w-32-lab)/N,(a.h-32-lab)/N));
+  const wrap=a.el('div','abs');const W=lab+cell*N;Object.assign(wrap.style,{left:(a.w-W)/2-8+'px',top:(a.h-W)/2+'px',width:W+'px',height:W+'px'});
+  cc.forEach((cl,c)=>{const d=a.el('div','abs nclue ncol',wrap);Object.assign(d.style,{left:lab+c*cell+'px',top:0,width:cell+'px',height:lab+'px'});d.innerHTML=cl.map(n=>`<span>${n}</span>`).join('')});
+  rc.forEach((cl,r)=>{const d=a.el('div','abs nclue nrow',wrap);Object.assign(d.style,{left:0,top:lab+r*cell+'px',width:lab+'px',height:cell+'px'});d.innerHTML=cl.map(n=>`<span>${n}</span>`).join('')});
+  const st=sol.map(r=>r.map(()=>0));let done=false;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){const e=a.el('div','abs ncell',wrap);Object.assign(e.style,{left:lab+c*cell+'px',top:lab+r*cell+'px',width:cell-3+'px',height:cell-3+'px'});
+    e.onclick=()=>{if(done)return;st[r][c]^=1;e.classList.toggle('on',!!st[r][c]);a.buzz(6);
+      if(st.every((row,i)=>row.every((v,j)=>v===sol[i][j]))){done=true;setTimeout(()=>a.solve(),400)}}}
+ }},
+/* 28 — one line */
+{hints:['Draw one line from the filled square to the ring.','Drag from the filled square. The line must pass through every open square exactly once. Drag back to undo.','Start: down to the bottom, then left, then all the way up the left edge, and right along the top.'],
+ init(a){
+  const map=['...#..','......','......','.#.#..','.S....','....#.','..E...','......'];
+  const R=map.length,C=map[0].length,g=grid(a,R,C,{pad:24});
+  let S,E,open=0;
+  const cells=map.map((row,r)=>[...row].map((ch,c)=>{if(ch==='#')return null;open++;if(ch==='S')S=[r,c];if(ch==='E')E=[r,c];return g.put('pcell',r,c,3)}));
+  g.at(a.el('div','pend',g.b),E[0],E[1],Math.round(g.cell*.28));
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',g.W);svg.setAttribute('height',g.H);svg.style.cssText='position:absolute;left:0;top:0;pointer-events:none;overflow:visible';g.b.appendChild(svg);
+  let path=[S],done=false;
+  const paint=()=>{cells.flat().forEach(e=>e&&e.classList.remove('on'));path.forEach(([r,c])=>cells[r][c].classList.add('on'));
+    svg.innerHTML=`<polyline points="${path.map(([r,c])=>`${(c+.5)*g.cell},${(r+.5)*g.cell}`).join(' ')}" fill="none" stroke="var(--on-accent)" stroke-width="${g.cell*.14}" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>`};
+  paint();
+  let drawing=false;
+  const at=e=>{const b=g.b.getBoundingClientRect();return[Math.floor((e.clientY-b.top)/g.cell),Math.floor((e.clientX-b.left)/g.cell)]};
+  g.b.onpointerdown=e=>{if(done)return;const[r,c]=at(e);const end=path[path.length-1];if(r===end[0]&&c===end[1]){drawing=true;g.b.setPointerCapture(e.pointerId)}};
+  g.b.onpointermove=e=>{if(!drawing)return;const[r,c]=at(e);const end=path[path.length-1];
+    if(r===end[0]&&c===end[1])return;
+    const prev=path[path.length-2];if(prev&&prev[0]===r&&prev[1]===c){path.pop();paint();a.buzz(4);return}
+    if(Math.abs(r-end[0])+Math.abs(c-end[1])!==1||r<0||c<0||r>=R||c>=C||!cells[r][c]||path.some(p=>p[0]===r&&p[1]===c))return;
+    if(end[0]===E[0]&&end[1]===E[1])return;
+    path.push([r,c]);paint();a.buzz(4);
+    if(path.length===open&&r===E[0]&&c===E[1]){done=true;drawing=false;const rr=cells[r][c].getBoundingClientRect();setTimeout(()=>a.solve(rr.left+rr.width/2,rr.top+rr.height/2),300)}};
+  g.b.onpointerup=()=>{drawing=false};
+ }},
+/* 29 — rotate the world, twice */
+{hints:['Two balls, two holes. A hole takes one ball and then it is closed.','Balls block each other. Sometimes one ball has to wait while the other one moves.','Turn: left, right, left, right, right, left, right, left, left, left, left, right, right.'],
+ init(a){return gravityLevel(a,['.....o..#','#..##....','...#.....','o.#..##..','#......#.','....##...','.#O....##','#.......O','.....#.#.'])}},
+/* 30 — twins */
+{hints:['Both dots move at the same time, in the same direction.','A dot stops at walls and at the other dot. Use one dot as a wall for the other.','Swipe: left, up, left, up, right, up, left, down, right, down, right.'],
+ init(a){return slideLevel(a,['.......','..T#...','##.....','...###.','#....#.','.......','.......','.#.....','.#.....','.#....#','S#T##.S'])}},
 ];
 
 renderAll();
