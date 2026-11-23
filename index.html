@@ -124,7 +124,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 /* Settings */
 .rows{display:flex;flex-direction:column;margin-top:24px;border-top:2px solid var(--line)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;border-bottom:2px solid var(--line);
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 0;border-bottom:2px solid var(--line);
   font-family:var(--display);font-stretch:110%;font-weight:800;font-size:18px}
 .row small{display:block;font-family:var(--body);font-stretch:100%;font-weight:400;font-size:13px;color:var(--muted);margin-top:4px}
 .seg{display:flex;border:2px solid var(--line)}
@@ -294,6 +294,8 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
         <div class="seg" id="vibSeg"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
       <div class="row"><div>Theme</div>
         <div class="seg" id="themeSeg"><button data-v="dark">Dark</button><button data-v="light">Light</button></div></div>
+      <div class="row"><div>Start at level<small>Marks every earlier level as solved, to carry progress over from another device.</small></div>
+        <div class="seg" id="skipSeg"><button data-d="-1" aria-label="Lower">−</button><button id="skipN" data-d="0" aria-label="Level">01</button><button data-d="1" aria-label="Higher">+</button><button id="skipSet">Set</button></div></div>
       <div class="row"><div>Progress<small id="saveWhere">Saved on this device.</small></div>
         <button class="danger link" id="resetAll">Reset</button></div>
     </div>
@@ -336,6 +338,10 @@ const blankState=()=>({solved:{},hints:{},hintAt:{},spent:{},last:1,vibrate:true
 let state=blankState();
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)state=Object.assign(blankState(),s)}catch(e){}
 const clone=o=>JSON.parse(JSON.stringify(o));
+/* Opening the game with #from-12 marks levels 1-11 as solved (once), so progress can move between installs. */
+try{const m=location.hash.match(/^#from-(\d+)$/);
+  if(m){const n=Math.max(1,Math.min(30,+m[1]));for(let i=1;i<n;i++)if(!state.solved[i])state.solved[i]={hints:0,time:0,at:Date.now()};
+    state.last=n;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}setTimeout(save,0)}}catch(e){}
 /* Merge two saved states without ever losing a solved level.
    Settings come from the newer copy; solved levels and hints are combined;
    anything recorded before the latest "Reset progress" is dropped. */
@@ -450,9 +456,14 @@ function renderAll(){
   // settings
   document.querySelectorAll('#vibSeg button').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.v==='on')===state.vibrate)));
   document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.theme)));
+  if(skipTo===null)skipTo=nextUnsolved()||TOTAL;$('#skipN').textContent=pad(skipTo);
 }
 document.querySelectorAll('#vibSeg button').forEach(b=>b.onclick=()=>{state.vibrate=b.dataset.v==='on';save();renderAll();buzz(15)});
 document.querySelectorAll('#themeSeg button').forEach(b=>b.onclick=()=>{state.theme=b.dataset.v;applyTheme();save();renderAll()});
+let skipTo=null;
+document.querySelectorAll('#skipSeg [data-d]').forEach(b=>b.onclick=()=>{skipTo=Math.max(1,Math.min(TOTAL,(skipTo||1)+(+b.dataset.d)));$('#skipN').textContent=pad(skipTo);$('#skipSet').textContent='Set'});
+$('#skipSet').onclick=()=>{if(!skipTo)return;for(let i=1;i<skipTo;i++)if(!state.solved[i])state.solved[i]={hints:0,time:0,at:Date.now()};
+  state.last=skipTo;save();renderAll();$('#skipSet').textContent='Done';buzz(12)};
 let resetArm=null;
 $('#resetAll').onclick=e=>{
   const b=e.currentTarget;
