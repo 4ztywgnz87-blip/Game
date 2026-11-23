@@ -360,7 +360,7 @@ function merge(x,y){
   return out;
 }
 let remote=null,remoteData=null,writing=false,dirty=false,retryT=null;
-function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function saveLocal(){try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)state=merge(state,s);localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 function save(){state.updatedAt=Date.now();saveLocal();push()}
 /* One write at a time. Every write first folds in the latest copy from the account,
    so another open copy of the game can never erase progress made here. */
