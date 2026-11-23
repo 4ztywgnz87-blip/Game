@@ -634,13 +634,15 @@ function slideLevel(a,map,{chevrons=false}={}){
   const solid=(r,c,s)=>{if(r<0||c<0||r>=R||c>=C)return true;const ch=map[r][c];return ch==='#'||(ch==='a'&&s===0)||(ch==='b'&&s===1)};
   const paint=()=>gates.forEach(x=>x.el.classList.toggle('closed',(x.ch==='a')===(gs===0)));
   place();paint();
-  let busy=false,done=false;
-  return swipes(a.stage,d=>{
-    if(busy||done)return;
+  let busy=false,done=false;const queue=[];
+  const next=()=>{if(!done&&queue.length)go(queue.shift())};
+  // Swipes made while the dot is still sliding are queued, never dropped.
+  const go=d=>{
+    if(done)return;if(busy){if(queue.length<20)queue.push(d);return}
     const[dr,dc]=DIRS[d];const cur=dots.map(p=>p.slice());let moved=true,steps=0;
     while(moved){moved=false;for(let i=0;i<cur.length;i++){const nr=cur[i][0]+dr,nc=cur[i][1]+dc;
       if(solid(nr,nc,gs)||cur.some((p,j)=>j!==i&&p[0]===nr&&p[1]===nc))continue;cur[i]=[nr,nc];moved=true}if(moved)steps++}
-    if(!steps){a.buzz(5);return}
+    if(!steps){a.buzz(5);next();return}
     if(chev)chev.style.opacity=0;
     busy=true;els.forEach(e=>e.style.transitionDuration=(.05*steps+.08)+'s');
     cur.forEach((p,i)=>dots[i]=p);place();a.buzz(8);
@@ -648,8 +650,10 @@ function slideLevel(a,map,{chevrons=false}={}){
       let ng=gs;dots.forEach(p=>{const sw=switches.find(s=>s.r===p[0]&&s.c===p[1]);if(sw){ng^=1;sw.el.classList.remove('flash');void sw.el.offsetWidth;sw.el.classList.add('flash')}});
       if(!dots.some(p=>solid(p[0],p[1],ng))&&ng!==gs){gs=ng;paint();a.buzz(14)}
       if(dots.map(p=>p+'').sort().join('|')===targets.slice().sort().join('|')){done=true;const r=els[0].getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)}
+      next();
     },50*steps+90);
-  });
+  };
+  return swipes(a.stage,go);
 }
 
 /* push engine: P you, B box, T target. One step per swipe. */
@@ -724,9 +728,11 @@ function gravityLevel(a,map){
     btn.innerHTML=`<svg viewBox="0 0 24 24">${path}</svg>`;btn.onclick=()=>turn(dir);return btn};
   mk(-1,'Rotate left','<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/>').style.transform='scaleX(-1)';
   mk(1,'Rotate right','<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/>');
-  function turn(dir){if(busy||done)return;busy=true;turns+=dir;gi=((gi+dir)%4+4)%4;a.buzz(8);
+  const queue=[];
+  function turn(dir){if(done)return;if(busy){if(queue.length<20)queue.push(dir);return}busy=true;turns+=dir;gi=((gi+dir)%4+4)%4;a.buzz(8);
     g.b.style.transform=`rotate(${turns*90}deg)`;
-    setTimeout(()=>settle(()=>{busy=false;if(balls.every(b=>!b.p)){done=true;const r=g.b.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)}}),460)}
+    setTimeout(()=>settle(()=>{busy=false;if(balls.every(b=>!b.p)){done=true;const r=g.b.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2);return}
+      if(queue.length)turn(queue.shift())}),460)}
   const key=e=>{if(e.key==='ArrowLeft')turn(-1);if(e.key==='ArrowRight')turn(1)};
   addEventListener('keydown',key);return()=>removeEventListener('keydown',key);
 }
