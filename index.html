@@ -1,0 +1,560 @@
+<title>Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one full-screen view at a time. A slim header, a borderless play field,
+   and the chapter colour reserved for the things you can touch and for the solve flood. */
+:root{
+  --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A;
+  --accent:var(--ch1); --on-accent:#0C0D11;
+  --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
+  --body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:dark;
+}
+:root.light{
+  --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --on-accent:#FFFFFF;
+  color-scheme:light;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;margin:0;
+  overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#app{position:relative;height:100%;overflow:hidden}
+.view{position:absolute;inset:0;display:flex;flex-direction:column;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px;
+  animation:viewIn .35s var(--ease)}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.big{font-family:var(--display);font-stretch:125%;font-weight:900;line-height:.86;letter-spacing:-.02em}
+
+/* Home */
+#home{justify-content:space-between;gap:24px}
+.home-top{display:flex;justify-content:space-between;align-items:center}
+.wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
+.wordmark>span{display:block}
+.wordmark .dot{color:var(--accent)}
+.chapters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.chapter-bar{display:flex;flex-direction:column;gap:8px}
+.chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
+.chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
+.home-actions{display:flex;flex-direction:column;gap:10px}
+.btn-primary{background:var(--accent);color:var(--on-accent);display:flex;justify-content:space-between;align-items:flex-end;
+  padding:18px 20px;min-height:84px;text-align:left;transition:transform .15s}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary .t{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:28px;line-height:1}
+.btn-primary .n{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:44px;line-height:.8;font-variant-numeric:tabular-nums}
+.btn-ghost{border:2px solid var(--line);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--display);font-stretch:110%;font-weight:800;font-size:18px}
+.btn-ghost:active{background:var(--surface)}
+.link{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:8px 0}
+
+/* Top bar shared by sub views */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px}
+.icon-btn{width:48px;height:48px;display:grid;place-items:center;border:2px solid var(--line)}
+.icon-btn:active{background:var(--surface)}
+.icon-btn svg{width:22px;height:22px;stroke:var(--fg);fill:none;stroke-width:2.4;stroke-linecap:square}
+.icon-btn.has-hint{border-color:var(--accent)}
+.bar h2{margin:0;font-size:28px}
+
+/* Level select */
+#levels .scroll{overflow-y:auto;flex:1;margin-top:16px;display:flex;flex-direction:column;gap:28px;padding-bottom:24px}
+.ch-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.ch-head .name{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:22px;color:var(--c)}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.cell{aspect-ratio:1;max-width:100%;display:grid;place-items:center;position:relative;
+  font-family:var(--display);font-stretch:125%;font-weight:900;font-size:clamp(18px,5.4vw,26px);font-variant-numeric:tabular-nums}
+.cell.locked{background:var(--surface);color:var(--line);cursor:default}
+.cell.open{border:2px solid var(--c);color:var(--c)}
+.cell.solved{background:var(--c);color:var(--on-accent)}
+.cell.clean::after{content:"";position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--on-accent);border-radius:50%}
+.legend{display:flex;gap:16px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;display:inline-block}
+
+/* Play */
+#play{padding-block:12px 0;padding-left:0;padding-right:0}
+#play .bar{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#lvlnum{font-size:44px;font-variant-numeric:tabular-nums;padding:0 8px;color:var(--fg);transition:color .2s}
+#lvlnum.wiggle{animation:wiggle .35s}
+@keyframes wiggle{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.bar .right{display:flex;gap:8px}
+#stage{position:relative;flex:1;overflow:hidden;touch-action:none}
+.abs{position:absolute}
+.center{left:50%;top:50%;transform:translate(-50%,-50%)}
+.hintline{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));text-align:center;pointer-events:none}
+
+/* Flood + solved */
+#flood{position:fixed;inset:0;background:var(--accent);color:var(--on-accent);z-index:30;
+  clip-path:circle(0px at 50% 50%);transition:clip-path .7s var(--ease);display:flex;flex-direction:column;justify-content:flex-end;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+  padding-block:24px calc(28px + env(safe-area-inset-bottom,0px));gap:18px}
+#flood .content{opacity:0;transform:translateY(10px);transition:opacity .3s .45s,transform .4s .45s var(--ease);display:flex;flex-direction:column;gap:16px}
+#flood.show .content{opacity:1;transform:none}
+#flood .lvl{font-size:clamp(120px,44vw,260px)}
+#flood .label{color:var(--on-accent);opacity:.75}
+#flood .stats{display:flex;gap:24px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#flood .next{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:22px;display:flex;justify-content:space-between;
+  border-top:2px solid currentColor;padding-top:16px}
+
+/* Hint sheet */
+#scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;opacity:0;transition:opacity .25s}
+#scrim.on{opacity:1}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--bg);border-top:2px solid var(--accent);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .3s var(--ease);
+  display:flex;flex-direction:column;gap:14px;max-height:80%;overflow-y:auto}
+#sheet.on{transform:none}
+.sheet-head{display:flex;justify-content:space-between;align-items:center}
+.sheet-head h3{margin:0;font-size:24px}
+.hint{border:2px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:52px;justify-content:center}
+.hint p{margin:0;font-size:17px;line-height:1.4}
+.hint.revealed{border-color:var(--surface);background:var(--surface)}
+.hint button{text-align:left;font-family:var(--display);font-stretch:110%;font-weight:800;font-size:17px;display:flex;justify-content:space-between}
+.hint.arm{border-color:var(--accent)}
+.hint.arm button{color:var(--accent)}
+.hint.locked{opacity:.4}
+
+/* Settings */
+.rows{display:flex;flex-direction:column;margin-top:24px;border-top:2px solid var(--line)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;border-bottom:2px solid var(--line);
+  font-family:var(--display);font-stretch:110%;font-weight:800;font-size:18px}
+.row small{display:block;font-family:var(--body);font-stretch:100%;font-weight:400;font-size:13px;color:var(--muted);margin-top:4px}
+.seg{display:flex;border:2px solid var(--line)}
+.seg button{padding:8px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.danger{color:var(--ch2)}
+.danger.arm{background:var(--ch2);color:#fff;padding:8px 14px}
+
+/* End */
+#end{justify-content:flex-end;gap:24px;padding-block:24px}
+#end .big{font-size:clamp(64px,20vw,140px)}
+#end p{margin:0;font-size:17px;line-height:1.5;color:var(--muted);max-width:32ch}
+
+/* Level pieces */
+.orb{width:72px;height:72px;border-radius:50%;background:var(--accent);transition:transform .4s var(--ease);cursor:pointer}
+.ring-target{border:3px dashed var(--muted);border-radius:50%}
+.tile{background:var(--surface);transition:background .2s,transform .12s;cursor:pointer}
+.tile.on{background:var(--accent)}
+.tile:active{transform:scale(.94)}
+.slot{display:grid;place-items:center;font-family:var(--display);font-stretch:125%;font-weight:900;font-size:22px}
+.slot.full{background:var(--accent);color:var(--on-accent)}
+.slot.empty{border:3px dashed var(--muted)}
+.fly{position:fixed;z-index:25;font-family:var(--display);font-stretch:125%;font-weight:900;display:grid;place-items:center;
+  transition:all .6s var(--ease);font-variant-numeric:tabular-nums}
+.chev{position:absolute;width:0;height:0;border:6px solid transparent;opacity:.0;animation:chev 2.4s infinite}
+@keyframes chev{30%,70%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<div id="app">
+  <section id="home" class="view">
+    <div class="home-top">
+      <span class="label" id="homeCount">0 / 30 solved</span>
+      <button class="link" id="toSettings">Settings</button>
+    </div>
+    <div class="wordmark big"><span>GA</span><span>ME<span class="dot">.</span></span></div>
+    <div class="chapters" id="chapterBars"></div>
+    <div class="home-actions">
+      <button class="btn-primary" id="continueBtn"><span><span class="label" style="color:inherit;opacity:.7" id="continueSub">Start</span><br><span class="t">Play</span></span><span class="n" id="continueNum">01</span></button>
+      <button class="btn-ghost" id="toLevels"><span>Levels</span><span aria-hidden="true">→</span></button>
+    </div>
+  </section>
+
+  <section id="levels" class="view" hidden>
+    <div class="bar">
+      <button class="icon-btn" data-back="home" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 class="big">Levels</h2>
+      <span style="width:48px"></span>
+    </div>
+    <div class="scroll" id="levelList"></div>
+    <div class="legend label">
+      <span><i style="border:2px solid var(--muted)"></i>Open</span>
+      <span><i style="background:var(--muted)"></i>Solved</span>
+      <span><i style="background:var(--muted);border-radius:50%;width:8px;height:8px"></i>No hints</span>
+    </div>
+  </section>
+
+  <section id="play" class="view" hidden>
+    <div class="bar">
+      <button class="icon-btn" id="playBack" aria-label="Back to levels"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button id="lvlnum" class="big" aria-label="Level number">01</button>
+      <div class="right">
+        <button class="icon-btn" id="hintBtn" aria-label="Hints"><svg viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.2V15"/><path d="M12 19h.01"/></svg></button>
+        <button class="icon-btn" id="resetBtn" aria-label="Restart level"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v5h5"/></svg></button>
+      </div>
+    </div>
+    <div id="stage"></div>
+  </section>
+
+  <section id="settings" class="view" hidden>
+    <div class="bar">
+      <button class="icon-btn" data-back="home" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 class="big">Settings</h2>
+      <span style="width:48px"></span>
+    </div>
+    <div class="rows">
+      <div class="row"><div>Vibration<small>Short buzz on taps and when you solve a level. Not supported on iPhone.</small></div>
+        <div class="seg" id="vibSeg"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
+      <div class="row"><div>Theme</div>
+        <div class="seg" id="themeSeg"><button data-v="dark">Dark</button><button data-v="light">Light</button></div></div>
+      <div class="row"><div>Progress<small id="saveWhere">Saved on this device.</small></div>
+        <button class="danger link" id="resetAll">Reset</button></div>
+    </div>
+  </section>
+
+  <section id="end" class="view" hidden>
+    <span class="label">Chapter I · in progress</span>
+    <div class="big">That’s all<br>for now.</div>
+    <p id="endText">You solved every level that exists so far. New levels will show up here as they are added.</p>
+    <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
+  </section>
+</div>
+
+<div id="scrim" hidden></div>
+<div id="sheet" role="dialog" aria-label="Hints" hidden>
+  <div class="sheet-head"><h3 class="big">Hints</h3><button class="link" id="sheetClose">Close</button></div>
+  <div id="hintList" style="display:flex;flex-direction:column;gap:10px"></div>
+  <span class="label">Hints are free. Using one removes the no-hint dot for this level.</span>
+</div>
+
+<div id="flood" aria-live="polite">
+  <div class="content">
+    <span class="label">Solved</span>
+    <div class="lvl big" id="floodNum">01</div>
+    <div class="stats"><span id="floodTime">0:00</span><span id="floodHints">No hints</span></div>
+    <div class="next"><span id="floodNext">Next level</span><span>→</span></div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const TOTAL=30, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'}];
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const chapterOf=id=>Math.floor((id-1)/10);
+
+/* ---------- progress state ---------- */
+const KEY='game.progress.v1';
+let state={solved:{},hints:{},spent:{},last:1,vibrate:true,theme:'dark',updatedAt:0};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)state=Object.assign(state,s)}catch(e){}
+let remote=null, saveTimer=null;
+function save(){
+  state.updatedAt=Date.now();
+  try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{if(remote)remote.set(JSON.parse(JSON.stringify(state))).catch(()=>{})},400);
+}
+(async()=>{
+  try{
+    if(!window.claude||!window.claude.use)return;
+    const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+    if(!db||!user)return;
+    const id=await user.id(); if(!id)return;
+    const ref=db.doc('data/users/'+id+'/progress');
+    const snap=await ref.get();
+    remote=ref;
+    $('#saveWhere').textContent='Saved to your Claude account.';
+    const r=snap.exists?snap.data():null;
+    if(r&&(r.updatedAt||0)>(state.updatedAt||0)){
+      state=Object.assign({solved:{},hints:{},spent:{}},r);
+      try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+      applyTheme(); if(current===null)renderAll();
+    }else if(!r||(state.updatedAt||0)>(r.updatedAt||0)){
+      ref.set(JSON.parse(JSON.stringify(state))).catch(()=>{});
+    }
+  }catch(e){}
+})();
+
+function buzz(p){if(!state.vibrate)return;try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function applyTheme(){document.documentElement.classList.toggle('light',state.theme==='light')}
+applyTheme();
+
+const isSolved=id=>!!state.solved[id];
+const isOpen=id=>id<=LEVELS.length&&(id===1||isSolved(id)||isSolved(id-1));
+function nextUnsolved(){for(let i=1;i<=LEVELS.length;i++)if(!isSolved(i))return i;return null}
+
+/* ---------- views ---------- */
+let current=null; // level id while playing
+function show(id){
+  document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!==id);
+  if(id!=='play')stopLevel();
+  renderAll();
+}
+document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(b.dataset.back));
+$('#toLevels').onclick=()=>show('levels');
+$('#toSettings').onclick=()=>show('settings');
+$('#continueBtn').onclick=()=>{const n=nextUnsolved();n?startLevel(n):show('end')};
+$('#playBack').onclick=()=>show('levels');
+
+function renderAll(){
+  const solvedCount=Object.keys(state.solved).length;
+  $('#homeCount').textContent=solvedCount+' / '+TOTAL+' solved';
+  const n=nextUnsolved();
+  $('#continueSub').textContent=solvedCount?'Continue':'Start';
+  $('#continueNum').textContent=n?pad(n):'✓';
+  document.documentElement.style.setProperty('--accent',`var(${CHAPTERS[chapterOf(n||state.last||1)].c})`);
+  // chapter bars
+  $('#chapterBars').innerHTML=CHAPTERS.map((ch,i)=>{
+    let s=0;for(let k=i*10+1;k<=i*10+10;k++)if(isSolved(k))s++;
+    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label">${['I','II','III'][i]} · ${s}/10</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
+  // level grid
+  $('#levelList').innerHTML=CHAPTERS.map((ch,i)=>{
+    let cells='';
+    for(let k=i*10+1;k<=i*10+10;k++){
+      const s=state.solved[k];
+      const cls=s?('solved'+(s.hints===0?' clean':'')):isOpen(k)?'open':'locked';
+      cells+=`<button class="cell ${cls}" data-id="${k}" ${cls==='locked'?'disabled aria-disabled="true"':''} aria-label="Level ${k}">${cls==='locked'?'':pad(k)}</button>`;
+    }
+    let s=0;for(let k=i*10+1;k<=i*10+10;k++)if(isSolved(k))s++;
+    return `<div style="--c:var(${ch.c})"><div class="ch-head"><span class="name">${['I','II','III'][i]} ${ch.name}</span><span class="label">${s}/10</span></div><div class="grid">${cells}</div></div>`}).join('');
+  document.querySelectorAll('.cell:not(.locked)').forEach(c=>c.onclick=()=>startLevel(+c.dataset.id));
+  // settings
+  document.querySelectorAll('#vibSeg button').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.v==='on')===state.vibrate)));
+  document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.theme)));
+}
+document.querySelectorAll('#vibSeg button').forEach(b=>b.onclick=()=>{state.vibrate=b.dataset.v==='on';save();renderAll();buzz(15)});
+document.querySelectorAll('#themeSeg button').forEach(b=>b.onclick=()=>{state.theme=b.dataset.v;applyTheme();save();renderAll()});
+let resetArm=null;
+$('#resetAll').onclick=e=>{
+  const b=e.currentTarget;
+  if(!resetArm){b.classList.add('arm');b.textContent='Tap again to erase';resetArm=setTimeout(()=>{resetArm=null;b.classList.remove('arm');b.textContent='Reset'},3000);return}
+  clearTimeout(resetArm);resetArm=null;b.classList.remove('arm');b.textContent='Reset';
+  state.solved={};state.hints={};state.spent={};state.last=1;save();renderAll();
+};
+
+/* ---------- level runtime ---------- */
+const stage=$('#stage');
+let cleanup=null, enteredAt=0, headerTap=null, solving=false;
+function stopLevel(){
+  if(current!==null){state.spent[current]=(state.spent[current]||0)+(Date.now()-enteredAt);save()}
+  if(cleanup)try{cleanup()}catch(e){}
+  cleanup=null;headerTap=null;current=null;stage.innerHTML='';closeSheet();
+}
+function startLevel(id){
+  stopLevel();
+  if(id>LEVELS.length){show('end');return}
+  document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!=='play');
+  current=id;state.last=id;save();
+  enteredAt=Date.now();solving=false;
+  document.documentElement.style.setProperty('--accent',`var(${CHAPTERS[chapterOf(id)].c})`);
+  $('#lvlnum').textContent=pad(id);
+  $('#hintBtn').classList.toggle('has-hint',(state.hints[id]||0)>0);
+  requestAnimationFrame(()=>runLevel());
+}
+function runLevel(){
+  if(cleanup)try{cleanup()}catch(e){}
+  stage.innerHTML='';headerTap=null;
+  const L=LEVELS[current-1];
+  cleanup=L.init(api)||null;
+}
+$('#resetBtn').onclick=()=>{if(current!==null&&!solving){buzz(8);runLevel()}};
+$('#lvlnum').onclick=()=>{
+  if(headerTap){headerTap()}else{const n=$('#lvlnum');n.classList.remove('wiggle');void n.offsetWidth;n.classList.add('wiggle')}
+};
+
+const api={
+  stage,
+  get w(){return stage.clientWidth},get h(){return stage.clientHeight},
+  el(tag,cls,parent=stage){const e=document.createElement(tag);if(cls)e.className=cls;parent.appendChild(e);return e},
+  buzz,
+  onHeaderTap(fn){headerTap=fn},
+  headerNumber:()=>$('#lvlnum'),
+  solve(x,y){ // x,y in viewport px; defaults to stage centre
+    if(solving)return;solving=true;
+    const r=stage.getBoundingClientRect();
+    if(x==null){x=r.left+r.width/2;y=r.top+r.height/2}
+    const id=current;
+    const time=(state.spent[id]||0)+(Date.now()-enteredAt);
+    const hints=state.hints[id]||0;
+    if(!state.solved[id])state.solved[id]={hints,time};
+    state.spent[id]=0;enteredAt=Date.now();
+    save();buzz([20,40,30]);
+    const s=Math.floor(time/1000);
+    $('#floodNum').textContent=pad(id);
+    $('#floodTime').textContent=Math.floor(s/60)+':'+pad(s%60);
+    $('#floodHints').textContent=hints?hints+(hints>1?' hints':' hint'):'No hints';
+    $('#floodNext').textContent=id<LEVELS.length?'Level '+pad(id+1):'Continue';
+    const f=$('#flood');
+    f.style.transition='none';f.style.clipPath=`circle(0px at ${x}px ${y}px)`;void f.offsetWidth;
+    f.style.transition='';f.style.pointerEvents='auto';
+    f.style.clipPath=`circle(${Math.hypot(innerWidth,innerHeight)}px at ${x}px ${y}px)`;
+    f.classList.add('show');
+    setTimeout(()=>{f.onclick=()=>{f.onclick=null;
+      const next=id+1;
+      f.classList.remove('show');f.style.pointerEvents='none';
+      f.style.transition='opacity .35s';f.style.opacity='0';
+      setTimeout(()=>{f.style.transition='none';f.style.clipPath='circle(0px at 50% 50%)';f.style.opacity='';void f.offsetWidth;f.style.transition=''},380);
+      if(next>LEVELS.length){current=null;show('end')}else startLevel(next);
+    }},500);
+  }
+};
+$('#flood').style.pointerEvents='none';
+
+/* ---------- hints ---------- */
+let armed=null;
+function openSheet(){
+  if(current===null||solving)return;
+  $('#scrim').hidden=false;$('#sheet').hidden=false;
+  requestAnimationFrame(()=>{$('#scrim').classList.add('on');$('#sheet').classList.add('on')});
+  renderHints();
+}
+function closeSheet(){
+  $('#scrim').classList.remove('on');$('#sheet').classList.remove('on');
+  setTimeout(()=>{if(!$('#sheet').classList.contains('on')){$('#scrim').hidden=true;$('#sheet').hidden=true}},300);
+  armed=null;
+}
+function renderHints(){
+  const id=current, L=LEVELS[id-1], used=state.hints[id]||0;
+  $('#hintList').innerHTML=L.hints.map((h,i)=>{
+    if(i<used)return `<div class="hint revealed"><span class="label">Hint ${i+1}</span><p>${h}</p></div>`;
+    if(i===used)return `<div class="hint ${armed===i?'arm':''}"><button data-i="${i}"><span>${armed===i?'Tap again to show':'Show hint '+(i+1)}</span><span>${i===2?'Solution':''}</span></button></div>`;
+    return `<div class="hint locked"><span class="label">Hint ${i+1}${i===2?' · Solution':''}</span></div>`;
+  }).join('');
+  document.querySelectorAll('#hintList button').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;
+    if(armed!==i){armed=i;buzz(8);renderHints();return}
+    armed=null;state.hints[id]=i+1;save();buzz(12);
+    $('#hintBtn').classList.add('has-hint');renderHints();
+  });
+}
+$('#hintBtn').onclick=openSheet;
+$('#scrim').onclick=closeSheet;$('#sheetClose').onclick=closeSheet;
+
+/* ---------- helpers for levels ---------- */
+function swipes(el,fn){
+  let sx,sy,id=null;
+  const down=e=>{id=e.pointerId;sx=e.clientX;sy=e.clientY};
+  const up=e=>{if(e.pointerId!==id)return;id=null;const dx=e.clientX-sx,dy=e.clientY-sy;
+    if(Math.max(Math.abs(dx),Math.abs(dy))<28)return;
+    fn(Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'))};
+  el.addEventListener('pointerdown',down);el.addEventListener('pointerup',up);
+  const key=e=>{const m={ArrowUp:'U',ArrowDown:'D',ArrowLeft:'L',ArrowRight:'R'}[e.key];if(m){e.preventDefault();fn(m)}};
+  addEventListener('keydown',key);
+  return()=>{el.removeEventListener('pointerdown',down);el.removeEventListener('pointerup',up);removeEventListener('keydown',key)};
+}
+const rectCenter=el=>{const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]};
+
+/* ---------- levels ---------- */
+const LEVELS=[
+/* 1 — tap to grow */
+{hints:['The circle reacts to you.','Tap the circle. Then do it again.','Keep tapping the circle until it fills the screen.'],
+ init(a){
+  const o=a.el('div','orb abs center');let n=0;const steps=[1,1.7,2.8,4.6,7.5];
+  o.onclick=()=>{n++;a.buzz(10);
+    if(n>=steps.length){const[x,y]=rectCenter(o);a.solve(x,y);return}
+    o.style.transform=`translate(-50%,-50%) scale(${steps[n]})`};
+ }},
+/* 2 — drag into outline */
+{hints:['The dashed ring is waiting for something exactly its size.','Things here can be moved.','Drag the blue dot into the dashed ring.'],
+ init(a){
+  const S=64,w=a.w,h=a.h;
+  const ring=a.el('div','ring-target abs');Object.assign(ring.style,{width:S+'px',height:S+'px',left:(w*.72-S/2)+'px',top:(h*.28-S/2)+'px'});
+  const dot=a.el('div','orb abs');Object.assign(dot.style,{width:S+'px',height:S+'px',left:(w*.28-S/2)+'px',top:(h*.7-S/2)+'px',transition:'transform .2s'});
+  let drag=null;
+  dot.onpointerdown=e=>{dot.setPointerCapture(e.pointerId);drag={x:e.clientX-dot.offsetLeft,y:e.clientY-dot.offsetTop};dot.style.transform='scale(1.08)';a.buzz(8)};
+  dot.onpointermove=e=>{if(!drag)return;
+    dot.style.left=Math.max(0,Math.min(w-S,e.clientX-drag.x))+'px';dot.style.top=Math.max(0,Math.min(h-S,e.clientY-drag.y))+'px'};
+  dot.onpointerup=()=>{if(!drag)return;drag=null;dot.style.transform='';
+    const d=Math.hypot(dot.offsetLeft-ring.offsetLeft,dot.offsetTop-ring.offsetTop);
+    if(d<S*.45){dot.style.transition='left .2s,top .2s';dot.style.left=ring.style.left;dot.style.top=ring.style.top;
+      ring.style.borderColor='transparent';setTimeout(()=>{const[x,y]=rectCenter(dot);a.solve(x,y)},260)}};
+ }},
+/* 3 — press and hold */
+{hints:['A quick tap is not enough.','Watch the thin ring while your finger is down.','Press and hold the circle until the ring is complete.'],
+ init(a){
+  const box=a.el('div','abs center');Object.assign(box.style,{width:'180px',height:'180px'});
+  box.innerHTML=`<svg viewBox="0 0 180 180" width="180" height="180" style="position:absolute;inset:0;transform:rotate(-90deg)">
+    <circle cx="90" cy="90" r="82" fill="none" stroke="var(--line)" stroke-width="4"/>
+    <circle id="prog" cx="90" cy="90" r="82" fill="none" stroke="var(--accent)" stroke-width="6" stroke-dasharray="515.2" stroke-dashoffset="515.2"/></svg>`;
+  const core=a.el('div','orb abs center',box);Object.assign(core.style,{width:'104px',height:'104px',transition:'transform .2s'});
+  const prog=box.querySelector('#prog');
+  let p=0,held=false,last=performance.now(),raf;
+  const tick=t=>{const dt=t-last;last=t;
+    p=held?p+dt/1600:Math.max(0,p-dt/500);
+    prog.setAttribute('stroke-dashoffset',515.2*(1-Math.min(1,p)));
+    if(p>=1){const[x,y]=rectCenter(core);a.solve(x,y);return}
+    raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  core.onpointerdown=e=>{core.setPointerCapture(e.pointerId);held=true;core.style.transform='translate(-50%,-50%) scale(.92)';a.buzz(8)};
+  const rel=()=>{held=false;core.style.transform='translate(-50%,-50%)'};
+  core.onpointerup=rel;core.onpointercancel=rel;
+  core.oncontextmenu=e=>e.preventDefault();
+  return()=>cancelAnimationFrame(raf);
+ }},
+/* 4 — flip with neighbours */
+{hints:['Every tile changes more than just itself.','A tile flips itself and the tiles directly above, below, left and right of it.','Tap each of the three dark tiles on the diagonal once.'],
+ init(a){
+  const N=3,size=Math.min(96,(Math.min(a.w,a.h)-64)/N);
+  const g=a.el('div','abs center');Object.assign(g.style,{display:'grid',gridTemplateColumns:`repeat(${N},${size}px)`,gap:'10px'});
+  const on=[1,1,1,1,1,1,1,1,1];[0,4,8].forEach(i=>on[i]=0);
+  const tiles=on.map((v,i)=>{const t=a.el('div','tile',g);Object.assign(t.style,{width:size+'px',height:size+'px'});
+    t.onclick=()=>{if(on.every(Boolean))return;a.buzz(10);
+      const r=Math.floor(i/N),c=i%N;
+      [[r,c],[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([rr,cc])=>{if(rr>=0&&cc>=0&&rr<N&&cc<N)on[rr*N+cc]^=1});
+      paint();if(on.every(Boolean)){const[x,y]=rectCenter(g);setTimeout(()=>a.solve(x,y),300)}};return t});
+  const paint=()=>tiles.forEach((t,i)=>t.classList.toggle('on',!!on[i]));
+  paint();
+ }},
+/* 5 — slide on ice */
+{hints:['The dot does not stop until something stops it.','Swipe anywhere. Grey blocks and the edges stop the dot.','Swipe up, right, down, left, up, right.'],
+ init(a){
+  const map=['.......','....#..','#.#....','.......','.#..#..','......T','S..#...'];
+  const N=7,cell=Math.floor(Math.min(a.w-32,a.h-48,392)/N);
+  const board=a.el('div','abs center');Object.assign(board.style,{width:cell*N+'px',height:cell*N+'px',background:'var(--surface)'});
+  let pos,target;
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#'){const b=a.el('div','abs',board);Object.assign(b.style,{left:c*cell+'px',top:r*cell+'px',width:cell+'px',height:cell+'px',background:'var(--muted)'})}
+    if(ch==='T'){target=[r,c];const t=a.el('div','abs',board);Object.assign(t.style,{left:c*cell+4+'px',top:r*cell+4+'px',width:cell-8+'px',height:cell-8+'px',border:'3px solid var(--accent)'})}
+    if(ch==='S')pos=[r,c];
+  }));
+  const dot=a.el('div','abs',board);
+  Object.assign(dot.style,{width:cell-14+'px',height:cell-14+'px',borderRadius:'50%',background:'var(--accent)',transition:'left .2s,top .2s'});
+  const chevs=a.el('div','abs',board);chevs.style.transition='opacity .3s';
+  [['U','borderBottomColor',0,-1],['D','borderTopColor',0,1],['L','borderRightColor',-1,0],['R','borderLeftColor',1,0]].forEach(([k,side,dx,dy])=>{
+    const c=a.el('div','chev',chevs);c.style[side]='var(--fg)';c.style.left=(cell/2-6+dx*cell*.62)+'px';c.style.top=(cell/2-6+dy*cell*.62)+'px'});
+  const place=()=>{dot.style.left=pos[1]*cell+7+'px';dot.style.top=pos[0]*cell+7+'px';chevs.style.left=pos[1]*cell+'px';chevs.style.top=pos[0]*cell+'px'};
+  place();
+  const wall=(r,c)=>r<0||c<0||r>=N||c>=N||map[r][c]==='#';
+  let busy=false,done=false;
+  const off=swipes(a.stage,d=>{if(busy||done)return;
+    chevs.style.opacity=0;
+    const [dr,dc]={U:[-1,0],D:[1,0],L:[0,-1],R:[0,1]}[d];
+    let [r,c]=pos,steps=0;while(!wall(r+dr,c+dc)){r+=dr;c+=dc;steps++}
+    if(!steps){a.buzz(5);return}
+    busy=true;dot.style.transitionDuration=(.06*steps+.08)+'s';pos=[r,c];place();a.buzz(8);
+    setTimeout(()=>{busy=false;if(r===target[0]&&c===target[1]){done=true;const[x,y]=rectCenter(dot);a.solve(x,y)}},(60*steps+90));
+  });
+  return off;
+ }},
+/* 6 — the missing number (uses the header) */
+{hints:['Something is missing. It is not far away.','Not everything you can tap is inside the play field.','Tap the level number at the top of the screen.'],
+ init(a){
+  const n=6,size=Math.min(52,(a.w-32-5*8)/n);
+  const row=a.el('div','abs center');Object.assign(row.style,{display:'flex',gap:'8px'});
+  const slots=[];
+  for(let i=1;i<=n;i++){const s=a.el('div','slot '+(i<n?'full':'empty'),row);Object.assign(s.style,{width:size+'px',height:size+'px',fontSize:size*.42+'px'});if(i<n)s.textContent=i;slots.push(s)}
+  let done=false;
+  a.onHeaderTap(()=>{if(done)return;done=true;a.buzz(12);
+    const num=a.headerNumber(),from=num.getBoundingClientRect(),to=slots[n-1].getBoundingClientRect();
+    const f=document.createElement('div');f.className='fly';f.textContent=n;
+    Object.assign(f.style,{left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px',fontSize:'44px',color:'var(--fg)'});
+    document.body.appendChild(f);num.style.color='transparent';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>Object.assign(f.style,{left:to.left+'px',top:to.top+'px',width:to.width+'px',height:to.height+'px',fontSize:size*.42+'px',background:'var(--accent)',color:'var(--on-accent)'})));
+    setTimeout(()=>{slots[n-1].className='slot full';slots[n-1].textContent=n;f.remove();num.style.color='';
+      const[x,y]=rectCenter(slots[n-1]);a.solve(x,y)},650);
+  });
+  return()=>{a.headerNumber().style.color='';document.querySelectorAll('.fly').forEach(f=>f.remove())};
+ }},
+];
+
+renderAll();
+})();
+</script>
