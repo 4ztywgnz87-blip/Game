@@ -29,7 +29,7 @@ img{max-width:100%}
    and the chapter colour reserved for the things you can touch and for the solve flood. */
 :root{
   --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
-  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF;
   --accent:var(--ch1); --on-accent:#0C0D11;
   --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
   --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -39,10 +39,11 @@ img{max-width:100%}
 }
 :root.light{
   --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
-  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --on-accent:#FFFFFF;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --on-accent:#FFFFFF;
   color-scheme:light;
 }
 [hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;margin:0;
   overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
@@ -62,7 +63,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
 .wordmark>span{display:block}
 .wordmark .dot{color:var(--accent)}
-.chapters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.chapters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .chapter-bar{display:flex;flex-direction:column;gap:8px}
 .chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
 .chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
@@ -179,7 +180,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .switch{border:3px solid var(--fg);border-radius:50%}
 .switch.flash{animation:flash .5s}
 @keyframes flash{50%{transform:scale(1.35);border-color:var(--accent)}}
-.gate{border:2px dashed var(--line);transition:background .2s,border-color .2s}
+.gate{border:2px dashed var(--muted);transition:background .2s,border-color .2s}
 .gate.closed{background:var(--fg);border:2px solid var(--fg)}
 .sdot{position:absolute;border-radius:50%;background:var(--accent);transition:left .2s,top .2s}
 .sdot.sq{border-radius:3px}
@@ -261,6 +262,28 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .pcell{background:var(--surface);transition:background .1s}
 .pcell.on{background:var(--accent)}
 .pend{border:3px solid var(--fg);border-radius:50%;z-index:1;pointer-events:none}
+.motion-note{left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+.motion-note.top{bottom:auto;top:8px}
+.motion-note .pill{pointer-events:auto;border:2px solid var(--accent);color:var(--accent);padding:12px 18px;font-family:var(--display);font-stretch:110%;font-weight:800;font-size:15px;letter-spacing:0;text-transform:none}
+.trap{background:var(--bg);border-radius:50%}
+.dust-code{display:grid;place-items:center;color:var(--fg);letter-spacing:.06em}
+.ublock{background:var(--muted);transition:left .15s,top .15s;touch-action:none;cursor:grab}
+.ublock.me{background:var(--accent)}
+.ublock.drag{transition:none;z-index:2}
+.kcell{background:var(--surface);display:grid;place-items:center;cursor:pointer;transition:background .15s}
+.kcell.seen{background:var(--line)}
+.kcell.cur{background:var(--accent)}
+.kcell.can::after{content:"";width:28%;height:28%;border-radius:50%;border:3px solid var(--accent)}
+.jugcol{display:flex;flex-direction:column;align-items:center;gap:10px}
+.jug{position:relative;border:3px solid var(--fg);border-top:0;transition:transform .2s var(--ease);cursor:pointer}
+.jug.sel{transform:translateY(-14px)}
+.jugfill{position:absolute;left:0;right:0;bottom:0;background:var(--accent);transition:height .5s var(--ease)}
+.jug .tick{position:absolute;left:0;width:10px;height:2px;background:var(--muted);z-index:1}
+.jug .mark4{position:absolute;left:-8px;right:-8px;border-top:2px dashed var(--fg);z-index:1}
+.mtile{position:absolute;background:var(--surface);font-family:var(--display);font-stretch:125%;font-weight:900;font-variant-numeric:tabular-nums;transition:background .15s}
+.mtile.sel{background:var(--accent);color:var(--on-accent)}
+.msum{position:absolute;width:40px;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--muted);text-align:center}
+.msum.ok{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -323,7 +346,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">30 / 30</span>
+    <span class="label">40 / 40</span>
     <div class="big">All<br>solved.</div>
     <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
@@ -348,7 +371,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <script>
 (()=>{
-const TOTAL=30, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'}];
+const TOTAL=40, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'}], ROMAN=['I','II','III','IV'];
 const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const chapterOf=id=>Math.floor((id-1)/10);
@@ -462,7 +485,7 @@ function renderAll(){
   // chapter bars
   $('#chapterBars').innerHTML=CHAPTERS.map((ch,i)=>{
     let s=0;for(let k=i*10+1;k<=i*10+10;k++)if(isSolved(k))s++;
-    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label">${['I','II','III'][i]} · ${s}/10</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
+    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label" style="white-space:nowrap">${ROMAN[i]} ${s}/10</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
   // level grid
   $('#levelList').innerHTML=CHAPTERS.map((ch,i)=>{
     let cells='';
@@ -472,7 +495,7 @@ function renderAll(){
       cells+=`<button class="cell ${cls}" data-id="${k}" ${cls==='locked'?'disabled aria-disabled="true"':''} aria-label="Level ${k}">${cls==='locked'?'':pad(k)}</button>`;
     }
     let s=0;for(let k=i*10+1;k<=i*10+10;k++)if(isSolved(k))s++;
-    return `<div style="--c:var(${ch.c})"><div class="ch-head"><span class="name">${['I','II','III'][i]} ${ch.name}</span><span class="label">${s}/10</span></div><div class="grid">${cells}</div></div>`}).join('');
+    return `<div style="--c:var(${ch.c})"><div class="ch-head"><span class="name">${ROMAN[i]} ${ch.name}</span><span class="label">${s}/10</span></div><div class="grid">${cells}</div></div>`}).join('');
   document.querySelectorAll('.cell:not(.locked)').forEach(c=>c.onclick=()=>startLevel(+c.dataset.id));
   // settings
   document.querySelectorAll('#vibSeg button').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.v==='on')===state.vibrate)));
@@ -642,7 +665,7 @@ function slideLevel(a,map,{chevrons=false}={}){
     if(ch==='#')g.put('wall',r,c);
     if(ch==='T'){targets.push(r+','+c);g.put('target',r,c,Math.max(4,Math.round(g.cell*.1)))}
     if(ch==='*')switches.push({r,c,el:g.put('switch',r,c,Math.round(g.cell*.28))});
-    if(ch==='a'||ch==='b')gates.push({ch,el:g.put('gate',r,c,2)});
+    if(ch==='a'||ch==='b')gates.push({ch,el:g.put('gate',r,c,0)});
     if(ch==='S')dots.push([r,c]);
   }));
   const inset=Math.round(g.cell*.16);
@@ -687,7 +710,7 @@ function pushLevel(a,map){
     if(ch==='T'){targets.add(r+','+c);g.put('target',r,c,Math.max(4,Math.round(g.cell*.1)))}
     if(ch==='P')P=[r,c];if(ch==='B')boxes.push([r,c]);
   }));
-  const bi=Math.round(g.cell*.14),pi=Math.round(g.cell*.2);
+  const bi=Math.round(g.cell*.2),pi=Math.round(g.cell*.22);
   const bEls=boxes.map(()=>{const e=a.el('div','box',g.b);return e});
   const pEl=a.el('div','sdot',g.b);
   const place=()=>{g.at(pEl,P[0],P[1],pi);boxes.forEach((b,i)=>{g.at(bEls[i],b[0],b[1],bi);bEls[i].classList.toggle('on',targets.has(b+''))})};
@@ -773,6 +796,110 @@ function holdRing(a,parent,size,{fill=1500,drain=500}={}){
   const rel=()=>{st.held=false;core.style.transform='translate(-50%,-50%)'};
   core.onpointerup=rel;core.onpointercancel=rel;core.oncontextmenu=e=>e.preventDefault();
   return st;
+}
+
+/* ---------- motion: real tilt/shake where the phone allows it, drag as a stand-in elsewhere ---------- */
+const motion={ori:null,oriAt:0,asked:false,granted:null,shakeFns:new Set(),peaks:[]};
+addEventListener('deviceorientation',e=>{if(e.beta==null||e.gamma==null)return;motion.ori={beta:e.beta,gamma:e.gamma};motion.oriAt=performance.now()});
+addEventListener('devicemotion',e=>{const ac=e.acceleration;if(!ac||ac.x==null)return;const m=Math.hypot(ac.x,ac.y||0,ac.z||0);const t=performance.now();
+  if(m>13&&(!motion.peaks.length||t-motion.peaks[motion.peaks.length-1]>110)){motion.peaks.push(t);motion.peaks=motion.peaks.filter(p=>t-p<1400);
+    if(motion.peaks.length>=3){motion.peaks=[];motion.shakeFns.forEach(f=>f())}}});
+const needsPermission=()=>typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function';
+function askMotion(){ // must run inside a tap
+  if(motion.asked)return Promise.resolve(motion.granted);motion.asked=true;
+  try{const ps=[DeviceOrientationEvent.requestPermission()];
+    if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function')ps.push(DeviceMotionEvent.requestPermission());
+    return Promise.all(ps).then(r=>motion.granted=r.every(x=>x==='granted')).catch(()=>motion.granted=false);
+  }catch(e){motion.granted=false;return Promise.resolve(false)}
+}
+/* Gravity on the screen from the phone's orientation: x to the right, y down the screen, length up to 1. */
+function sensorGravity(){
+  if(!motion.ori||performance.now()-motion.oriAt>600)return null;
+  const b=motion.ori.beta*Math.PI/180,g=motion.ori.gamma*Math.PI/180;
+  return{x:Math.sin(g)*Math.cos(b),y:Math.sin(b)};
+}
+/* Sets up a level that wants motion. Returns {gravity(), mode, cleanup}.
+   mode: 'sensor' when the phone reports orientation, 'drag' otherwise. */
+function motionInput(a,{rest={x:0,y:0},onShake,top=false}={}){
+  const st={mode:'wait',drag:null,cleanup:[]};
+  const note=a.el('div','abs motion-note'+(top?' top':''));note.hidden=true;
+  const setMode=m=>{st.mode=m;note.hidden=m!=='drag'&&m!=='ask';
+    if(m==='drag')note.textContent=onShake?'No motion sensor here. Scrub fast left and right to shake.':'No motion sensor here. Drag to tilt.';
+    if(m==='ask')note.innerHTML='<button class="pill">Allow motion</button>'};
+  if(needsPermission()&&!motion.granted){setMode(motion.asked?'drag':'ask');
+    const btn=note.querySelector('.pill');if(btn)btn.onclick=e=>{e.stopPropagation();askMotion().then(ok=>setMode(ok?'wait':'drag'))}}
+  const t0=performance.now();
+  const timer=setInterval(()=>{if(sensorGravity()){if(st.mode!=='sensor')setMode('sensor')}
+    else if(st.mode==='wait'&&performance.now()-t0>1200)setMode('drag')},250);
+  st.cleanup.push(()=>clearInterval(timer));
+  // drag stand-in
+  let start=null,lastX=null,lastDir=0,flips=[];
+  const down=e=>{if(e.target.closest&&e.target.closest('.pill'))return;start={x:e.clientX,y:e.clientY};lastX=e.clientX;lastDir=0};
+  const move=e=>{if(!start)return;st.drag={x:Math.max(-1,Math.min(1,(e.clientX-start.x)/110)),y:Math.max(-1,Math.min(1,(e.clientY-start.y)/110))};
+    if(onShake&&st.mode!=='sensor'){const dx=e.clientX-lastX;if(Math.abs(dx)>14){const d=Math.sign(dx);if(d!==lastDir&&lastDir!==0){const t=performance.now();flips.push(t);flips=flips.filter(f=>t-f<1200);if(flips.length>=4){flips=[];onShake()}}lastDir=d;lastX=e.clientX}}};
+  const up=()=>{start=null;st.drag=null};
+  a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointermove',move);a.stage.addEventListener('pointerup',up);a.stage.addEventListener('pointercancel',up);
+  st.cleanup.push(()=>{a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointermove',move);a.stage.removeEventListener('pointerup',up);a.stage.removeEventListener('pointercancel',up)});
+  if(onShake){const f=()=>onShake();motion.shakeFns.add(f);st.cleanup.push(()=>motion.shakeFns.delete(f))}
+  st.gravity=()=>{const s=sensorGravity();if(s)return s;return st.drag||rest};
+  st.dispose=()=>st.cleanup.forEach(f=>f());
+  return st;
+}
+
+/* tilt engine: # wall, x trap, O goal, S start, a/b gates (a closed first), * switch (flips gates when the ball rolls onto it) */
+function tiltLevel(a,map,{rest={x:0,y:0}}={}){
+  const R=map.length,C=map[0].length,g=grid(a,R,C,{below:52});g.b.style.background='var(--surface)';
+  let S,goal;const traps=[],gates=[],switches=[];let gs=0;
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='x'){traps.push([r,c]);g.put('trap',r,c,Math.round(g.cell*.16))}
+    if(ch==='O'){goal=[r,c];g.put('hole',r,c,Math.round(g.cell*.14))}
+    if(ch==='a'||ch==='b')gates.push({ch,r,c,el:g.put('gate',r,c,0)});
+    if(ch==='*')switches.push({r,c,el:g.put('switch',r,c,Math.round(g.cell*.28))});
+    if(ch==='S')S=[r,c];
+  }));
+  const cell=g.cell,rad=cell*.3;
+  const ballEl=a.el('div','sdot',g.b);Object.assign(ballEl.style,{width:rad*2+'px',height:rad*2+'px',left:0,top:0,transition:'none'});
+  const paint=()=>gates.forEach(x=>x.el.classList.toggle('closed',(x.ch==='a')===(gs===0)));paint();
+  const solid=(r,c)=>{if(r<0||c<0||r>=R||c>=C)return true;const ch=map[r][c];return ch==='#'||(ch==='a'&&gs===0)||(ch==='b'&&gs===1)};
+  let p,v,onSwitch=null,state='play';
+  const reset=()=>{p={x:(S[1]+.5)*cell,y:(S[0]+.5)*cell};v={x:0,y:0};ballEl.style.transition='none';ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px)`};reset();
+  const mi=motionInput(a,{rest});
+  let last=performance.now(),raf;
+  function collide(){
+    const r0=Math.floor((p.y-rad)/cell),r1=Math.floor((p.y+rad)/cell),c0=Math.floor((p.x-rad)/cell),c1=Math.floor((p.x+rad)/cell);
+    for(let r=r0-1;r<=r1+1;r++)for(let c=c0-1;c<=c1+1;c++){
+      if(!solid(r,c))continue;
+      const nx=Math.max(c*cell,Math.min(p.x,(c+1)*cell)),ny=Math.max(r*cell,Math.min(p.y,(r+1)*cell));
+      const dx=p.x-nx,dy=p.y-ny,d=Math.hypot(dx,dy);
+      if(d<rad&&d>0){const k=(rad-d)/d;p.x+=dx*k;p.y+=dy*k;const nl={x:dx/d,y:dy/d};const vn=v.x*nl.x+v.y*nl.y;if(vn<0){v.x-=1.35*vn*nl.x;v.y-=1.35*vn*nl.y}}
+      else if(d===0){p.y-=rad}
+    }
+  }
+  const tick=t=>{const dt=Math.min(.033,(t-last)/1000);last=t;
+    if(state==='play'){
+      const gr=mi.gravity();const acc=cell*14;
+      v.x+=gr.x*acc*dt;v.y+=gr.y*acc*dt;v.x*=Math.pow(.35,dt);v.y*=Math.pow(.35,dt);
+      const sp=Math.hypot(v.x,v.y),max=cell*9;if(sp>max){v.x*=max/sp;v.y*=max/sp}
+      const steps=Math.ceil(Math.hypot(v.x,v.y)*dt/(rad*.5))||1;
+      for(let i=0;i<steps;i++){p.x+=v.x*dt/steps;p.y+=v.y*dt/steps;collide()}
+      const cr=Math.floor(p.y/cell),cc=Math.floor(p.x/cell);
+      const sw=switches.find(s=>s.r===cr&&s.c===cc);
+      if(sw&&onSwitch!==sw){onSwitch=sw;const ng=gs^1;
+        const blocked=gates.some(x=>((x.ch==='a')===(ng===0))&&Math.abs((x.c+.5)*cell-p.x)<cell/2+rad&&Math.abs((x.r+.5)*cell-p.y)<cell/2+rad);
+        if(!blocked){gs=ng;paint();a.buzz(14);sw.el.classList.remove('flash');void sw.el.offsetWidth;sw.el.classList.add('flash')}}
+      if(!sw)onSwitch=null;
+      const near=([r,c])=>Math.hypot((c+.5)*cell-p.x,(r+.5)*cell-p.y)<cell*.26;
+      if(traps.some(near)){state='fall';a.buzz([30,40,30]);ballEl.style.transition='transform .25s';ballEl.style.transform+=' scale(0)';setTimeout(()=>{reset();state='play'},450)}
+      else if(near(goal)){state='done';ballEl.style.transition='transform .25s';p.x=(goal[1]+.5)*cell;p.y=(goal[0]+.5)*cell;ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px) scale(.6)`;
+        const r=g.b.getBoundingClientRect();setTimeout(()=>a.solve(r.left+p.x,r.top+p.y),300);return}
+      if(state==='play')ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px)`;
+    }
+    raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  // testing hook: lets the automated test steer the ball
+  a.stage._tilt={setGravity:gv=>{mi.drag=gv}};
+  return()=>{cancelAnimationFrame(raf);mi.dispose()};
 }
 
 /* ---------- levels ---------- */
@@ -1214,6 +1341,153 @@ const LEVELS=[
 /* 30 — twins */
 {hints:['Both dots move at the same time, in the same direction.','A dot stops at walls and at the other dot. Use one dot as a wall for the other.','Swipe: left, up, left, up, right, up, left, down, right, down, right.'],
  init(a){return slideLevel(a,['.......','..T#...','##.....','...###.','#....#.','.......','.......','.#.....','.#.....','.#....#','S#T##.S'])}},
+/* 31 — tilt */
+{hints:['The ball wants to roll. Nothing on the screen moves it.','Tilt your phone to roll the ball into the ring. The dark holes send you back to the start.','Roll right two squares, straight down the third column to the bottom, right along the bottom row, up one and right into the ring.'],
+ init(a){return tiltLevel(a,['S..#...','.x.#.x.','...#...','##.#.#.','...x.#.','.#...#.','.#.#.x.','.x.#...','.#.####','...x..O','##...x.'])}},
+/* 32 — turn it over */
+{hints:['The ring is at the very top, and gravity pulls the ball down.','Which way is down depends on how you hold your phone.','Turn your phone upside down and steer left and right through the gaps.'],
+ init(a){return tiltLevel(a,['O......','######.','.......','.######','.......','######.','.......','.######','.......','.......','...S...'],{rest:{x:0,y:1}})}},
+/* 33 — dust */
+{hints:['Something is buried under the dust.','Wiping will not help. Think of a snow globe.','Shake your phone until the dust is gone. The code is 7 0 3.'],
+ init(a){
+  const H=a.h-150,cw=Math.min(a.w-48,300),ch=Math.min(140,H*.4);
+  const code=a.el('div','abs big dust-code');Object.assign(code.style,{left:(a.w-cw)/2+'px',top:(H-ch)/2+'px',width:cw+'px',height:ch+'px',fontSize:ch*.62+'px'});code.textContent='7 0 3';
+  const cv=a.el('canvas','abs');cv.width=a.w*devicePixelRatio;cv.height=H*devicePixelRatio;Object.assign(cv.style,{left:0,top:0,width:a.w+'px',height:H+'px',pointerEvents:'none'});
+  const ctx=cv.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);
+  const col=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#7D8294';
+  const S=7;let ps=[];
+  for(let y=(H-ch)/2-14;y<(H+ch)/2+14;y+=S-1)for(let x=(a.w-cw)/2-14;x<(a.w+cw)/2+14;x+=S-1)ps.push({x:x+Math.random()*2,y:y+Math.random()*2,vx:0,vy:0,fly:false});
+  const draw=()=>{ctx.clearRect(0,0,a.w,H);ctx.fillStyle=col;for(const p of ps)ctx.fillRect(p.x,p.y,S,S)};draw();
+  let raf=null,last=0;
+  const step=t=>{const dt=Math.min(.033,(t-last)/1000);last=t;let any=false;
+    for(const p of ps)if(p.fly){p.vy+=1400*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;any=true}
+    ps=ps.filter(p=>p.y<H+20&&p.x>-20&&p.x<a.w+20);draw();raf=any?requestAnimationFrame(step):null};
+  const shake=()=>{a.buzz(20);for(const p of ps)if(!p.fly&&Math.random()<.55){p.fly=true;p.vx=(Math.random()-.5)*700;p.vy=-200-Math.random()*500}
+    if(!raf){last=performance.now();raf=requestAnimationFrame(step)}};
+  const mi=motionInput(a,{onShake:shake,top:true});
+  a.stage._shake=shake;
+  dials(a,3,{onChange:v=>{if(v.join('')==='703')a.solve()}});
+  return()=>{mi.dispose();if(raf)cancelAnimationFrame(raf)};
+ }},
+/* 34 — clocks */
+{hints:['The small clocks follow a rule. The big one is next.','Each clock is 1 hour and 15 minutes later than the one before. Drag around the big clock to turn its hands.','Set the big clock to 4:00.'],
+ init(a){
+  const face=(size,min,cls='')=>{const h=(min/60)%12,m=min%60,cx=size/2,r=size/2-3;
+    const ticks=[...Array(12)].map((_,i)=>{const t=i*Math.PI/6;return`<line x1="${cx+Math.sin(t)*r*.82}" y1="${cx-Math.cos(t)*r*.82}" x2="${cx+Math.sin(t)*r*.94}" y2="${cx-Math.cos(t)*r*.94}" stroke="var(--muted)" stroke-width="${i%3?2:4}"/>`}).join('');
+    return`<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--fg)" stroke-width="3"/>${ticks}
+      <line class="hh" x1="${cx}" y1="${cx}" x2="${cx}" y2="${cx-r*.5}" stroke="var(--fg)" stroke-width="${Math.max(4,size*.04)}" stroke-linecap="round" transform="rotate(${h*30} ${cx} ${cx})"/>
+      <line class="mh" x1="${cx}" y1="${cx}" x2="${cx}" y2="${cx-r*.78}" stroke="var(--accent)" stroke-width="${Math.max(3,size*.025)}" stroke-linecap="round" transform="rotate(${m*6} ${cx} ${cx})"/>
+      <circle cx="${cx}" cy="${cx}" r="${Math.max(4,size*.03)}" fill="var(--fg)"/></svg>`};
+  const sm=Math.min(92,(a.w-32-24)/3);
+  const row=a.el('div','abs');Object.assign(row.style,{left:'50%',top:'16px',transform:'translateX(-50%)',display:'flex',gap:'12px'});
+  [15,90,165].forEach(mn=>{const d=a.el('div','',row);d.innerHTML=face(sm,mn)});
+  const big=Math.min(a.w-64,a.h-sm-90);
+  const box=a.el('div','abs');Object.assign(box.style,{left:(a.w-big)/2+'px',top:sm+48+'px',width:big+'px',height:big+'px',cursor:'grab'});
+  let total=0;box.innerHTML=face(big,0,'bigclock');
+  const set=()=>{const h=(total/60)%12,m=total%60,cx=big/2;box.querySelector('.hh').setAttribute('transform',`rotate(${h*30} ${cx} ${cx})`);box.querySelector('.mh').setAttribute('transform',`rotate(${m*6} ${cx} ${cx})`)};
+  let raw=0,lastAng=null,done=false;
+  const ang=e=>{const b=box.getBoundingClientRect();return Math.atan2(e.clientX-b.left-big/2,-(e.clientY-b.top-big/2))*180/Math.PI};
+  box.onpointerdown=e=>{if(done)return;box.setPointerCapture(e.pointerId);lastAng=ang(e)};
+  box.onpointermove=e=>{if(lastAng===null)return;const A=ang(e);let d=A-lastAng;if(d>180)d-=360;if(d<-180)d+=360;lastAng=A;
+    raw+=d/6;const snapped=((Math.round(raw/5)*5)%720+720)%720;if(snapped!==total){total=snapped;set();a.buzz(3)}};
+  box.onpointerup=()=>{lastAng=null;if(total===240&&!done){done=true;const[x,y]=rectCenter(box);setTimeout(()=>a.solve(x,y),300)}};
+  a.stage._clock=m=>{raw=m;total=m;set();box.onpointerup()};
+ }},
+/* 35 — unblock */
+{hints:['Get your block (the coloured one) out through the gap on the right.','Blocks only slide along their own length. Move the long blocks out of the way first, and do not be afraid to move your block back.','Long middle block up · long right block up one · small flat block on the left all the way right · long middle block down · your block right two · both small bottom-left blocks up · your block back left · long middle block up · bottom-right flat block all the way left · left flat block back left · long middle block down · long right block down · your block out.'],
+ init(a){
+  const N=6,B=[[2,0,2,1],[4,0,2,0],[3,2,3,0],[1,4,3,0],[5,4,2,1],[3,0,2,1],[4,1,2,0]].map(([r,c,len,h])=>({r,c,len,h:!!h}));
+  const g=grid(a,N,N,{pad:24});g.b.style.background='var(--surface)';
+  const exit=a.el('div','abs',g.b);Object.assign(exit.style,{left:g.W+'px',top:2*g.cell+6+'px',width:'14px',height:g.cell-12+'px',background:'var(--accent)'});
+  const gap=3;
+  const place=(b)=>{Object.assign(b.el.style,{left:b.c*g.cell+gap+'px',top:b.r*g.cell+gap+'px',width:(b.h?b.len:1)*g.cell-2*gap+'px',height:(b.h?1:b.len)*g.cell-2*gap+'px'})};
+  B.forEach((b,i)=>{b.el=a.el('div','abs ublock'+(i===0?' me':''),g.b);place(b)});
+  const occ=(skip)=>{const o=new Set();B.forEach((b,i)=>{if(i===skip)return;for(let k=0;k<b.len;k++)o.add((b.r+(b.h?0:k))+','+(b.c+(b.h?k:0)))});return o};
+  let done=false;
+  B.forEach((b,i)=>{let st=null;
+    b.el.onpointerdown=e=>{if(done)return;b.el.setPointerCapture(e.pointerId);const o=occ(i);
+      let lo=0,hi=0;const free=(d)=>{const r=b.r+(b.h?0:d+(d>0?b.len-1:0)),c=b.c+(b.h?d+(d>0?b.len-1:0):0);return r>=0&&c>=0&&r<N&&c<N&&!o.has(r+','+c)};
+      while(free(lo-1))lo--;while(free(hi+1))hi++;
+      st={x:e.clientX,y:e.clientY,lo,hi,r:b.r,c:b.c};b.el.classList.add('drag')};
+    b.el.onpointermove=e=>{if(!st)return;const d=Math.max(st.lo,Math.min(st.hi,((b.h?e.clientX-st.x:e.clientY-st.y))/g.cell));
+      b.el.style.transform=b.h?`translateX(${d*g.cell}px)`:`translateY(${d*g.cell}px)`;b._d=d};
+    b.el.onpointerup=()=>{if(!st)return;const d=Math.round(b._d||0);b._d=0;b.el.style.transform='';b.el.classList.remove('drag');
+      if(b.h)b.c=st.c+d;else b.r=st.r+d;st=null;place(b);if(d)a.buzz(8);
+      if(i===0&&b.c===N-2){done=true;b.el.style.transition='left .4s var(--ease)';b.el.style.left=g.W+20+'px';const r=g.b.getBoundingClientRect();setTimeout(()=>a.solve(r.right,r.top+2.5*g.cell),350)}};
+  });
+  a.stage._unblock=(i,d)=>{const b=B[i];if(b.h)b.c+=d;else b.r+=d;place(b);if(i===0&&b.c===N-2){done=true;a.solve()}};
+ }},
+/* 36 — in the dark */
+{hints:['There is something written here. You just can not see it like this.','The game has two looks. You can change it outside this level.','Go to Settings on the home screen, switch the theme, come back: the code is 5 0 8.'],
+ init(a){
+  this._hidden=this._hidden||state.theme;
+  const col=this._hidden==='dark'?'#0C0D11':'#F3F4F7';
+  const H=a.h-150;
+  const code=a.el('div','abs big');Object.assign(code.style,{left:0,right:0,top:H*.38+'px',textAlign:'center',fontSize:'96px',color:col,letterSpacing:'.08em'});code.textContent='508';
+  const icon=a.el('div','abs');Object.assign(icon.style,{left:'50%',top:H*.14+'px',transform:'translateX(-50%)'});
+  icon.innerHTML='<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="var(--muted)"/></svg>';
+  dials(a,3,{onChange:v=>{if(v.join('')==='508')a.solve()}});
+ }},
+/* 37 — knight */
+{hints:['Visit every square exactly once.','The piece jumps in an L: two squares one way, then one to the side. Corners have few ways in, so plan for them. Tap the square you just left to step back.','Start: top-right corner, row 2 column 3, top-left corner, row 3 column 2, bottom-left corner, row 4 column 3, row 3 column 5, top row column 4, and keep going.'],
+ init(a){
+  const R=5,C=5,holes=new Set([8,16,23,24]),open=R*C-holes.size;
+  const g=grid(a,R,C,{pad:24});
+  const M=[[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]];
+  const cells=[];let path=[13],done=false;
+  for(let i=0;i<R*C;i++){if(holes.has(i)){cells.push(null);continue}const e=g.put('kcell',Math.floor(i/C),i%C,3);e.onclick=()=>tap(i);cells.push(e)}
+  const reach=i=>{const r=Math.floor(i/C),c=i%C;return M.map(([dr,dc])=>[r+dr,c+dc]).filter(([rr,cc])=>rr>=0&&cc>=0&&rr<R&&cc<C).map(([rr,cc])=>rr*C+cc).filter(j=>!holes.has(j))};
+  const paint=()=>{const cur=path[path.length-1],nxt=new Set(reach(cur).filter(j=>!path.includes(j)));
+    cells.forEach((e,i)=>{if(!e)return;e.className='kcell'+(path.includes(i)?' seen':'')+(i===cur?' cur':'')+(nxt.has(i)?' can':'');
+      e.innerHTML=i===cur?'<svg viewBox="0 0 24 24" width="60%" height="60%"><path d="M7 3h4v13h7v5H7z" fill="var(--on-accent)"/></svg>':''})};
+  function tap(i){if(done)return;const cur=path[path.length-1];
+    if(path.length>1&&i===path[path.length-2]){path.pop();paint();a.buzz(4);return}
+    if(path.includes(i)||!reach(cur).includes(i)){a.buzz(5);return}
+    path.push(i);paint();a.buzz(8);
+    if(path.length===open){done=true;const[x,y]=rectCenter(cells[i]);setTimeout(()=>a.solve(x,y),350)}}
+  paint();
+ }},
+/* 38 — pour */
+{hints:['Get exactly 4 into one of the jugs. The dashed line marks 4.','Tap a jug, then tap another to pour into it. Pouring stops when the first is empty or the second is full.','Big → middle, middle → small, small → big, middle → small, big → middle, middle → small.'],
+ init(a){
+  const cap=[8,5,3],amt=[8,0,0];const unit=Math.floor(Math.min(40,(a.h-120)/8)),w=Math.min(86,(a.w-32-32)/3);
+  const row=a.el('div','abs');Object.assign(row.style,{left:'50%',bottom:'48px',transform:'translateX(-50%)',display:'flex',gap:'16px',alignItems:'flex-end'});
+  let sel=null,done=false;
+  const jugs=cap.map((c,i)=>{const col=a.el('div','jugcol',row);const j=a.el('div','jug',col);Object.assign(j.style,{width:w+'px',height:c*unit+'px'});
+    const fill=a.el('div','jugfill',j);
+    for(let k=1;k<c;k++){const t=a.el('i','tick',j);t.style.bottom=k*unit+'px'}
+    if(c>=4){const m=a.el('i','mark4',j);m.style.bottom=4*unit+'px'}
+    const lab=a.el('div','label',col);lab.textContent=c;
+    j.onclick=()=>{if(done)return;
+      if(sel===null){if(!amt[i]){a.buzz(5);return}sel=i;paint();a.buzz(6);return}
+      if(sel===i){sel=null;paint();return}
+      const n=Math.min(amt[sel],cap[i]-amt[i]);amt[sel]-=n;amt[i]+=n;sel=null;paint();a.buzz(10);
+      if(amt.includes(4)){done=true;const k=amt.indexOf(4);setTimeout(()=>{const[x,y]=rectCenter(jugs[k].j);a.solve(x,y)},650)}};
+    return{j,fill}});
+  const paint=()=>jugs.forEach(({j,fill},i)=>{fill.style.height=amt[i]*unit+'px';j.classList.toggle('sel',sel===i)});
+  paint();
+ }},
+/* 39 — magic square */
+{hints:['Make every row, column and diagonal add up to the same number.','Tap two tiles to swap them. The nine numbers add up to 45, so each row needs 15. The 5 belongs in the middle.','One answer: 2 7 6 / 9 5 1 / 4 3 8.'],
+ init(a){
+  const v=[1,2,3,4,5,6,7,8,9];const S=Math.floor(Math.min((a.w-32-56)/3,(a.h-120)/3.6));
+  const wrap=a.el('div','abs');const W=S*3+16+48;Object.assign(wrap.style,{left:(a.w-W)/2+'px',top:(a.h-S*3-60)/2+'px',width:W+'px',height:S*3+16+48+'px'});
+  const tiles=v.map((n,i)=>{const t=a.el('button','mtile',wrap);Object.assign(t.style,{left:(i%3)*(S+8)+'px',top:Math.floor(i/3)*(S+8)+'px',width:S+'px',height:S+'px',fontSize:S*.42+'px'});t.onclick=()=>tap(i);return t});
+  const sumEl=(x,y)=>{const e=a.el('div','msum',wrap);Object.assign(e.style,{left:x+'px',top:y+'px'});return e};
+  const rows=[0,1,2].map(r=>sumEl(3*(S+8)+6,r*(S+8)+S/2-10)),cols=[0,1,2].map(c=>sumEl(c*(S+8)+S/2-14,3*(S+8)+6));
+  const d1=sumEl(3*(S+8)+6,3*(S+8)+6),d2=sumEl(3*(S+8)+6,-30);
+  let sel=null,done=false;
+  const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  const paint=()=>{tiles.forEach((t,i)=>{t.textContent=v[i];t.classList.toggle('sel',sel===i)});
+    const els=[...rows,...cols,d1,d2];lines.forEach((l,k)=>{const s=l.reduce((x,i)=>x+v[i],0);els[k].textContent=s;els[k].classList.toggle('ok',s===15)})};
+  function tap(i){if(done)return;if(sel===null){sel=i;paint();a.buzz(5);return}
+    if(sel!==i){[v[sel],v[i]]=[v[i],v[sel]];a.buzz(8)}sel=null;paint();
+    if(lines.every(l=>l.reduce((x,k)=>x+v[k],0)===15)){done=true;setTimeout(()=>{const[x,y]=rectCenter(tiles[4]);a.solve(x,y)},400)}}
+  paint();
+ }},
+/* 40 — the last gate */
+{hints:['The ring is locked behind a gate.','Rolling onto a small circle flips every gate: closed ones open, open ones close. There are two circles.','Roll up the third column, right along the middle row, up the right edge, onto the circle at the top right, then left along the top. Roll over the circle near the start twice, or not at all.'],
+ init(a){return tiltLevel(a,['O.a....','##b##*.','.x...#.','.#.#.#.','...#...','.#####b','.x.....','.#.#x#.','...#...','##.#.x.','S..*...'])}},
 ];
 
 renderAll();
