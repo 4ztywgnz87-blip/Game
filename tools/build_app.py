@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs"
 BG = (12, 13, 17)
 BLUE = (47, 107, 255)
-VERSION = "8"
+VERSION = "9"
 
 HEAD = """<!doctype html>
 <html lang="en">

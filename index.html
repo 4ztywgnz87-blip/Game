@@ -8,7 +8,7 @@
    and the chapter colour reserved for the things you can touch and for the solve flood. */
 :root{
   --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
-  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE; --ch7:#FF5FA2;
   --accent:var(--ch1); --on-accent:#0C0D11;
   --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
   --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -18,7 +18,7 @@
 }
 :root.light{
   --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
-  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --on-accent:#FFFFFF;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --ch7:#DB2777; --on-accent:#FFFFFF;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -42,7 +42,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
 .wordmark>span{display:block}
 .wordmark .dot{color:var(--accent)}
-.chapters{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.chapters{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .chapter-bar{display:flex;flex-direction:column;gap:8px}
 .chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
 .chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
@@ -343,6 +343,35 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .six.nope{animation:wiggle .3s}
 .pcell2{border:1px solid var(--line)}
 .pcell2.on::after{content:"";position:absolute;inset:22%;border-radius:50%;background:var(--accent)}
+.portal{border:4px double var(--accent);border-radius:50%}
+.portal.two{border-color:var(--fg)}
+.keyitem{background:var(--accent);transform:rotate(45deg)}
+.answer-ring{border:3px dashed var(--accent);border-radius:50%}
+.answer-ring.nope{animation:wiggle .3s;border-color:var(--ch2)}
+.coin{border-radius:50%;background:var(--fg);box-shadow:inset 0 0 0 4px var(--muted);touch-action:none;cursor:grab;transition:left .35s var(--ease),top .35s var(--ease);z-index:1}
+.coin.drag{transition:none;z-index:3}
+.mcell{background:var(--line);display:grid;place-items:center;cursor:pointer}
+.mcell.open{background:var(--surface);font-family:var(--display);font-stretch:125%;font-weight:900;font-size:20px;color:var(--fg);cursor:default}
+.mcell.flag::after{content:"";width:42%;height:42%;border-radius:50%;background:var(--accent)}
+.tube{position:relative;border:3px solid var(--fg);border-top:0;border-radius:0 0 18px 18px;transition:transform .15s}
+.tube.sel{border-color:var(--accent)}
+.tube i{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%;transition:bottom .15s var(--ease)}
+.fleet{left:0;right:0;top:12px;display:flex;justify-content:center;gap:14px}
+.fleet span{display:flex;gap:2px}.fleet i{display:block;width:14px;height:14px;background:var(--fg)}
+.fcount{display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:15px;color:var(--muted)}
+.fcount.ok{color:var(--accent)}
+.scell{background:var(--surface);display:grid;place-items:center}
+.scell.ship{background:var(--accent)}
+.scell.water::after{content:"";width:22%;height:22%;border-radius:50%;background:var(--muted)}
+.qcell{background:var(--surface);cursor:pointer}
+.qcell.fixed{background:var(--fg);cursor:default}
+.qcell.on{background:var(--accent)}
+.spin{transition:transform .8s var(--ease);transform:rotate(90deg)}
+.domino{display:flex;background:var(--fg);border-radius:6px;padding:3px;gap:3px;transition:box-shadow .2s}
+.domino b{flex:1;display:block}
+.domino b+b{border-left:2px solid var(--muted)}
+.domino.sel{box-shadow:0 0 0 4px var(--accent)}
+.domino.ok{box-shadow:4px 0 0 0 var(--accent)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -405,7 +434,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">60 / 60</span>
+    <span class="label">70 / 70</span>
     <div class="big">All<br>solved.</div>
     <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
@@ -430,7 +459,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <script>
 (()=>{
-const TOTAL=60, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'}], ROMAN=['I','II','III','IV','V','VI'];
+const TOTAL=70, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'},{name:'Pink',c:'--ch7'}], ROMAN=['I','II','III','IV','V','VI','VII'];
 const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const chapterOf=id=>Math.floor((id-1)/10);
@@ -544,7 +573,7 @@ function renderAll(){
   // chapter bars
   $('#chapterBars').innerHTML=CHAPTERS.map((ch,i)=>{
     let s=0;for(let k=i*10+1;k<=i*10+10;k++)if(isSolved(k))s++;
-    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label" style="white-space:nowrap">${ROMAN[i]} ${s}</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
+    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label" style="white-space:nowrap">${ROMAN[i]}</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
   // level grid
   $('#levelList').innerHTML=CHAPTERS.map((ch,i)=>{
     let cells='';
@@ -975,6 +1004,48 @@ function tiltLevel(a,map,{rest={x:0,y:0},fog=false}={}){
   // testing hook: lets the automated test steer the ball
   a.stage._tilt={setGravity:gv=>{mi.drag=gv}};
   return()=>{cancelAnimationFrame(raf);mi.dispose()};
+}
+
+/* ice engine: # wall, P you, B block, T target, A/a a pair of rings. You slide until stopped;
+   a block you hit slides on by itself; anything sliding into a ring comes out of its twin, still sliding. */
+function iceLevel(a,map){
+  const R=map.length,C=map[0].length,g=grid(a,R,C);g.b.style.background='var(--surface)';
+  let P;const boxes=[],targets=new Set(),por=[];
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='T'){targets.add(r+','+c);g.put('target',r,c,Math.max(4,Math.round(g.cell*.1)))}
+    if(ch==='A'||ch==='a'){por.push([r,c]);g.put('portal',r,c,Math.round(g.cell*.14))}
+    if(ch==='P')P=[r,c];if(ch==='B')boxes.push([r,c]);
+  }));
+  const partner=(r,c)=>{if(por.length<2)return null;const[p,q]=por;if(p[0]===r&&p[1]===c)return q;if(q[0]===r&&q[1]===c)return p;return null};
+  const wall=(r,c)=>r<0||c<0||r>=R||c>=C||map[r][c]==='#';
+  const bi=Math.round(g.cell*.2),pi=Math.round(g.cell*.22);
+  const bEls=boxes.map(()=>a.el('div','box',g.b)),pEl=a.el('div','sdot',g.b);
+  const setPos=(el,r,c,ins)=>g.at(el,r,c,ins);
+  const paintBoxes=()=>boxes.forEach((b,i)=>{setPos(bEls[i],b[0],b[1],bi);bEls[i].classList.toggle('on',targets.has(b+''))});
+  setPos(pEl,P[0],P[1],pi);paintBoxes();
+  [pEl,...bEls].forEach(e=>e.style.transition='left .05s linear,top .05s linear,background .2s');
+  const anim=(el,path,ins,cb)=>{let i=0;const step=()=>{if(i>=path.length){cb&&cb();return}const s=path[i++];
+      if(s.jump){el.style.transition='none';setPos(el,s.r,s.c,ins);void el.offsetWidth;el.style.transition='left .05s linear,top .05s linear,background .2s'}else setPos(el,s.r,s.c,ins);
+      setTimeout(step,s.jump?90:50)};step()};
+  // slide something from pos; blocked(r,c) says whether another object is in the way
+  const slide=(pos,dr,dc,blocked)=>{let[r,c]=pos;const path=[];for(let s=0;s<60;s++){const nr=r+dr,nc=c+dc;if(wall(nr,nc)||blocked(nr,nc))break;
+      const pp=partner(nr,nc);if(pp){if(blocked(pp[0],pp[1]))break;path.push({r:nr,c:nc},{r:pp[0],c:pp[1],jump:true});[r,c]=pp;continue}path.push({r:nr,c:nc});r=nr;c=nc}return{end:[r,c],path}};
+  let busy=false,done=false;const queue=[];
+  const go=d=>{if(done)return;if(busy){if(queue.length<20)queue.push(d);return}
+    const[dr,dc]=DIRS[d];let[r,c]=P;const ppath=[];let hit=-1,bres=null;
+    for(let s=0;s<60;s++){const nr=r+dr,nc=c+dc;if(wall(nr,nc))break;const k=boxes.findIndex(b=>b[0]===nr&&b[1]===nc);
+      if(k>=0){const res=slide(boxes[k],dr,dc,(x,y)=>boxes.some((b,j)=>j!==k&&b[0]===x&&b[1]===y)||(x===r&&y===c));if(res.path.length){hit=k;bres=res}break}
+      const pp=partner(nr,nc);if(pp){if(boxes.some(b=>b[0]===pp[0]&&b[1]===pp[1]))break;ppath.push({r:nr,c:nc},{r:pp[0],c:pp[1],jump:true});[r,c]=pp;continue}
+      ppath.push({r:nr,c:nc});r=nr;c=nc}
+    if(!ppath.length&&hit<0){a.buzz(5);if(queue.length)go(queue.shift());return}
+    busy=true;a.buzz(8);P=[r,c];
+    anim(pEl,ppath,pi,()=>{const fin=()=>{busy=false;paintBoxes();
+        if(boxes.every(b=>targets.has(b+''))){done=true;const rr=g.b.getBoundingClientRect();setTimeout(()=>a.solve(rr.left+rr.width/2,rr.top+rr.height/2),250);return}
+        if(queue.length)go(queue.shift())};
+      if(hit>=0){boxes[hit]=bres.end;a.buzz(12);anim(bEls[hit],bres.path,bi,fin)}else fin()});
+  };
+  return swipes(a.stage,go);
 }
 
 function cleanCount(upto){return Object.entries(state.solved).filter(([id,v])=>+id<upto&&v&&v.hints===0).length}
@@ -1967,6 +2038,177 @@ const LEVELS=[
     if(on.every(Boolean)){done=true;setTimeout(()=>a.solve(cx+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top),400)}}
   paint();
  }},
+/* 61 — untangle */
+{hints:['Drag the dots until no two lines cross.','Lines that still cross are coloured. Start with the dot that has the most lines and build around it.','The dots fit on a 3 × 3 grid: the dot with six lines goes in the middle.'],
+ init(a){
+  const E=[[0,1],[1,2],[3,4],[4,5],[6,7],[7,8],[0,3],[3,6],[1,4],[4,7],[2,5],[5,8],[0,4],[4,8],[2,4],[4,6]];
+  const n=9,order=[4,7,1,8,3,0,6,2,5],R=Math.min(a.w,a.h)*.36,cx=a.w/2,cy=a.h*.47;
+  const P=[];order.forEach((v,k)=>{const t=k/n*Math.PI*2-Math.PI/2;P[v]=[cx+Math.cos(t)*R,cy+Math.sin(t)*R]});
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',a.w);svg.setAttribute('height',a.h);svg.style.cssText='position:absolute;left:0;top:0;touch-action:none';a.stage.appendChild(svg);
+  const cross=(p,q,r,s)=>{const o=(a,b,c)=>Math.sign((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]));return o(p,q,r)*o(p,q,s)<0&&o(r,s,p)*o(r,s,q)<0};
+  let drag=null,done=false;
+  const bad=()=>{const b=new Set();E.forEach((e,i)=>E.forEach((f,j)=>{if(j<=i||e.some(x=>f.includes(x)))return;if(cross(P[e[0]],P[e[1]],P[f[0]],P[f[1]])){b.add(i);b.add(j)}}));return b};
+  const paint=()=>{const b=bad();svg.innerHTML=E.map((e,i)=>`<line x1="${P[e[0]][0]}" y1="${P[e[0]][1]}" x2="${P[e[1]][0]}" y2="${P[e[1]][1]}" stroke="${b.has(i)?'var(--accent)':'var(--muted)'}" stroke-width="${b.has(i)?4:3}"/>`).join('')
+    +P.map((p,i)=>`<circle data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="${drag&&drag.i===i?16:13}" fill="var(--fg)"/>`).join('');return b.size};
+  paint();
+  const loc=e=>{const r=a.stage.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  svg.onpointerdown=e=>{if(done)return;const[x,y]=loc(e);let bi=-1,bd=34;P.forEach((p,i)=>{const d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;bi=i}});if(bi<0)return;svg.setPointerCapture(e.pointerId);drag={i:bi};a.buzz(4);paint()};
+  svg.onpointermove=e=>{if(!drag)return;const[x,y]=loc(e);P[drag.i]=[Math.max(16,Math.min(a.w-16,x)),Math.max(16,Math.min(a.h-16,y))];paint()};
+  svg.onpointerup=()=>{if(!drag)return;drag=null;if(paint()===0){done=true;a.buzz(14);setTimeout(()=>a.solve(cx+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top),300)}};
+  a.stage._untangle=()=>{for(let v=0;v<9;v++)P[v]=[cx+(v%3-1)*R*.7,cy+(Math.floor(v/3)-1)*R*.7];drag={i:0};svg.onpointerup()};
+ }},
+/* 62 — ice */
+{hints:['Get the block onto the square. Everything here slides on ice.','You slide until something stops you. If you hit the block, it slides on by itself and you stop.','Swipe: down, right, up, left, down, right, down, right, down, left, up, left, up, right, down, right, up.'],
+ init(a){return iceLevel(a,['....#.T','.##.#..','.......','.......','...#..#','......#','#...B..','P#...#.','...#...'])}},
+/* 63 — portals */
+{hints:['Reach the square. Each ring takes you to its twin.','Arrow squares can only be entered in the direction of the arrow. The door needs the key.','Swipe: right ×3, up ×2, right ×2, up ×2, right, up, right ×2, down, up ×3, left, up ×2, down, up ×2, left ×3, up, left ×2, down.'],
+ init(a){
+  const map=['#...#A.','..Dv#..','T#.....','#...#.a','.#...b#','#.<.#..','S...#..','...#...','###.>#k','##....#','#..B.^.'];
+  const R=map.length,C=map[0].length,g=grid(a,R,C);g.b.style.background='var(--surface)';
+  const ow={'>':'R','<':'L','^':'U','v':'D'},ang={R:90,L:270,U:0,D:180};let P,T,key=false,door=null,keyEl=null;const por={};
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='S')P=[r,c];if(ch==='T'){T=[r,c];g.put('target',r,c,Math.round(g.cell*.1))}
+    if(/[AaBb]/.test(ch)){(por[ch.toLowerCase()]=por[ch.toLowerCase()]||[]).push([r,c]);g.put('portal'+(ch.toLowerCase()==='b'?' two':''),r,c,Math.round(g.cell*.14))}
+    if(ow[ch]){const e=g.put('arw',r,c,2);e.innerHTML='<svg viewBox="0 0 24 24" width="60%" height="60%"><path d="M12 4l7 9h-4.5v7h-5v-7H5z"/></svg>';e.style.setProperty('--a',ang[ow[ch]]+'deg')}
+    if(ch==='k')keyEl=g.put('keyitem',r,c,Math.round(g.cell*.3));
+    if(ch==='D')door=g.put('gate closed',r,c,0);
+  }));
+  const partner=(r,c)=>{for(const k in por){const[p,q]=por[k];if(p[0]===r&&p[1]===c)return q;if(q[0]===r&&q[1]===c)return p}return null};
+  const me=a.el('div','sdot',g.b);const ins=Math.round(g.cell*.2);const place=()=>g.at(me,P[0],P[1],ins);place();
+  let done=false;
+  return swipes(a.stage,d=>{if(done)return;let nr=P[0]+DIRS[d][0],nc=P[1]+DIRS[d][1];
+    if(nr<0||nc<0||nr>=R||nc>=C){a.buzz(5);return}const ch=map[nr][nc];
+    if(ch==='#'||(ow[ch]&&ow[ch]!==d)||(ch==='D'&&!key)){a.buzz(5);return}
+    if(ch==='k'&&!key){key=true;keyEl.hidden=true;door.classList.remove('closed');a.buzz(14)}
+    const pp=partner(nr,nc);P=[nr,nc];place();a.buzz(6);
+    if(pp){setTimeout(()=>{me.style.transition='none';P=pp;place();void me.offsetWidth;me.style.transition=''},140)}
+    if(nr===T[0]&&nc===T[1]){done=true;setTimeout(()=>{const r=me.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)},200)}});
+ }},
+/* 64 — the heavy coin */
+{hints:['One coin is a little heavier than the others. Find it with at most two weighings.','Drag coins onto the pans and press the scale button. Only drop a coin in the ring when your weighings leave no doubt: a lucky guess does not count.','Three against three. If one side is heavier, weigh two of its coins against each other (balanced means the third). If balanced, weigh the last two. Then drop the heavy coin in the ring.'],
+ init(a){
+  let heavy=Math.floor(Math.random()*8),left=2,cands=new Set([0,1,2,3,4,5,6,7]),done=false;
+  const cx=a.w/2,py=a.h*.2,arm=Math.min(a.w*.36,150),hang=a.h*.13,cs=Math.min(40,a.w/11);
+  const beam=a.el('div','abs beam');Object.assign(beam.style,{left:cx-arm+'px',top:py-3+'px',width:arm*2+'px'});
+  const post=a.el('div','abs post');Object.assign(post.style,{left:cx-3+'px',top:py+'px',height:a.h*.36+'px'});
+  const pans=[0,1].map(()=>{const p=a.el('div','abs pan');p.style.width=arm*.95+'px';const s=a.el('div','abs string');return{p,s,x:0,y:0}});
+  const pips=a.el('div','abs pipsrow');pips.style.top=a.h*.6+'px';
+  const btn=a.el('button','abs icon-btn big-btn');btn.setAttribute('aria-label','Weigh');Object.assign(btn.style,{left:cx-32+'px',top:a.h*.6+24+'px'});
+  btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 4v16M5 20h14M4 8h16M4 8l-3 6h6zM20 8l-3 6h6z"/></svg>';
+  const ring=a.el('div','abs answer-ring');Object.assign(ring.style,{width:cs*1.8+'px',height:cs*1.8+'px',right:'24px',bottom:`calc(24px + env(safe-area-inset-bottom,0px))`});
+  const coins=[...Array(8)].map((_,i)=>{const e=a.el('div','abs coin');Object.assign(e.style,{width:cs+'px',height:cs+'px'});return{i,e,side:-1}});
+  let angle=0;
+  const layout=()=>{const rad=angle*Math.PI/180;beam.style.transform=`rotate(${angle}deg)`;
+    const ends=[[cx-arm*Math.cos(rad),py-arm*Math.sin(rad)],[cx+arm*Math.cos(rad),py+arm*Math.sin(rad)]];
+    pans.forEach((pn,k)=>{const[x,y]=ends[k];pn.x=x;pn.y=y+hang;Object.assign(pn.p.style,{left:x-arm*.475+'px',top:y+hang+'px'});Object.assign(pn.s.style,{left:x-1+'px',top:y+'px',height:hang+'px'})});
+    [0,1].forEach(k=>{const on=coins.filter(c=>c.side===k);on.forEach((c,j)=>{if(c.drag)return;const row=Math.floor(j/3),col=j%3,n=Math.min(3,on.length-row*3);
+      c.e.style.left=pans[k].x-(n*(cs+3))/2+col*(cs+3)+'px';c.e.style.top=pans[k].y-(row+1)*(cs+2)+'px'})});
+    const tr=coins.filter(c=>c.side===-1);tr.forEach((c,j)=>{if(c.drag)return;const row=Math.floor(j/4),col=j%4;c.e.style.left=24+col*(cs+10)+'px';c.e.style.top=a.h-24-(2-row)*(cs+10)+'px'});
+    pips.innerHTML=[0,1].map(i=>`<i class="${i<left?'on':''}"></i>`).join('');btn.disabled=left<=0;btn.style.opacity=left>0?1:.3};
+  function reset(){heavy=Math.floor(Math.random()*8);left=2;cands=new Set([0,1,2,3,4,5,6,7]);angle=0;coins.forEach(c=>c.side=-1);layout()}
+  btn.onclick=()=>{if(done||left<=0)return;const L=coins.filter(c=>c.side===0).map(c=>c.i),Rr=coins.filter(c=>c.side===1).map(c=>c.i);if(!L.length&&!Rr.length)return;
+    const wl=L.length+(L.includes(heavy)?.1:0),wr=Rr.length+(Rr.includes(heavy)?.1:0);left--;a.buzz(12);
+    angle=wl>wr?-10:wl<wr?10:0;
+    if(L.length!==Rr.length){/* unequal counts tell nothing certain about a slightly heavier coin */cands=new Set([...cands].filter(i=>wl>wr?true:true))}
+    else if(wl===wr)cands=new Set([...cands].filter(i=>!L.includes(i)&&!Rr.includes(i)));
+    else cands=new Set([...cands].filter(i=>(wl>wr?L:Rr).includes(i)));
+    layout()};
+  coins.forEach(c=>{let ox,oy;
+    c.e.onpointerdown=e=>{if(done)return;c.e.setPointerCapture(e.pointerId);c.drag=true;c.e.classList.add('drag');ox=e.clientX-c.e.offsetLeft;oy=e.clientY-c.e.offsetTop};
+    c.e.onpointermove=e=>{if(!c.drag)return;c.e.style.left=e.clientX-ox+'px';c.e.style.top=e.clientY-oy+'px'};
+    c.e.onpointerup=()=>{if(!c.drag)return;c.drag=false;c.e.classList.remove('drag');const x=c.e.offsetLeft+cs/2,y=c.e.offsetTop+cs/2;
+      const rr=ring.getBoundingClientRect(),sr=a.stage.getBoundingClientRect();
+      if(Math.hypot(x-(rr.left-sr.left+rr.width/2),y-(rr.top-sr.top+rr.height/2))<cs*1.4){answer(c);return}
+      let best=-1,bd=arm*.7;[0,1].forEach(k=>{const d=Math.hypot(x-pans[k].x,y-(pans[k].y-cs));if(d<bd){bd=d;best=k}});
+      if(best>=0&&coins.filter(o=>o.side===best).length>=6)best=-1;c.side=best;angle=0;layout()}});
+  function answer(c){if(cands.size===1&&cands.has(c.i)&&c.i===heavy){done=true;Object.assign(c.e.style,{left:ring.offsetLeft+cs*.4+'px',top:ring.offsetTop+cs*.4+'px'});a.buzz(16);setTimeout(()=>{const r=c.e.getBoundingClientRect();a.solve(r.left+cs/2,r.top+cs/2)},300)}
+    else{a.buzz([30,40,30]);ring.classList.remove('nope');void ring.offsetWidth;ring.classList.add('nope');setTimeout(reset,500)}}
+  layout();
+  a.stage._coin={get heavy(){return heavy},put(i,side){coins[i].side=side;layout()},weigh(){btn.onclick()},answer(i){answer(coins[i])}};
+ }},
+/* 65 — mines */
+{hints:['Mark all eight mines. The numbers count the mines in the eight squares around them.','Tap a square to mark a mine, tap again to clear it. Start where a number leaves only one choice.','Row 1: columns 1, 2 and 6. Row 2: column 4. Row 3: columns 2 and 3. Row 4: columns 4 and 6.'],
+ init(a){
+  const N=6,mines=new Set([0,1,5,9,13,14,21,23]),rev=new Set([2,3,4,6,7,12,15,16,22,27,28,35]);
+  const g=grid(a,N,N,{pad:24,below:60});const flags=new Set();let done=false;
+  const num=i=>{const r=Math.floor(i/N),c=i%N;let n=0;for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;const x=r+dr,y=c+dc;if(x>=0&&y>=0&&x<N&&y<N&&mines.has(x*N+y))n++}return n};
+  const pips=a.el('div','abs pipsrow');pips.style.top=g.b.offsetTop+g.H+22+'px';
+  const paint=()=>{pips.innerHTML=[...Array(8)].map((_,i)=>`<i class="${i<flags.size?'on':''}"></i>`).join('')+(flags.size>8?'<i class="over"></i>':'')};
+  for(let i=0;i<N*N;i++){const r=Math.floor(i/N),c=i%N;
+    if(rev.has(i)){const e=g.put('mcell open',r,c,2);const n=num(i);e.textContent=n||''}
+    else{const e=g.put('mcell',r,c,2);e.onclick=()=>{if(done)return;if(flags.has(i))flags.delete(i);else flags.add(i);e.classList.toggle('flag');a.buzz(6);paint();
+      if(flags.size===mines.size&&[...mines].every(m=>flags.has(m))){done=true;const rr=g.b.getBoundingClientRect();setTimeout(()=>a.solve(rr.left+rr.width/2,rr.top+rr.height/2),350)}}}}
+  paint();
+ }},
+/* 66 — sort */
+{hints:['Sort the balls so every tube holds a single colour.','Tap a tube to lift its top ball, then tap the tube where it should go. A ball can only land on the same colour or in an empty tube.','Tubes from the left: 2→4, 3→4, 1→3, 1→2, 3→1, 3→1, 2→3, 2→3, 2→4.'],
+ init(a){
+  const tubes=[[2,1,2],[0,1,0],[1,2,0],[]],col=['var(--fg)','var(--muted)','var(--accent)'];
+  const bs=Math.min(54,(a.w-32-3*18)/4-12),tw=bs+14,th=bs*3+36;
+  const row=a.el('div','abs');Object.assign(row.style,{left:'50%',top:a.h*.5-th/2+'px',transform:'translateX(-50%)',display:'flex',gap:'18px',alignItems:'flex-end'});
+  let sel=null,done=false;
+  const els=tubes.map((t,i)=>{const e=a.el('button','tube',row);Object.assign(e.style,{width:tw+'px',height:th+'px'});e.onclick=()=>tap(i);return e});
+  const paint=()=>els.forEach((e,i)=>{e.innerHTML=tubes[i].map((v,k)=>`<i style="width:${bs}px;height:${bs}px;background:${col[v]};bottom:${8+k*(bs+4)+(sel===i&&k===tubes[i].length-1?28:0)}px"></i>`).join('');e.classList.toggle('sel',sel===i)});
+  function tap(i){if(done)return;if(sel===null){if(!tubes[i].length)return;sel=i;paint();a.buzz(5);return}
+    if(sel===i){sel=null;paint();return}const t=tubes[sel],top=t[t.length-1],d=tubes[i];
+    if(d.length>=3||(d.length&&d[d.length-1]!==top)){a.buzz([20,30,20]);sel=null;paint();return}
+    d.push(t.pop());sel=null;a.buzz(8);paint();
+    if(tubes.every(x=>!x.length||(x.length===3&&x.every(v=>v===x[0])))){done=true;setTimeout(()=>{const r=row.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)},350)}}
+  paint();
+ }},
+/* 67 — fleet */
+{hints:['Find the hidden fleet shown at the top. The numbers say how many ship squares are in each row and column.','Ships never touch each other, not even at a corner. Tap once for a ship square, twice for water, three times to clear.','Top row: the long ship on the left three squares, and a two-ship going down in the right corner. A two-ship going down at the left of rows 3 and 4. Single ships at row 4 column 4 and row 6 column 1.'],
+ init(a){
+  const N=6,sol=new Set([0,1,2,5,11,12,18,21,30]),rc=[4,1,1,2,0,1],cc=[4,1,1,1,0,2];
+  const fleet=a.el('div','abs fleet');fleet.innerHTML=[3,2,2,1,1].map(n=>`<span>${'<i></i>'.repeat(n)}</span>`).join('');
+  const lab=34,cell=Math.floor(Math.min((a.w-32-lab)/N,(a.h-110-lab)/N)),W=cell*N;
+  const wrap=a.el('div','abs');Object.assign(wrap.style,{left:(a.w-W-lab)/2+'px',top:'64px',width:W+lab+'px',height:W+lab+'px'});
+  const st=Array(N*N).fill(0);let done=false;
+  const rl=rc.map((n,r)=>{const e=a.el('div','abs fcount',wrap);Object.assign(e.style,{left:W+'px',top:r*cell+'px',width:lab+'px',height:cell+'px'});e.textContent=n;return e});
+  const cl=cc.map((n,c)=>{const e=a.el('div','abs fcount',wrap);Object.assign(e.style,{left:c*cell+'px',top:W+'px',width:cell+'px',height:lab+'px'});e.textContent=n;return e});
+  const cells=st.map((_,i)=>{const e=a.el('button','abs scell',wrap);Object.assign(e.style,{left:(i%N)*cell+1+'px',top:Math.floor(i/N)*cell+1+'px',width:cell-2+'px',height:cell-2+'px'});
+    e.onclick=()=>{if(done)return;st[i]=(st[i]+1)%3;a.buzz(5);paint()};return e});
+  const paint=()=>{cells.forEach((e,i)=>{e.className='abs scell'+(st[i]===1?' ship':st[i]===2?' water':'')});
+    rl.forEach((e,r)=>e.classList.toggle('ok',st.slice(r*N,r*N+N).filter(v=>v===1).length===rc[r]));
+    cl.forEach((e,c)=>e.classList.toggle('ok',[0,1,2,3,4,5].filter(r=>st[r*N+c]===1).length===cc[c]));
+    if(st.every((v,i)=>(v===1)===sol.has(i))){done=true;const r=wrap.getBoundingClientRect();setTimeout(()=>a.solve(r.left+W/2,r.top+W/2),350)}};
+  paint();
+ }},
+/* 68 — quarter turn */
+{hints:['Make the picture look exactly the same after a quarter turn.','Every square has three partners: where it lands after a quarter, half and three-quarter turn. If one is filled, all four must be. Nothing else may be filled.','Twelve squares are missing: for each white square, fill the three squares it turns into.'],
+ init(a){
+  const N=6,given=[[0,1],[1,3],[2,2],[1,0]];const rot=([r,c])=>[c,N-1-r];
+  const need=new Set();given.forEach(p=>{let q=p;for(let k=0;k<4;k++){need.add(q[0]*N+q[1]);q=rot(q)}});
+  const g=grid(a,N,N,{pad:28,below:70});const fixed=new Set(given.map(([r,c])=>r*N+c));const on=new Set();let done=false;
+  for(let i=0;i<N*N;i++){const e=g.put('qcell'+(fixed.has(i)?' fixed':''),Math.floor(i/N),i%N,2);if(fixed.has(i))continue;
+    e.onclick=()=>{if(done)return;if(on.has(i))on.delete(i);else on.add(i);e.classList.toggle('on');a.buzz(5);
+      const all=new Set([...fixed,...on]);if(all.size===need.size&&[...need].every(x=>all.has(x))){done=true;g.b.classList.add('spin');setTimeout(()=>{const r=g.b.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)},900)}}}
+  const icon=a.el('div','abs');Object.assign(icon.style,{left:'50%',transform:'translateX(-50%)',bottom:`calc(22px + env(safe-area-inset-bottom,0px))`});
+  icon.innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/></svg>';
+ }},
+/* 69 — domino ring */
+{hints:['Close the ring: halves that touch must show the same number.','Tap a stone, then another to swap them. Tap a selected stone again to turn it around.','Clockwise: 1-2, 2-4, 4-1, 1-3, 3-4, 4-5, 5-3, 3-1.'],
+ init(a){
+  const tiles=[[1,2],[2,4],[4,1],[1,3],[3,4],[4,5],[5,3],[3,1]];
+  const start=[[4,3],[2,1],[5,3],[1,4],[3,1],[4,2],[4,5],[1,3]];
+  const slots=start.map(t=>t.slice());const n=8,R=Math.min(a.w,a.h)*.34,cx=a.w/2,cy=a.h*.46,dw=Math.min(84,R*.62),dh=dw/2;
+  const pipSvg=v=>{const P={1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],4:[[0,0],[2,0],[0,2],[2,2]],5:[[0,0],[2,0],[1,1],[0,2],[2,2]]}[v];
+    return`<svg viewBox="0 0 30 30" width="100%" height="100%">${P.map(([x,y])=>`<circle cx="${6+x*9}" cy="${6+y*9}" r="3.2" fill="var(--bg)"/>`).join('')}</svg>`};
+  let sel=null,done=false;
+  const els=slots.map((_,i)=>{const t=i/n*Math.PI*2-Math.PI/2;const e=a.el('button','abs domino');Object.assign(e.style,{width:dw+'px',height:dh+'px',left:cx+Math.cos(t)*R-dw/2+'px',top:cy+Math.sin(t)*R-dh/2+'px',transform:`rotate(${t*180/Math.PI+90}deg)`});
+    e.onclick=()=>tap(i);return e});
+  const paint=()=>els.forEach((e,i)=>{e.innerHTML=`<b>${pipSvg(slots[i][0])}</b><b>${pipSvg(slots[i][1])}</b>`;e.classList.toggle('sel',sel===i);
+    e.classList.toggle('ok',slots[i][1]===slots[(i+1)%n][0])});
+  function tap(i){if(done)return;if(sel===null){sel=i;a.buzz(5);paint();return}
+    if(sel===i)slots[i].reverse();else[slots[sel],slots[i]]=[slots[i],slots[sel]];sel=null;a.buzz(8);paint();
+    if(slots.every((s,k)=>s[1]===slots[(k+1)%n][0])){done=true;setTimeout(()=>a.solve(cx+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top),400)}}
+  paint();
+  a.stage._domino=()=>{tiles.forEach((t,i)=>{slots[i]=t.slice()});sel=null;tap(0);tap(0);tap(0);tap(0)};
+ }},
+/* 70 — ice and rings */
+{hints:['Two blocks, two squares and a pair of rings, all on ice.','Everything slides until stopped. A ring sends anything that slides into it out of its twin, still sliding the same way.','Swipe: up, right, up, left, down, left, up, right, left, up, right ×2, up, right, up, left, up ×2, right, up, left ×2, down, left, down, left, up.'],
+ init(a){return iceLevel(a,['....a..','..B....','#..B..#','#..#..#','T...#..','...#...','A.....#','.#...T#','....P#.'])}},
 ];
 
 renderAll();
