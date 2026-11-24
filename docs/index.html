@@ -362,6 +362,8 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .six.picked{transform:scale(.8)}
 .six.dim{opacity:.22}
 .six.nope{animation:wiggle .3s}
+.pcell2{border:1px solid var(--line)}
+.pcell2.on::after{content:"";position:absolute;inset:22%;border-radius:50%;background:var(--accent)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -1930,23 +1932,26 @@ const LEVELS=[
   a.stage._arrows=()=>rot.forEach(([r,c],i)=>{const want=['U','L','L','U'][i];while(dir[r][c]!==want)els[r][c].onclick()});
  }},
 /* 58 — punch */
-{hints:['Unfold the paper in your head.','Every fold works like a mirror: the holes flip across each fold line.','The answer is symmetric across both middle lines: the second pattern.'],
+{hints:['Unfold the paper in your head, one fold at a time, starting with the last fold.','Every fold is a mirror, so two punched holes become sixteen. Tap squares on the open paper to mark where the holes will be.','Rows 1 and 8: columns 2, 3, 6 and 7. Rows 3 and 6: columns 1, 4, 5 and 8.'],
  init(a){
-  const holes=[['c',.15,.13],['s',.36,.34]];
-  const mk=(list,sz)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 1 1"><rect x="0" y="0" width="1" height="1" fill="var(--fg)"/>${list.map(([k,x,y])=>k==='c'?`<circle cx="${x}" cy="${y}" r=".055" fill="var(--bg)"/>`:`<rect x="${x-.05}" y="${y-.05}" width=".1" height=".1" fill="var(--bg)"/>`).join('')}</svg>`;
-  const mir=h=>h.flatMap(([k,x,y])=>[[k,x,y],[k,1-x,y],[k,x,1-y],[k,1-x,1-y]]);
-  const trans=h=>h.flatMap(([k,x,y])=>[[k,x,y],[k,x+.5,y],[k,x,y+.5],[k,x+.5,y+.5]]);
-  const half=h=>h.flatMap(([k,x,y])=>[[k,x,y],[k,1-x,y],[k,x,y+.5],[k,1-x,y+.5]]);
-  const swap=h=>h.flatMap(([k,x,y])=>{const o=k==='c'?'s':'c';return[[k,x,y],[o,1-x,y],[o,x,1-y],[k,1-x,1-y]]});
-  const st=Math.min(104,(a.w-32-40)/3);
+  const N=8,punch=[[0,1],[2,0]];
+  // unfold: last fold (4 wide, right over left at x=2), then bottom over top (y=4), then right over left (x=4)
+  const want=new Set();punch.forEach(([r,c])=>{for(const c1 of [c,3-c])for(const c2 of [c1,7-c1])for(const r1 of [r,7-r])want.add(r1*N+c2)});
+  const st=Math.min(78,(a.w-32-36)/4),u=st/8;
+  const gridLines=(w,h,u)=>{let s='';for(let i=1;i<w;i++)s+=`<line x1="${i*u}" y1="0" x2="${i*u}" y2="${h*u}" stroke="var(--line)" stroke-width="1"/>`;for(let i=1;i<h;i++)s+=`<line x1="0" y1="${i*u}" x2="${w*u}" y2="${i*u}" stroke="var(--line)" stroke-width="1"/>`;return s};
+  const sheet=(w,h,extra,uu=u)=>`<svg width="${st}" height="${st}" viewBox="-2 -2 ${st+4} ${st+4}" style="overflow:visible"><rect width="${w*uu}" height="${h*uu}" fill="var(--surface)" stroke="var(--fg)" stroke-width="2"/>${gridLines(w,h,uu)}${extra}</svg>`;
+  const vfold=(w,h)=>`<line x1="${w*u/2}" y1="-4" x2="${w*u/2}" y2="${h*u+4}" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/><path d="M${w*u*.85} ${h*u*.42} Q${w*u/2} ${h*u*.1} ${w*u*.15} ${h*u*.42}" fill="none" stroke="var(--accent)" stroke-width="2.5"/><path d="M${w*u*.15} ${h*u*.42} l5 -7 M${w*u*.15} ${h*u*.42} l8 2" stroke="var(--accent)" stroke-width="2.5"/>`;
+  const hfold=(w,h)=>`<line x1="-4" y1="${h*u/2}" x2="${w*u+4}" y2="${h*u/2}" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/><path d="M${w*u*.4} ${h*u*.85} Q${w*u*.05} ${h*u/2} ${w*u*.4} ${h*u*.15}" fill="none" stroke="var(--accent)" stroke-width="2.5"/><path d="M${w*u*.4} ${h*u*.15} l-7 -3 M${w*u*.4} ${h*u*.15} l-2 8" stroke="var(--accent)" stroke-width="2.5"/>`;
+  const u2=st/4,holes=punch.map(([r,c])=>`<circle cx="${(c+.5)*u2}" cy="${(r+.5)*u2}" r="${u2*.3}" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.5"/>`).join('');
   const steps=a.el('div','abs punch-steps');
-  steps.innerHTML=`<div class="pst"><svg width="${st}" height="${st}" viewBox="-.05 -.05 1.1 1.1"><rect width="1" height="1" fill="var(--fg)"/><line x1=".5" y1="-.04" x2=".5" y2="1.04" stroke="var(--accent)" stroke-width=".03" stroke-dasharray=".06 .05"/><path d="M.82 .3 Q.5 .05 .2 .3" fill="none" stroke="var(--accent)" stroke-width=".04"/></svg></div>
-    <div class="pst"><svg width="${st}" height="${st}" viewBox="-.05 -.05 1.1 1.1"><rect width=".5" height="1" fill="var(--fg)"/><line x1="-.04" y1=".5" x2=".54" y2=".5" stroke="var(--accent)" stroke-width=".03" stroke-dasharray=".06 .05"/><path d="M.25 .85 Q.0 .5 .25 .15" fill="none" stroke="var(--accent)" stroke-width=".04"/></svg></div>
-    <div class="pst"><svg width="${st}" height="${st}" viewBox="-.05 -.05 1.1 1.1"><rect width=".5" height=".5" fill="var(--fg)"/>${holes.map(([k,x,y])=>k==='c'?`<circle cx="${x}" cy="${y}" r=".055" fill="var(--bg)"/>`:`<rect x="${x-.05}" y="${y-.05}" width=".1" height=".1" fill="var(--bg)"/>`).join('')}</svg></div>`;
-  const opts=[trans(holes),mir(holes),half(holes),swap(holes)];const os=Math.min(150,(a.w-32-12)/2);
-  const wrap=a.el('div','abs punch-opts');let done=false;
-  opts.forEach((h,i)=>{const b=a.el('button','punch-opt',wrap);b.innerHTML=mk(h,os-16);b.onclick=()=>{if(done)return;
-    if(i===1){done=true;a.buzz(12);const[x,y]=rectCenter(b);setTimeout(()=>a.solve(x,y),250)}else{b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');a.buzz([20,30,20])}}});
+  steps.innerHTML=[sheet(8,8,vfold(8,8)),sheet(4,8,hfold(4,8)),sheet(4,4,vfold(4,4)),sheet(2,4,holes,u2)].map(s=>`<div class="pst">${s}</div>`).join('');
+  const cell=Math.floor(Math.min((a.w-40)/N,(a.h-st-90)/N));const W=cell*N;
+  const board=a.el('div','abs');Object.assign(board.style,{left:(a.w-W)/2+'px',top:st+44+'px',width:W+'px',height:W+'px',background:'var(--surface)'});
+  const marked=new Set();let done=false;
+  for(let i=0;i<N*N;i++){const e=a.el('button','abs pcell2',board);Object.assign(e.style,{left:(i%N)*cell+'px',top:Math.floor(i/N)*cell+'px',width:cell+'px',height:cell+'px'});
+    e.onclick=()=>{if(done)return;if(marked.has(i))marked.delete(i);else marked.add(i);e.classList.toggle('on');a.buzz(5);
+      if(marked.size===want.size&&[...want].every(k=>marked.has(k))){done=true;const r=board.getBoundingClientRect();setTimeout(()=>a.solve(r.left+W/2,r.top+W/2),350)}}}
+  a.stage._punch=()=>{const els=board.querySelectorAll('.pcell2');want.forEach(k=>els[k].onclick())};
  }},
 /* 59 — snake */
 {hints:['Eat everything, then leave through the ring.','The snake grows with every bite and can not cross itself. The order you eat in matters.','Swipe: up ×6, left, up, left, down, right, down ×5, right, down, right, up ×7.'],
