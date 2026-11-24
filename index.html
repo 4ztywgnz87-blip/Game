@@ -8,7 +8,7 @@
    and the chapter colour reserved for the things you can touch and for the solve flood. */
 :root{
   --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
-  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE;
   --accent:var(--ch1); --on-accent:#0C0D11;
   --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
   --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -18,7 +18,7 @@
 }
 :root.light{
   --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
-  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --on-accent:#FFFFFF;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --on-accent:#FFFFFF;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -42,7 +42,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
 .wordmark>span{display:block}
 .wordmark .dot{color:var(--accent)}
-.chapters{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.chapters{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .chapter-bar{display:flex;flex-direction:column;gap:8px}
 .chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
 .chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
@@ -302,6 +302,45 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .holdpad{left:50%;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:3px solid var(--fg);touch-action:none}
 .holdpad.down{background:var(--fg)}
 .holdpad.side{left:auto;right:max(24px,env(safe-area-inset-right,0px));transform:none}
+.calc-target{left:50%;top:12px;transform:translateX(-50%);border:3px solid var(--accent);color:var(--accent);padding:10px 18px;font-size:44px}
+.calc-val{left:0;right:0;text-align:center;font-size:110px;font-variant-numeric:tabular-nums}
+.calc-op{width:84px;font-size:30px}
+.pipsrow.nope i{background:var(--ch2)}
+.pipsrow i.over{background:var(--ch2)}
+.sky{background:linear-gradient(to top,var(--accent) calc(var(--h,0)*100%),var(--surface) 0);font-family:var(--display);font-stretch:125%;font-weight:900;font-size:26px;color:var(--fg)}
+.skybar{display:flex;align-items:flex-end;justify-content:center}
+.skybar b{position:absolute;bottom:auto;top:0;left:0;right:0;border:2px dashed var(--muted)}
+.skybar i{position:absolute;top:0;left:0;right:0;background:var(--accent);opacity:.85}
+.skybar.h b{top:0;bottom:0;right:auto}
+.skybar.h i{top:0;bottom:0;right:auto}
+.compass-mark{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:16px solid var(--fg)}
+.aligned circle{stroke:var(--accent)}
+.island{border-radius:50%;background:var(--surface);border:3px solid var(--fg);font-family:var(--display);font-stretch:125%;font-weight:900;font-size:20px;z-index:1}
+.island.sel{border-color:var(--accent);color:var(--accent)}
+.island.full{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.island.over{border-color:var(--ch2);color:var(--ch2)}
+.island.nope{animation:wiggle .3s}
+.fog{background:var(--bg);z-index:1;pointer-events:none;
+  -webkit-mask-image:radial-gradient(circle var(--r,60px) at var(--x,-999px) var(--y,-999px),transparent 0,transparent 45%,#000 100%);
+  mask-image:radial-gradient(circle var(--r,60px) at var(--x,-999px) var(--y,-999px),transparent 0,transparent 45%,#000 100%)}
+.arw{background:var(--line);display:grid;place-items:center}
+.arw svg{fill:var(--muted);transform:rotate(var(--a,0deg));transition:transform .2s var(--ease)}
+.arw.rot{background:var(--bg);box-shadow:inset 0 0 0 3px var(--accent);cursor:pointer}
+.arw.rot svg{fill:var(--fg)}
+.sdot.fail{background:var(--ch2)}
+.punch-steps{left:0;right:0;top:12px;display:flex;justify-content:center;gap:20px}
+.punch-opts{left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:grid;grid-template-columns:repeat(2,auto);gap:12px}
+.punch-opt{border:2px solid var(--line);padding:6px;display:grid;place-items:center}
+.punch-opt.nope{animation:wiggle .3s;border-color:var(--ch2)}
+.apple{background:var(--fg);border-radius:50%}
+.snake{background:var(--accent);opacity:.75;border-radius:4px;transition:left .1s,top .1s}
+.snake.head{opacity:1;border-radius:8px;z-index:1}
+.snake-exit{border-color:var(--muted)}
+.snake-exit.full{border-color:var(--accent);background:none}
+.six{transition:opacity .2s,transform .15s}
+.six.picked{transform:scale(.8)}
+.six.dim{opacity:.22}
+.six.nope{animation:wiggle .3s}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -364,7 +403,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">50 / 50</span>
+    <span class="label">60 / 60</span>
     <div class="big">All<br>solved.</div>
     <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
@@ -389,7 +428,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <script>
 (()=>{
-const TOTAL=50, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'}], ROMAN=['I','II','III','IV','V'];
+const TOTAL=60, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'}], ROMAN=['I','II','III','IV','V','VI'];
 const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const chapterOf=id=>Math.floor((id-1)/10);
@@ -822,6 +861,8 @@ addEventListener('deviceorientation',e=>{if(e.beta==null||e.gamma==null)return;m
 addEventListener('devicemotion',e=>{const ac=e.acceleration;if(!ac||ac.x==null)return;const m=Math.hypot(ac.x,ac.y||0,ac.z||0);const t=performance.now();
   if(m>13&&(!motion.peaks.length||t-motion.peaks[motion.peaks.length-1]>110)){motion.peaks.push(t);motion.peaks=motion.peaks.filter(p=>t-p<1400);
     if(motion.peaks.length>=3){motion.peaks=[];motion.shakeFns.forEach(f=>f())}}});
+addEventListener('deviceorientation',e=>{if(typeof e.webkitCompassHeading==='number'&&e.webkitCompassHeading>=0){motion.heading=e.webkitCompassHeading;motion.headAt=performance.now()}});
+addEventListener('deviceorientationabsolute',e=>{if(e.alpha!=null){motion.heading=(360-e.alpha)%360;motion.headAt=performance.now()}});
 const needsPermission=()=>typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function';
 function askMotion(){ // must run inside a tap
   if(motion.asked)return Promise.resolve(motion.granted);motion.asked=true;
@@ -838,11 +879,11 @@ function sensorGravity(){
 }
 /* Sets up a level that wants motion. Returns {gravity(), mode, cleanup}.
    mode: 'sensor' when the phone reports orientation, 'drag' otherwise. */
-function motionInput(a,{rest={x:0,y:0},onShake,top=false}={}){
+function motionInput(a,{rest={x:0,y:0},onShake,top=false,text=''}={}){
   const st={mode:'wait',drag:null,cleanup:[]};
   const note=a.el('div','abs motion-note'+(top?' top':''));note.hidden=true;
   const setMode=m=>{st.mode=m;note.hidden=m!=='drag'&&m!=='ask';
-    if(m==='drag')note.textContent=onShake?'No motion sensor here. Scrub fast left and right to shake.':'No motion sensor here. Drag to tilt.';
+    if(m==='drag')note.textContent=text?text:onShake?'No motion sensor here. Scrub fast left and right to shake.':'No motion sensor here. Drag to tilt.';
     if(m==='ask')note.innerHTML='<button class="pill">Allow motion</button>'};
   if(needsPermission()&&!motion.granted){setMode(motion.asked?'drag':'ask');
     const btn=note.querySelector('.pill');if(btn)btn.onclick=e=>{e.stopPropagation();askMotion().then(ok=>setMode(ok?'wait':'drag'))}}
@@ -866,14 +907,14 @@ function motionInput(a,{rest={x:0,y:0},onShake,top=false}={}){
 }
 
 /* tilt engine: # wall, x trap, O goal, S start, a/b gates (a closed first), * switch (flips gates when the ball rolls onto it) */
-function tiltLevel(a,map,{rest={x:0,y:0}}={}){
+function tiltLevel(a,map,{rest={x:0,y:0},fog=false}={}){
   const hasHold=map.some(r=>r.includes('h'));
   const R=map.length,C=map[0].length,g=grid(a,R,C,{below:hasHold?100:52});g.b.style.background='var(--surface)';
   let S,goal;const traps=[],gates=[],switches=[],holds=[];let gs=0,hOpen=false,hWantClose=false;
   map.forEach((row,r)=>[...row].forEach((ch,c)=>{
     if(ch==='#')g.put('wall',r,c);
     if(ch==='x'){traps.push([r,c]);g.put('trap',r,c,Math.round(g.cell*.16))}
-    if(ch==='O'){goal=[r,c];g.put('hole',r,c,Math.round(g.cell*.14))}
+    if(ch==='O'){goal=[r,c];goal.el=g.put('hole',r,c,Math.round(g.cell*.14))}
     if(ch==='a'||ch==='b')gates.push({ch,r,c,el:g.put('gate',r,c,0)});
     if(ch==='*')switches.push({r,c,el:g.put('switch',r,c,Math.round(g.cell*.28))});
     if(ch==='h')holds.push({r,c,el:g.put('gate closed',r,c,0)});
@@ -889,6 +930,7 @@ function tiltLevel(a,map,{rest={x:0,y:0}}={}){
     holds.paint=paintH}
   const ballEl=a.el('div','sdot',g.b);Object.assign(ballEl.style,{width:rad*2+'px',height:rad*2+'px',left:0,top:0,transition:'none'});
   const paint=()=>gates.forEach(x=>x.el.classList.toggle('closed',(x.ch==='a')===(gs===0)));paint();
+  let fogEl=null;if(fog){fogEl=a.el('div','abs fog',g.b);fogEl.style.inset='0';fogEl.style.setProperty('--r',cell*1.8+'px');goal.el.style.zIndex=2;ballEl.style.zIndex=3}
   const solid=(r,c)=>{if(r<0||c<0||r>=R||c>=C)return true;const ch=map[r][c];return ch==='#'||(ch==='a'&&gs===0)||(ch==='b'&&gs===1)||(ch==='h'&&!hOpen)};
   let p,v,onSwitch=null,state='play';
   const reset=()=>{p={x:(S[1]+.5)*cell,y:(S[0]+.5)*cell};v={x:0,y:0};ballEl.style.transition='none';ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px)`};reset();
@@ -924,6 +966,7 @@ function tiltLevel(a,map,{rest={x:0,y:0}}={}){
       else if(near(goal)){state='done';ballEl.style.transition='transform .25s';p.x=(goal[1]+.5)*cell;p.y=(goal[0]+.5)*cell;ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px) scale(.6)`;
         const r=g.b.getBoundingClientRect();setTimeout(()=>a.solve(r.left+p.x,r.top+p.y),300);return}
       if(state==='play')ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px)`;
+      if(fogEl){fogEl.style.setProperty('--x',p.x+'px');fogEl.style.setProperty('--y',p.y+'px')}
     }
     raf=requestAnimationFrame(tick)};
   raf=requestAnimationFrame(tick);
@@ -932,6 +975,7 @@ function tiltLevel(a,map,{rest={x:0,y:0}}={}){
   return()=>{cancelAnimationFrame(raf);mi.dispose()};
 }
 
+function cleanCount(upto){return Object.entries(state.solved).filter(([id,v])=>+id<upto&&v&&v.hints===0).length}
 /* ---------- levels ---------- */
 const LEVELS=[
 /* 1 — tap to grow */
@@ -1747,6 +1791,176 @@ const LEVELS=[
   raf=requestAnimationFrame(tick);paint();
   a.stage._undo={shrink(){s=small/full;paint();up({pointerId:-1})},hold(v){held=v}};
   return()=>{cancelAnimationFrame(raf);a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointermove',move);a.stage.removeEventListener('pointerup',up);a.stage.removeEventListener('pointercancel',up);a.stage.removeEventListener('wheel',wheel)};
+ }},
+/* 51 — number machine */
+{hints:['Turn the big number into the one in the box.','You get exactly six moves, shown by the dots. Every move must count.','+3, ×2, ×2, +3, ×2, −5.'],
+ init(a){
+  const ops=[['+3',x=>x+3],['×2',x=>x*2],['−5',x=>x-5]],target=33,limit=6;let v=1,used=0,done=false;
+  const box=a.el('div','abs big calc-target');box.textContent=target;
+  const val=a.el('div','abs big calc-val');val.style.top=a.h*.3+'px';
+  const pips=a.el('div','abs pipsrow calc-pips');pips.style.top=a.h*.3+130+'px';
+  const row=a.el('div','abs dials');row.style.bottom=`calc(36px + env(safe-area-inset-bottom,0px))`;
+  const paint=()=>{val.textContent=v;pips.innerHTML=[...Array(limit)].map((_,i)=>`<i class="${i<limit-used?'on':''}"></i>`).join('')};
+  ops.forEach(([n,f])=>{const b=a.el('button','dial calc-op',row);b.textContent=n;b.onclick=()=>{if(done||used>=limit)return;v=f(v);used++;paint();a.buzz(8);
+    if(v===target){done=true;const[x,y]=rectCenter(val);setTimeout(()=>a.solve(x,y),300);return}
+    if(used===limit){pips.classList.add('nope');a.buzz([30,40,30]);setTimeout(()=>{pips.classList.remove('nope');v=1;used=0;paint()},800)}}});
+  paint();
+ }},
+/* 52 — skyline */
+{hints:['The bars show the towers from the front (below) and from the side (right).','Each bar is the tallest tower in that column or row. You have exactly 10 blocks, so one tower must count for a row and a column at the same time.','3 in the top-left corner, 3 in the bottom row third column, 2 in row two column two, 2 in row three column four.'],
+ init(a){
+  const N=4,rowT=[3,2,2,3],colT=[3,2,3,2],budget=10;const h=Array(N*N).fill(0);let done=false;
+  const side=56,cell=Math.floor(Math.min((a.w-32-side)/N,(a.h-200)/N)),W=cell*N;
+  const wrap=a.el('div','abs');Object.assign(wrap.style,{left:(a.w-W-side)/2+'px',top:'40px',width:W+side+'px',height:W+side+'px'});
+  const cells=h.map((_,i)=>{const e=a.el('button','abs sky',wrap);Object.assign(e.style,{left:(i%N)*cell+2+'px',top:Math.floor(i/N)*cell+2+'px',width:cell-4+'px',height:cell-4+'px'});
+    e.onclick=()=>{if(done)return;h[i]=(h[i]+1)%4;a.buzz(6);paint()};return e});
+  const bar=(x,y,horiz)=>{const e=a.el('div','abs skybar'+(horiz?' h':''),wrap);Object.assign(e.style,{left:x+'px',top:y+'px'});e.innerHTML='<b></b><i></i>';return e};
+  const cb=[0,1,2,3].map(c=>bar(c*cell+cell*.2,W+8,false)),rb=[0,1,2,3].map(r=>bar(W+8,r*cell+cell*.2,true));
+  const unit=(side-12)/3;
+  const pips=a.el('div','abs pipsrow');pips.style.top=W+side+70+'px';
+  const paint=()=>{h.forEach((v,i)=>{cells[i].textContent=v||'';cells[i].style.setProperty('--h',v/3)});
+    const cm=[0,1,2,3].map(c=>Math.max(...[0,1,2,3].map(r=>h[r*N+c]))),rm=[0,1,2,3].map(r=>Math.max(...h.slice(r*N,r*N+N)));
+    cb.forEach((e,c)=>{Object.assign(e.style,{width:cell*.6+'px',height:3*unit+'px'});e.querySelector('b').style.height=colT[c]*unit+'px';e.querySelector('i').style.height=cm[c]*unit+'px'});
+    rb.forEach((e,r)=>{Object.assign(e.style,{height:cell*.6+'px',width:3*unit+'px'});e.querySelector('b').style.width=rowT[r]*unit+'px';e.querySelector('i').style.width=rm[r]*unit+'px'});
+    const used=h.reduce((s,x)=>s+x,0);pips.innerHTML=[...Array(budget)].map((_,i)=>`<i class="${i<used?'on':''}"></i>`).join('')+(used>budget?'<i class="over"></i>':'');
+    if(used===budget&&cm.join()===colT.join()&&rm.join()===rowT.join()){done=true;const r=wrap.getBoundingClientRect();setTimeout(()=>a.solve(r.left+W/2,r.top+W/2),400)}};
+  paint();
+ }},
+/* 53 — compass */
+{hints:['The letters are directions.','Hold your phone flat and turn yourself around. The mark at the top is where your phone is pointing.','Point the top of your phone to the west, the highlighted W, and hold it there.'],
+ init(a){
+  const S=Math.min(a.w-48,a.h-160),cx=a.w/2,cy=a.h*.45;
+  const mark=a.el('div','abs compass-mark');Object.assign(mark.style,{left:cx-9+'px',top:cy-S/2-26+'px'});
+  const rose=a.el('div','abs');Object.assign(rose.style,{left:cx-S/2+'px',top:cy-S/2+'px',width:S+'px',height:S+'px'});
+  let ticks='';for(let i=0;i<72;i++){const t=i*5*Math.PI/180,R=S/2-4,l=i%9===0?R*.86:R*.93;ticks+=`<line x1="${S/2+Math.sin(t)*R}" y1="${S/2-Math.cos(t)*R}" x2="${S/2+Math.sin(t)*l}" y2="${S/2-Math.cos(t)*l}" stroke="var(--muted)" stroke-width="${i%9===0?3:1.5}"/>`}
+  const L=[['N',0],['E',90],['S',180],['W',270]].map(([n,d])=>{const t=d*Math.PI/180,R=S*.33;return`<text class="cl ${n==='W'?'w':''}" x="${S/2+Math.sin(t)*R}" y="${S/2-Math.cos(t)*R+12}" text-anchor="middle" font-size="34" font-weight="900" font-family="Archivo, sans-serif" font-stretch="125%" fill="${n==='W'?'var(--accent)':'var(--fg)'}">${n}</text>`}).join('');
+  rose.innerHTML=`<svg width="${S}" height="${S}"><circle cx="${S/2}" cy="${S/2}" r="${S/2-4}" fill="var(--surface)" stroke="var(--fg)" stroke-width="3"/>${ticks}${L}</svg>`;
+  const mi=motionInput(a,{text:'No compass here. Drag sideways to turn.'});
+  let fake=0,dragX=null,hold=0,done=false,last=performance.now(),raf;
+  const dn=e=>{dragX=e.clientX},mv=e=>{if(dragX===null)return;fake=(fake-(e.clientX-dragX)*.6+360)%360;dragX=e.clientX},up=()=>{dragX=null};
+  a.stage.addEventListener('pointerdown',dn);a.stage.addEventListener('pointermove',mv);a.stage.addEventListener('pointerup',up);a.stage.addEventListener('pointercancel',up);
+  const tick=t=>{const dt=(t-last)/1000;last=t;const real=motion.heading!=null&&performance.now()-motion.headAt<800;const hd=real?motion.heading:fake;
+    rose.style.transform=`rotate(${-hd}deg)`;const off=Math.abs(((hd-270)%360+540)%360-180);
+    hold=off<12?hold+dt:0;rose.classList.toggle('aligned',off<12);
+    if(hold>1.5&&!done){done=true;a.solve(cx+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top);return}raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  a.stage._heading=v=>{fake=v};
+  return()=>{cancelAnimationFrame(raf);mi.dispose();a.stage.removeEventListener('pointerdown',dn);a.stage.removeEventListener('pointermove',mv);a.stage.removeEventListener('pointerup',up);a.stage.removeEventListener('pointercancel',up)};
+ }},
+/* 54 — bridges */
+{hints:['Each number says how many bridges leave that island.','Tap an island, then another one in a straight line, to build a bridge. Tap the pair again for a double bridge, a third time to remove it. Bridges can not cross, and all islands must end up connected.','Top: double. Left side: single, single. Middle row: double, then single. Right side: single, double. Bottom: single.'],
+ init(a){
+  const I=[[0,0,3],[0,4,3],[3,0,4],[3,2,3],[3,4,4],[6,0,2],[6,4,3]];const R=7,C=5;
+  const g=grid(a,R,C,{pad:36});const cs=g.cell;
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',g.W);svg.setAttribute('height',g.H);svg.style.cssText='position:absolute;left:0;top:0;overflow:visible;pointer-events:none';g.b.appendChild(svg);
+  const B=new Map();let sel=null,done=false;
+  const pos=i=>[(I[i][1]+.5)*cs,(I[i][0]+.5)*cs];
+  const els=I.map((isl,i)=>{const e=a.el('button','abs island',g.b);const z=Math.min(54,cs*.8);Object.assign(e.style,{width:z+'px',height:z+'px',left:pos(i)[0]-z/2+'px',top:pos(i)[1]-z/2+'px'});e.textContent=isl[2];e.onclick=()=>tap(i);return e});
+  const between=(i,j)=>{const[a1,b1]=I[i],[a2,b2]=I[j];if(a1!==a2&&b1!==b2)return null;
+    return I.some((k,n)=>n!==i&&n!==j&&(a1===a2?k[0]===a1&&k[1]>Math.min(b1,b2)&&k[1]<Math.max(b1,b2):k[1]===b1&&k[0]>Math.min(a1,a2)&&k[0]<Math.max(a1,a2)))?null:true};
+  const crosses=(i,j)=>{const h1=I[i][0]===I[j][0];for(const [k] of B){const[p,q]=k.split('-').map(Number);if([p,q].some(x=>x===i||x===j))continue;const h2=I[p][0]===I[q][0];if(h1===h2)continue;
+    const[H,V]=h1?[[i,j],[p,q]]:[[p,q],[i,j]];const hr=I[H[0]][0],hc=[I[H[0]][1],I[H[1]][1]].sort((x,y)=>x-y),vc=I[V[0]][1],vr=[I[V[0]][0],I[V[1]][0]].sort((x,y)=>x-y);
+    if(vc>hc[0]&&vc<hc[1]&&hr>vr[0]&&hr<vr[1])return true}return false};
+  function tap(i){if(done)return;if(sel===null){sel=i;paint();a.buzz(5);return}if(sel===i){sel=null;paint();return}
+    const j=i,s=sel;sel=null;if(!between(s,j)||crosses(s,j)){a.buzz([20,30,20]);els[j].classList.remove('nope');void els[j].offsetWidth;els[j].classList.add('nope');paint();return}
+    const k=Math.min(s,j)+'-'+Math.max(s,j);const n=((B.get(k)||0)+1)%3;if(n)B.set(k,n);else B.delete(k);a.buzz(8);paint();check()}
+  function paint(){svg.innerHTML=[...B].map(([k,n])=>{const[p,q]=k.split('-').map(Number);const[x1,y1]=pos(p),[x2,y2]=pos(q);const h=y1===y2;
+      return(n===1?[0]:[-5,5]).map(o=>`<line x1="${x1+(h?0:o)}" y1="${y1+(h?o:0)}" x2="${x2+(h?0:o)}" y2="${y2+(h?o:0)}" stroke="var(--fg)" stroke-width="3"/>`).join('')}).join('');
+    els.forEach((e,i)=>{const d=[...B].reduce((s,[k,n])=>s+(k.split('-').map(Number).includes(i)?n:0),0);e.classList.toggle('full',d===I[i][2]);e.classList.toggle('over',d>I[i][2]);e.classList.toggle('sel',sel===i)})}
+  function check(){const deg=I.map((_,i)=>[...B].reduce((s,[k,n])=>s+(k.split('-').map(Number).includes(i)?n:0),0));if(!deg.every((d,i)=>d===I[i][2]))return;
+    const seen=new Set([0]),q=[0];while(q.length){const x=q.shift();for(const [k] of B){const[p,r]=k.split('-').map(Number);const y=p===x?r:r===x?p:-1;if(y>=0&&!seen.has(y)){seen.add(y);q.push(y)}}}
+    if(seen.size===I.length){done=true;const r=g.b.getBoundingClientRect();setTimeout(()=>a.solve(r.left+r.width/2,r.top+r.height/2),350)}}
+  paint();
+ }},
+/* 55 — clean record */
+{get hints(){const n=cleanCount(55);return['That tile looks familiar. Where have you seen it before?','In the level list, a small dot marks a level you solved without hints. How many of those do you have?',`Count the levels with a dot. Right now you have ${n}.`]},
+ init(a){
+  const n=cleanCount(55);
+  const tile=a.el('div','abs cell solved clean');const z=Math.min(110,a.w*.28);Object.assign(tile.style,{width:z+'px',height:z+'px',left:a.w/2-z-24+'px',top:a.h*.2+'px',fontSize:z*.36+'px'});tile.style.setProperty('--c','var(--accent)');tile.textContent='??';
+  const x=a.el('div','abs big');Object.assign(x.style,{left:a.w/2+4+'px',top:a.h*.2+z*.2+'px',fontSize:z*.6+'px',color:'var(--muted)'});x.textContent='×?';
+  dials(a,2,{bottom:Math.max(40,a.h*.3),onChange:v=>{if(v[0]*10+v[1]===n)a.solve()}});
+  a.stage._clean=n;
+ }},
+/* 56 — fog */
+{hints:['You can only see what is close to the ball.','Tilt slowly and remember what you saw. The ring is at the bottom right.','Go down to the fifth row, right along it to the fifth column, down two, right to the edge and straight down to the ring.'],
+ init(a){return tiltLevel(a,['S.#....','..#.x#.','x.#..#.','..##.#.','.....#.','##.#.#.','...#...','.#x##x.','.#.....','.###x#.','...x.#O'],{fog:true})}},
+/* 57 — arrows */
+{hints:['The ball follows the arrows. Collect every diamond, then reach the ring.','Outlined arrows turn when you tap them. Press play to send the ball.','Set the outlined arrows (bottom to top): up, left, left, up.'],
+ init(a){
+  const map=['.O.UL','.....','.D*RD','R...L','....*','....*','LL...'],rot=[[3,4],[2,4],[2,3],[2,1]],start=[6,4];const R=7,C=5;
+  const g=grid(a,R,C,{pad:24,below:96});g.b.style.background='var(--surface)';
+  const dir=map.map(r=>[...r]);const isRot=(r,c)=>rot.some(x=>x[0]===r&&x[1]===c);
+  const ang={U:0,R:90,D:180,L:270},nextD={U:'R',R:'D',D:'L',L:'U'};let stars=[],busy=false,done=false;
+  const els=map.map((row,r)=>[...row].map((ch,c)=>{
+    if('URDL'.includes(ch)){const e=g.put('arw'+(isRot(r,c)?' rot':''),r,c,3);e.innerHTML='<svg viewBox="0 0 24 24" width="60%" height="60%"><path d="M12 4l7 9h-4.5v7h-5v-7H5z"/></svg>';
+      e.style.setProperty('--a',ang[ch]+'deg');if(isRot(r,c))e.onclick=()=>{if(busy||done)return;dir[r][c]=nextD[dir[r][c]];e.style.setProperty('--a',(parseFloat(e.style.getPropertyValue('--a'))+90)+'deg');a.buzz(6)};return e}
+    if(ch==='*'){const e=g.put('crystal',r,c,Math.round(g.cell*.32));stars.push({r,c,e});return e}
+    if(ch==='O')return g.put('hole',r,c,Math.round(g.cell*.16));return null}));
+  const ball=a.el('div','sdot',g.b);const bi=Math.round(g.cell*.28);const at=(r,c)=>g.at(ball,r,c,bi);at(...start);ball.style.transition='left .14s linear,top .14s linear';
+  const play=a.el('button','abs icon-btn big-btn');play.style.left='50%';play.style.transform='translateX(-50%)';play.style.bottom=`calc(20px + env(safe-area-inset-bottom,0px))`;
+  play.setAttribute('aria-label','Play');play.innerHTML='<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="var(--fg)"/></svg>';
+  play.onclick=()=>{if(busy||done)return;busy=true;let[r,c]=start,d='U';const got=new Set();const seen=new Set();stars.forEach(s=>s.e.classList.remove('on'));
+    const step=()=>{const ch=dir[r][c];if('URDL'.includes(map[r][c]))d=ch;const s=stars.find(s=>s.r===r&&s.c===c);if(s){got.add(s);s.e.classList.add('on')}
+      if(map[r][c]==='O'&&got.size===stars.length){done=true;const rr=ball.getBoundingClientRect();a.solve(rr.left+rr.width/2,rr.top+rr.height/2);return}
+      const k=r+','+c+','+d+','+got.size;const nr=r+DIRS[d][0],nc=c+DIRS[d][1];
+      if(map[r][c]==='O'||seen.has(k)||nr<0||nc<0||nr>=R||nc>=C){a.buzz([30,40,30]);ball.classList.add('fail');setTimeout(()=>{ball.classList.remove('fail');ball.style.transition='none';at(...start);void ball.offsetWidth;ball.style.transition='left .14s linear,top .14s linear';stars.forEach(s=>s.e.classList.remove('on'));busy=false},500);return}
+      seen.add(k);r=nr;c=nc;at(r,c);setTimeout(step,150)};
+    step()};
+  a.stage._arrows=()=>rot.forEach(([r,c],i)=>{const want=['U','L','L','U'][i];while(dir[r][c]!==want)els[r][c].onclick()});
+ }},
+/* 58 — punch */
+{hints:['Unfold the paper in your head.','Every fold works like a mirror: the holes flip across each fold line.','The answer is symmetric across both middle lines: the second pattern.'],
+ init(a){
+  const holes=[['c',.15,.13],['s',.36,.34]];
+  const mk=(list,sz)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 1 1"><rect x="0" y="0" width="1" height="1" fill="var(--fg)"/>${list.map(([k,x,y])=>k==='c'?`<circle cx="${x}" cy="${y}" r=".055" fill="var(--bg)"/>`:`<rect x="${x-.05}" y="${y-.05}" width=".1" height=".1" fill="var(--bg)"/>`).join('')}</svg>`;
+  const mir=h=>h.flatMap(([k,x,y])=>[[k,x,y],[k,1-x,y],[k,x,1-y],[k,1-x,1-y]]);
+  const trans=h=>h.flatMap(([k,x,y])=>[[k,x,y],[k,x+.5,y],[k,x,y+.5],[k,x+.5,y+.5]]);
+  const half=h=>h.flatMap(([k,x,y])=>[[k,x,y],[k,1-x,y],[k,x,y+.5],[k,1-x,y+.5]]);
+  const swap=h=>h.flatMap(([k,x,y])=>{const o=k==='c'?'s':'c';return[[k,x,y],[o,1-x,y],[o,x,1-y],[k,1-x,1-y]]});
+  const st=Math.min(104,(a.w-32-40)/3);
+  const steps=a.el('div','abs punch-steps');
+  steps.innerHTML=`<div class="pst"><svg width="${st}" height="${st}" viewBox="-.05 -.05 1.1 1.1"><rect width="1" height="1" fill="var(--fg)"/><line x1=".5" y1="-.04" x2=".5" y2="1.04" stroke="var(--accent)" stroke-width=".03" stroke-dasharray=".06 .05"/><path d="M.82 .3 Q.5 .05 .2 .3" fill="none" stroke="var(--accent)" stroke-width=".04"/></svg></div>
+    <div class="pst"><svg width="${st}" height="${st}" viewBox="-.05 -.05 1.1 1.1"><rect width=".5" height="1" fill="var(--fg)"/><line x1="-.04" y1=".5" x2=".54" y2=".5" stroke="var(--accent)" stroke-width=".03" stroke-dasharray=".06 .05"/><path d="M.25 .85 Q.0 .5 .25 .15" fill="none" stroke="var(--accent)" stroke-width=".04"/></svg></div>
+    <div class="pst"><svg width="${st}" height="${st}" viewBox="-.05 -.05 1.1 1.1"><rect width=".5" height=".5" fill="var(--fg)"/>${holes.map(([k,x,y])=>k==='c'?`<circle cx="${x}" cy="${y}" r=".055" fill="var(--bg)"/>`:`<rect x="${x-.05}" y="${y-.05}" width=".1" height=".1" fill="var(--bg)"/>`).join('')}</svg></div>`;
+  const opts=[trans(holes),mir(holes),half(holes),swap(holes)];const os=Math.min(150,(a.w-32-12)/2);
+  const wrap=a.el('div','abs punch-opts');let done=false;
+  opts.forEach((h,i)=>{const b=a.el('button','punch-opt',wrap);b.innerHTML=mk(h,os-16);b.onclick=()=>{if(done)return;
+    if(i===1){done=true;a.buzz(12);const[x,y]=rectCenter(b);setTimeout(()=>a.solve(x,y),250)}else{b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');a.buzz([20,30,20])}}});
+ }},
+/* 59 — snake */
+{hints:['Eat everything, then leave through the ring.','The snake grows with every bite and can not cross itself. The order you eat in matters.','Swipe: up ×6, left, up, left, down, right, down ×5, right, down, right, up ×7.'],
+ init(a){
+  const map=['..#O.#','a....#','#....#','....##','......','......','.a....','...a.#'];const R=map.length,C=map[0].length;
+  const g=grid(a,R,C,{pad:24});g.b.style.background='var(--surface)';
+  const apples=[];let exit;map.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='#')g.put('wall',r,c);if(ch==='a')apples.push({r,c,e:g.put('apple',r,c,Math.round(g.cell*.3))});if(ch==='O'){exit=[r,c];exit.e=g.put('hole snake-exit',r,c,Math.round(g.cell*.14))}}));
+  let body=[[7,2],[7,1],[7,0]],done=false;const segs=[];
+  const paint=()=>{while(segs.length<body.length)segs.push(a.el('div','abs snake',g.b));
+    body.forEach(([r,c],i)=>{g.at(segs[i],r,c,Math.round(g.cell*(i?.12:.06)));segs[i].classList.toggle('head',i===0)});
+    exit.e.classList.toggle('full',apples.every(x=>x.eaten))};
+  paint();
+  return swipes(a.stage,d=>{if(done)return;const[dr,dc]=DIRS[d];const nr=body[0][0]+dr,nc=body[0][1]+dc;
+    if(nr<0||nc<0||nr>=R||nc>=C||map[nr][nc]==='#'){a.buzz(5);return}
+    const ap=apples.find(x=>!x.eaten&&x.r===nr&&x.c===nc);const rest=ap?body:body.slice(0,-1);
+    if(rest.some(([r,c])=>r===nr&&c===nc)){a.buzz(5);return}
+    const atExit=nr===exit[0]&&nc===exit[1];if(atExit&&!apples.every(x=>x.eaten||x===ap)){a.buzz(5);return}
+    if(ap){ap.eaten=true;ap.e.hidden=true;a.buzz(14)}else a.buzz(6);
+    body=[[nr,nc],...rest];paint();
+    if(atExit){done=true;const r=segs[0].getBoundingClientRect();setTimeout(()=>a.solve(r.left+r.width/2,r.top+r.height/2),200)}});
+ }},
+/* 60 — six */
+{hints:['The colours have an order. You have seen it on the home screen.','First tap them from the first chapter to the last. Then each tile switches itself and its two neighbours.','Blue, red, green, violet, yellow, cyan. Then tap green and blue.'],
+ init(a){
+  const order=[2,5,0,4,1,3],cols=['--ch1','--ch2','--ch3','--ch4','--ch5','--ch6'];
+  const R=Math.min(a.w,a.h)*.32,cx=a.w/2,cy=a.h*.45,z=Math.min(76,R*.75);let stage=1,next=0,done=false;const on=[0,1,0,0,1,0];
+  const tiles=order.map((ch,i)=>{const t=a.el('button','abs six');const ang=i*Math.PI/3-Math.PI/2;Object.assign(t.style,{width:z+'px',height:z+'px',left:cx+Math.cos(ang)*R-z/2+'px',top:cy+Math.sin(ang)*R-z/2+'px',background:`var(${cols[ch]})`});
+    t.onclick=()=>tap(i);return t});
+  const paint=()=>tiles.forEach((t,i)=>{t.classList.toggle('dim',stage===2&&!on[i]);t.classList.toggle('picked',stage===1&&order[i]<next)});
+  function tap(i){if(done)return;
+    if(stage===1){if(order[i]===next){next++;a.buzz(8);paint();if(next===6){stage=2;setTimeout(()=>{paint();a.buzz(14)},300)}}
+      else{next=0;a.buzz([20,30,20]);tiles.forEach(t=>{t.classList.remove('nope');void t.offsetWidth;t.classList.add('nope')});paint()}return}
+    [i+5,i,i+1].forEach(j=>on[j%6]^=1);a.buzz(8);paint();
+    if(on.every(Boolean)){done=true;setTimeout(()=>a.solve(cx+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top),400)}}
+  paint();
  }},
 ];
 
