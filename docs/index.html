@@ -29,7 +29,7 @@ img{max-width:100%}
    and the chapter colour reserved for the things you can touch and for the solve flood. */
 :root{
   --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
-  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533;
   --accent:var(--ch1); --on-accent:#0C0D11;
   --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
   --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -39,7 +39,7 @@ img{max-width:100%}
 }
 :root.light{
   --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
-  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --on-accent:#FFFFFF;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --on-accent:#FFFFFF;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -63,7 +63,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
 .wordmark>span{display:block}
 .wordmark .dot{color:var(--accent)}
-.chapters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chapters{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .chapter-bar{display:flex;flex-direction:column;gap:8px}
 .chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
 .chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
@@ -284,6 +284,45 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .mtile.sel{background:var(--accent);color:var(--on-accent)}
 .msum{position:absolute;width:40px;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--muted);text-align:center}
 .msum.ok{color:var(--accent)}
+.fcell{background:var(--surface);box-shadow:inset 0 0 0 2px var(--line)}
+.fpiece{transform-origin:0 0;transition:left .2s var(--ease),top .2s var(--ease),transform .2s var(--ease);touch-action:none;cursor:grab;z-index:1}
+.fpiece i{position:absolute;display:block;background:var(--muted)}
+.fpiece.on i{background:var(--accent)}
+.fpiece.drag{transition:none;z-index:3}
+.pk{background:var(--surface);cursor:pointer;transition:background .12s,box-shadow .12s}
+.pk.on{background:var(--accent)}
+.peek .pk[data-t]{box-shadow:inset 0 0 0 4px var(--fg)}
+.eye{left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;touch-action:none}
+.eye.down{background:var(--surface);border-color:var(--fg)}
+.swcol{display:flex;flex-direction:column;align-items:center;gap:10px}
+.toggle{width:44px;height:84px;border:3px solid var(--fg);position:relative}
+.toggle::after{content:"";position:absolute;left:5px;right:5px;bottom:5px;height:32px;background:var(--muted);transition:bottom .15s var(--ease),background .15s}
+.toggle.on::after{bottom:41px;background:var(--accent)}
+.bulbdoor{border:3px solid var(--fg);background:var(--surface)}
+.bulb{border-radius:50%;border:3px solid var(--fg);background:var(--surface)}
+.bulb.lit{background:var(--accent);border-color:var(--accent);box-shadow:0 0 80px var(--accent)}
+.waves{width:60px;height:36px;display:flex;justify-content:space-between;opacity:0}
+.waves.warm{opacity:1}
+.waves i{display:block;width:4px;height:100%;border-radius:2px;background:var(--fg);animation:heat 1.2s ease-in-out infinite alternate}
+.waves i:nth-child(2){animation-delay:.3s}.waves i:nth-child(3){animation-delay:.6s}
+@keyframes heat{from{transform:translateY(4px) scaleY(.7)}to{transform:translateY(-4px) scaleY(1)}}
+.colon{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 2px;margin-top:26px}
+.colon i{display:block;width:8px;height:8px;background:var(--fg);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.lever{width:56px;height:56px;border:2px solid var(--line);display:grid;place-items:center}
+.lever i{display:block;width:8px;height:30px;background:var(--fg);transform:rotate(-30deg);transition:transform .2s var(--ease)}
+.lever.off i{transform:rotate(30deg)}
+.starcard{left:50%;top:10px;transform:translateX(-50%);border:2px solid var(--line);padding:6px 14px;display:grid;place-items:center}
+.flipcard{left:50%;top:12px;width:150px;height:100px;margin-left:-75px;perspective:600px;cursor:pointer}
+.flipcard .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .5s var(--ease)}
+.flipcard .back{background:repeating-linear-gradient(45deg,var(--surface) 0 8px,var(--line) 8px 16px);border:2px solid var(--fg)}
+.flipcard .front{transform:rotateY(180deg);background:var(--fg);color:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;font-family:var(--mono);font-weight:700;font-size:16px}
+.flipcard.flipped .back{transform:rotateY(180deg)}
+.flipcard.flipped .front{transform:rotateY(360deg)}
+.flipcard.nudge{animation:wiggle .3s}
+.holdpad{left:50%;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:3px solid var(--fg);touch-action:none}
+.holdpad.down{background:var(--fg)}
+.holdpad.side{left:auto;right:max(24px,env(safe-area-inset-right,0px));transform:none}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -346,7 +385,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">40 / 40</span>
+    <span class="label">50 / 50</span>
     <div class="big">All<br>solved.</div>
     <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
@@ -371,7 +410,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <script>
 (()=>{
-const TOTAL=40, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'}], ROMAN=['I','II','III','IV'];
+const TOTAL=50, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'}], ROMAN=['I','II','III','IV','V'];
 const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const chapterOf=id=>Math.floor((id-1)/10);
@@ -485,7 +524,7 @@ function renderAll(){
   // chapter bars
   $('#chapterBars').innerHTML=CHAPTERS.map((ch,i)=>{
     let s=0;for(let k=i*10+1;k<=i*10+10;k++)if(isSolved(k))s++;
-    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label" style="white-space:nowrap">${ROMAN[i]} ${s}/10</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
+    return `<div class="chapter-bar" style="--c:var(${ch.c})"><span class="label" style="white-space:nowrap">${ROMAN[i]} ${s}</span><div class="track"><div class="fill" style="width:${s*10}%"></div></div></div>`}).join('');
   // level grid
   $('#levelList').innerHTML=CHAPTERS.map((ch,i)=>{
     let cells='';
@@ -841,6 +880,7 @@ function motionInput(a,{rest={x:0,y:0},onShake,top=false}={}){
   a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointermove',move);a.stage.addEventListener('pointerup',up);a.stage.addEventListener('pointercancel',up);
   st.cleanup.push(()=>{a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointermove',move);a.stage.removeEventListener('pointerup',up);a.stage.removeEventListener('pointercancel',up)});
   if(onShake){const f=()=>onShake();motion.shakeFns.add(f);st.cleanup.push(()=>motion.shakeFns.delete(f))}
+  st.note=note;
   st.gravity=()=>{const s=sensorGravity();if(s)return s;return st.drag||rest};
   st.dispose=()=>st.cleanup.forEach(f=>f());
   return st;
@@ -848,23 +888,33 @@ function motionInput(a,{rest={x:0,y:0},onShake,top=false}={}){
 
 /* tilt engine: # wall, x trap, O goal, S start, a/b gates (a closed first), * switch (flips gates when the ball rolls onto it) */
 function tiltLevel(a,map,{rest={x:0,y:0}}={}){
-  const R=map.length,C=map[0].length,g=grid(a,R,C,{below:52});g.b.style.background='var(--surface)';
-  let S,goal;const traps=[],gates=[],switches=[];let gs=0;
+  const hasHold=map.some(r=>r.includes('h'));
+  const R=map.length,C=map[0].length,g=grid(a,R,C,{below:hasHold?100:52});g.b.style.background='var(--surface)';
+  let S,goal;const traps=[],gates=[],switches=[],holds=[];let gs=0,hOpen=false,hWantClose=false;
   map.forEach((row,r)=>[...row].forEach((ch,c)=>{
     if(ch==='#')g.put('wall',r,c);
     if(ch==='x'){traps.push([r,c]);g.put('trap',r,c,Math.round(g.cell*.16))}
     if(ch==='O'){goal=[r,c];g.put('hole',r,c,Math.round(g.cell*.14))}
     if(ch==='a'||ch==='b')gates.push({ch,r,c,el:g.put('gate',r,c,0)});
     if(ch==='*')switches.push({r,c,el:g.put('switch',r,c,Math.round(g.cell*.28))});
+    if(ch==='h')holds.push({r,c,el:g.put('gate closed',r,c,0)});
     if(ch==='S')S=[r,c];
   }));
   const cell=g.cell,rad=cell*.3;
+  // hold pad: 'h' cells are open only while a finger rests on it
+  if(hasHold){const pad=a.el('button','abs holdpad side');pad.setAttribute('aria-label','Hold');pad.style.bottom=`calc(18px + env(safe-area-inset-bottom,0px))`;
+    const paintH=()=>holds.forEach(h=>h.el.classList.toggle('closed',!hOpen));
+    pad.onpointerdown=e=>{e.stopPropagation();try{pad.setPointerCapture(e.pointerId)}catch(_){}pad.classList.add('down');hOpen=true;hWantClose=false;paintH();a.buzz(8)};
+    const rel=()=>{pad.classList.remove('down');hWantClose=true};pad.onpointerup=rel;pad.onpointercancel=rel;pad.oncontextmenu=e=>e.preventDefault();
+    a.stage._hold=v=>{if(v)pad.onpointerdown({stopPropagation(){},pointerId:0});else rel()};
+    holds.paint=paintH}
   const ballEl=a.el('div','sdot',g.b);Object.assign(ballEl.style,{width:rad*2+'px',height:rad*2+'px',left:0,top:0,transition:'none'});
   const paint=()=>gates.forEach(x=>x.el.classList.toggle('closed',(x.ch==='a')===(gs===0)));paint();
-  const solid=(r,c)=>{if(r<0||c<0||r>=R||c>=C)return true;const ch=map[r][c];return ch==='#'||(ch==='a'&&gs===0)||(ch==='b'&&gs===1)};
+  const solid=(r,c)=>{if(r<0||c<0||r>=R||c>=C)return true;const ch=map[r][c];return ch==='#'||(ch==='a'&&gs===0)||(ch==='b'&&gs===1)||(ch==='h'&&!hOpen)};
   let p,v,onSwitch=null,state='play';
   const reset=()=>{p={x:(S[1]+.5)*cell,y:(S[0]+.5)*cell};v={x:0,y:0};ballEl.style.transition='none';ballEl.style.transform=`translate(${p.x-rad}px,${p.y-rad}px)`};reset();
   const mi=motionInput(a,{rest});
+  if(hasHold){mi.note.style.right='104px';mi.note.style.textAlign='left'}
   let last=performance.now(),raf;
   function collide(){
     const r0=Math.floor((p.y-rad)/cell),r1=Math.floor((p.y+rad)/cell),c0=Math.floor((p.x-rad)/cell),c1=Math.floor((p.x+rad)/cell);
@@ -878,6 +928,7 @@ function tiltLevel(a,map,{rest={x:0,y:0}}={}){
   }
   const tick=t=>{const dt=Math.min(.033,(t-last)/1000);last=t;
     if(state==='play'){
+      if(hWantClose&&!holds.some(h=>Math.abs((h.c+.5)*cell-p.x)<cell/2+rad&&Math.abs((h.r+.5)*cell-p.y)<cell/2+rad)){hOpen=false;hWantClose=false;holds.paint()}
       const gr=mi.gravity();const acc=cell*14;
       v.x+=gr.x*acc*dt;v.y+=gr.y*acc*dt;v.x*=Math.pow(.35,dt);v.y*=Math.pow(.35,dt);
       const sp=Math.hypot(v.x,v.y),max=cell*9;if(sp>max){v.x*=max/sp;v.y*=max/sp}
@@ -1405,15 +1456,19 @@ const LEVELS=[
   const occ=(skip)=>{const o=new Set();B.forEach((b,i)=>{if(i===skip)return;for(let k=0;k<b.len;k++)o.add((b.r+(b.h?0:k))+','+(b.c+(b.h?k:0)))});return o};
   let done=false;
   B.forEach((b,i)=>{let st=null;
-    b.el.onpointerdown=e=>{if(done)return;b.el.setPointerCapture(e.pointerId);const o=occ(i);
+    b.el.onpointerdown=e=>{if(done||b._busy)return;b.el.setPointerCapture(e.pointerId);const o=occ(i);
       let lo=0,hi=0;const free=(d)=>{const r=b.r+(b.h?0:d+(d>0?b.len-1:0)),c=b.c+(b.h?d+(d>0?b.len-1:0):0);return r>=0&&c>=0&&r<N&&c<N&&!o.has(r+','+c)};
       while(free(lo-1))lo--;while(free(hi+1))hi++;
       st={x:e.clientX,y:e.clientY,lo,hi,r:b.r,c:b.c};b.el.classList.add('drag')};
     b.el.onpointermove=e=>{if(!st)return;const d=Math.max(st.lo,Math.min(st.hi,((b.h?e.clientX-st.x:e.clientY-st.y))/g.cell));
       b.el.style.transform=b.h?`translateX(${d*g.cell}px)`:`translateY(${d*g.cell}px)`;b._d=d};
-    b.el.onpointerup=()=>{if(!st)return;const d=Math.round(b._d||0);b._d=0;b.el.style.transform='';b.el.classList.remove('drag');
-      if(b.h)b.c=st.c+d;else b.r=st.r+d;st=null;place(b);if(d)a.buzz(8);
-      if(i===0&&b.c===N-2){done=true;b.el.style.transition='left .4s var(--ease)';b.el.style.left=g.W+20+'px';const r=g.b.getBoundingClientRect();setTimeout(()=>a.solve(r.right,r.top+2.5*g.cell),350)}};
+    // Release: glide from where the finger left it to the nearest square, then commit the move.
+    b.el.onpointerup=b.el.onpointercancel=()=>{if(!st)return;const d=Math.round(b._d||0);b._d=0;const s0=st;st=null;b._busy=true;
+      b.el.style.transition='transform .12s var(--ease)';
+      b.el.style.transform=b.h?`translateX(${d*g.cell}px)`:`translateY(${d*g.cell}px)`;
+      setTimeout(()=>{b.el.style.transition='none';if(b.h)b.c=s0.c+d;else b.r=s0.r+d;place(b);b.el.style.transform='';
+        void b.el.offsetWidth;b.el.style.transition='';b.el.classList.remove('drag');b._busy=false;if(d)a.buzz(8);
+        if(i===0&&b.c===N-2){done=true;b.el.style.transition='left .4s var(--ease)';b.el.style.left=g.W+20+'px';const r=g.b.getBoundingClientRect();setTimeout(()=>a.solve(r.right,r.top+2.5*g.cell),350)}},130)};
   });
   a.stage._unblock=(i,d)=>{const b=B[i];if(b.h)b.c+=d;else b.r+=d;place(b);if(i===0&&b.c===N-2){done=true;a.solve()}};
  }},
@@ -1488,6 +1543,232 @@ const LEVELS=[
 /* 40 — the last gate */
 {hints:['The ring is locked behind a gate.','Rolling onto a small circle flips every gate: closed ones open, open ones close. There are two circles.','Roll up the third column, right along the middle row, up the right edge, onto the circle at the top right, then left along the top. Roll over the circle near the start twice, or not at all.'],
  init(a){return tiltLevel(a,['O.a....','##b##*.','.x...#.','.#.#.#.','...#...','.#####b','.x.....','.#.#x#.','...#...','##.#.x.','S..*...'])}},
+/* 41 — fill */
+{hints:['Fill the outlined shape with the four pieces.','Drag a piece onto the shape. Tap a piece to turn it. Pieces can not be flipped over.','The three-block bar goes across the top left, the long L hangs down the second column, the zigzag fills the top right, and the T sits in the lower right.'],
+ init(a){
+  const region=['#####','####.','.#...','.####','.#.#.'];const N=5;
+  const base={L:[[0,0],[1,0],[2,0],[3,0],[3,1]],T:[[0,0],[0,1],[0,2],[1,1]],S:[[0,0],[1,0],[1,1],[2,1]],I:[[0,0],[1,0],[2,0]]};
+  const rotf=c=>c.map(([r,q])=>[q,-r]);
+  const norm=c=>{const mr=Math.min(...c.map(x=>x[0])),mc=Math.min(...c.map(x=>x[1]));return c.map(([r,q])=>[r-mr,q-mc]).sort((x,y)=>x[0]-y[0]||x[1]-y[1])};
+  const rots=c=>{const out=[];let x=c;for(let i=0;i<4;i++){const n=norm(x);if(!out.some(o=>JSON.stringify(o)===JSON.stringify(n)))out.push(n);x=rotf(x)}return out};
+  const trayH=Math.min(200,a.h*.36);const g=grid(a,N,N,{pad:28,below:trayH});
+  const inRegion=(r,c)=>r>=0&&c>=0&&r<N&&c<N&&region[r][c]==='#';
+  region.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='#')g.put('fcell',r,c,1)}));
+  const ts=.5,cell=g.cell;
+  const names=['L','T','S','I'],start={L:0,T:2,S:0,I:0};
+  const slots=[[.14,.12],[.4,.1],[.64,.1],[.86,.12]];
+  const pcs=names.map((n,k)=>({n,rs:rots(base[n]),ri:start[n],at:null,el:a.el('div','abs fpiece'),slot:slots[k]}));
+  const shape=p=>p.rs[p.ri%p.rs.length];
+  const gb=()=>({x:g.b.offsetLeft,y:g.b.offsetTop});
+  function draw(p){p.el.innerHTML='';const sh=shape(p);const h=Math.max(...sh.map(x=>x[0]))+1,w=Math.max(...sh.map(x=>x[1]))+1;
+    Object.assign(p.el.style,{width:w*cell+'px',height:h*cell+'px'});
+    sh.forEach(([r,c])=>{const d=document.createElement('i');Object.assign(d.style,{left:c*cell+1+'px',top:r*cell+1+'px',width:cell-2+'px',height:cell-2+'px'});p.el.appendChild(d)});p.w=w;p.h=h}
+  function home(p){p.at=null;const x=p.slot[0]*a.w-p.w*cell*ts/2,y=a.h-trayH+p.slot[1]*trayH+10;
+    Object.assign(p.el.style,{left:x+'px',top:y+'px',transform:`scale(${ts})`});p.el.classList.remove('on')}
+  function put(p,r,c){p.at=[r,c];const o=gb();Object.assign(p.el.style,{left:o.x+c*cell+'px',top:o.y+r*cell+'px',transform:'scale(1)'});p.el.classList.add('on')}
+  const occupied=skip=>{const s=new Set();pcs.forEach(q=>{if(q===skip||!q.at)return;shape(q).forEach(([r,c])=>s.add((q.at[0]+r)+','+(q.at[1]+c)))});return s};
+  const fits=(p,r,c)=>{const o=occupied(p);return shape(p).every(([dr,dc])=>inRegion(r+dr,c+dc)&&!o.has((r+dr)+','+(c+dc)))};
+  let done=false;
+  const check=()=>{if(pcs.every(p=>p.at)){done=true;a.buzz(14);setTimeout(()=>{const r=g.b.getBoundingClientRect();a.solve(r.left+r.width/2,r.top+r.height/2)},300)}};
+  pcs.forEach(p=>{draw(p);home(p);let st=null;
+    p.el.onpointerdown=e=>{if(done)return;p.el.setPointerCapture(e.pointerId);const b=p.el.getBoundingClientRect();
+      st={x:e.clientX,y:e.clientY,moved:false,fx:(e.clientX-b.left)/b.width,fy:(e.clientY-b.top)/b.height};p.el.classList.add('drag')};
+    p.el.onpointermove=e=>{if(!st)return;if(Math.hypot(e.clientX-st.x,e.clientY-st.y)>8)st.moved=true;if(!st.moved)return;
+      const sb=a.stage.getBoundingClientRect();p.el.style.transform='scale(1)';
+      p.el.style.left=e.clientX-sb.left-st.fx*p.w*cell+'px';p.el.style.top=e.clientY-sb.top-st.fy*p.h*cell-30+'px'};
+    p.el.onpointerup=p.el.onpointercancel=()=>{if(!st)return;const s0=st;st=null;p.el.classList.remove('drag');
+      if(!s0.moved){p.ri=(p.ri+1)%p.rs.length;draw(p);a.buzz(6);if(p.at&&fits(p,...p.at))put(p,...p.at);else home(p);return}
+      const o=gb();const c=Math.round((p.el.offsetLeft-o.x)/cell),r=Math.round((p.el.offsetTop-o.y)/cell);
+      if(fits(p,r,c)){put(p,r,c);a.buzz(8);check()}else home(p)};
+  });
+  a.stage._fill=moves=>moves.forEach(([k,ri,r,c])=>{const p=pcs[k];p.ri=ri;draw(p);put(p,r,c)})||check();
+ }},
+/* 42 — peek */
+{hints:['There is a pattern here that you can not see yet.','Hold the eye to see it. While one finger holds the eye, tap squares with another.','Row by row (x = filled): .x.x. / xx.xx / ..x.. / xx.xx / .x.x.'],
+ init(a){
+  const pat=['.#.#.','##.##','..#..','##.##','.#.#.'];const N=5;const g=grid(a,N,N,{pad:24,below:110});
+  const mine=new Set(),cells=[];let done=false;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){const e=g.put('pk',r,c,3);if(pat[r][c]==='#')e.dataset.t='1';cells.push(e);
+    e.onpointerdown=()=>{if(done)return;const k=r*N+c;if(mine.has(k))mine.delete(k);else mine.add(k);e.classList.toggle('on');a.buzz(6);
+      if(cells.every((x,i)=>!!x.dataset.t===mine.has(i))){done=true;g.b.classList.add('peek');setTimeout(()=>{const rr=g.b.getBoundingClientRect();a.solve(rr.left+rr.width/2,rr.top+rr.height/2)},400)}}}
+  const eye=a.el('button','abs eye');eye.setAttribute('aria-label','Look');eye.style.bottom=`calc(24px + env(safe-area-inset-bottom,0px))`;
+  eye.innerHTML='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--fg)" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="var(--fg)"/></svg>';
+  eye.onpointerdown=e=>{try{eye.setPointerCapture(e.pointerId)}catch(_){}g.b.classList.add('peek');eye.classList.add('down');a.buzz(6)};
+  const off=()=>{if(!done)g.b.classList.remove('peek');eye.classList.remove('down')};eye.onpointerup=off;eye.onpointercancel=off;eye.oncontextmenu=e=>e.preventDefault();
+ }},
+/* 43 — the bulb */
+{hints:['One of the three switches works the lamp behind the door. You can look only once, then you must say which switch it is.','A lamp that has been on for a while is still warm after you switch it off. Warm lamps show heat lines.','Switch 1 on, wait 5 seconds, switch it off. Switch 2 on. Go in: lit = 2, dark but warm = 1, dark and cold = 3.'],
+ init(a){
+  let k=Math.floor(Math.random()*3);const on=[false,false,false];let heat=0,inside=false,done=false;
+  const hall=a.el('div','abs');hall.style.inset='0';
+  const sw=[0,1,2].map(i=>{const col=a.el('div','abs swcol',hall);col.style.left=a.w*.07+i*Math.min(76,a.w*.17)+'px';col.style.top=a.h*.32+'px';
+    const t=a.el('button','toggle',col);t.setAttribute('aria-label','Switch '+(i+1));const lab=a.el('div','label',col);lab.textContent=i+1;
+    t.onclick=()=>{if(done||inside)return;on[i]=!on[i];t.classList.toggle('on',on[i]);a.buzz(8)};return t});
+  const door=a.el('button','abs door bulbdoor',hall);const dh=Math.min(220,a.h*.4);Object.assign(door.style,{width:dh*.5+'px',height:dh+'px',right:a.w*.1+'px',top:a.h*.28+'px'});
+  a.el('div','knob',door);door.setAttribute('aria-label','Door');
+  const room=a.el('div','abs');room.style.inset='0';room.hidden=true;
+  const bulb=a.el('div','abs bulb',room);const bs=Math.min(110,a.w*.28);Object.assign(bulb.style,{width:bs+'px',height:bs+'px',left:(a.w-bs)/2+'px',top:a.h*.22+'px'});
+  const waves=a.el('div','abs waves',room);waves.style.left=(a.w-60)/2+'px';waves.style.top=a.h*.22-44+'px';waves.innerHTML='<i></i><i></i><i></i>';
+  const pick=a.el('div','abs dials',room);pick.style.bottom=`calc(36px + env(safe-area-inset-bottom,0px))`;
+  [0,1,2].forEach(i=>{const b=a.el('button','dial',pick);b.textContent=i+1;b.onclick=()=>choose(i)});
+  door.onclick=()=>{if(done||inside)return;inside=true;a.buzz(10);hall.hidden=true;room.hidden=false;
+    bulb.classList.toggle('lit',on[k]);waves.classList.toggle('warm',heat>2.5)};
+  function choose(i){if(done)return;if(i===k){done=true;const[x,y]=rectCenter(bulb);a.solve(x,y);return}
+    a.buzz([30,40,30]);pick.classList.add('nope');setTimeout(()=>{pick.classList.remove('nope');
+      k=Math.floor(Math.random()*3);on.fill(false);sw.forEach(t=>t.classList.remove('on'));heat=0;inside=false;room.hidden=true;hall.hidden=false},700)}
+  let last=performance.now(),raf;
+  const tick=t=>{const dt=(t-last)/1000;last=t;if(!inside){if(on[k])heat=Math.min(8,heat+dt);else heat=Math.max(0,heat-dt*.05)}raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  a.stage._bulb={get k(){return k},set heat(v){heat=v}};
+  return()=>cancelAnimationFrame(raf);
+ }},
+/* 44 — now */
+{hints:['It looks like a clock, but it shows nothing yet.','A clock should show one particular time.','Enter the time it is right now, in 24-hour format, like 14:05.'],
+ init(a){
+  const dl=dials(a,4,{bottom:Math.max(40,a.h*.38),onChange:v=>{
+    const H=v[0]*10+v[1],M=v[2]*10+v[3];const now=new Date();
+    for(const d of [-1,0,1]){const t=new Date(now.getTime()+d*60000);if(M===t.getMinutes()&&(H===t.getHours()||H===(t.getHours()%12||12))){a.solve();return}}}});
+  const colon=document.createElement('div');colon.className='colon';colon.innerHTML='<i></i><i></i>';dl.wrap.insertBefore(colon,dl.cols[2]);
+ }},
+/* 45 — gears */
+{hints:['Get all three arrows pointing straight up.','Turning one gear turns the gears it touches. The little lever under the right gear can unhook it.','Turn the left gear three times, unhook the right gear with the lever, then turn the left gear once more.'],
+ init(a){
+  const rB=Math.min((a.w-40)/4.3,110),rS=rB/2,cy=a.h*.42,tooth=rB*.12;
+  const cxB=a.w/2,cxA=cxB-rB-rS+tooth*.8,cxC=cxB+rB+rS-tooth*.8;
+  const st={A:0,B:4,C:2},deg={A:0,B:180,C:90};let hooked=true,done=false;
+  const gearPath=(r,n)=>{let d='';for(let i=0;i<n*2;i++){const a0=i*Math.PI/n,a1=(i+1)*Math.PI/n,R=i%2?r-tooth:r;d+=`${i?'L':'M'}${Math.cos(a0)*R} ${Math.sin(a0)*R}A${R} ${R} 0 0 1 ${Math.cos(a1)*R} ${Math.sin(a1)*R}`}return d+'Z'};
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',a.w);svg.setAttribute('height',a.h);svg.style.cssText='position:absolute;left:0;top:0;overflow:visible';a.stage.appendChild(svg);
+  const mk=(id,cx,r,n)=>{const g=document.createElementNS(svg.namespaceURI,'g');g.innerHTML=`<g class="gear-rot" style="transition:transform .35s var(--ease)"><path d="${gearPath(r,n)}" fill="var(--surface)" stroke="var(--fg)" stroke-width="3"/><line x1="0" y1="0" x2="0" y2="${-(r-tooth-6)}" stroke="var(--accent)" stroke-width="${Math.max(5,r*.12)}" stroke-linecap="round"/><circle r="${Math.max(5,r*.1)}" fill="var(--fg)"/></g>`;
+    g.setAttribute('transform',`translate(${cx} ${cy})`);g.style.cursor='pointer';g.style.transition='transform .3s var(--ease)';svg.appendChild(g);g.onclick=()=>tap(id);return g};
+  const G={A:mk('A',cxA,rS,8),B:mk('B',cxB,rB,16),C:mk('C',cxC,rS,8)};
+  const lever=a.el('button','abs lever');Object.assign(lever.style,{left:cxC-28+'px',top:cy+rS+44+'px'});lever.setAttribute('aria-label','Lever');lever.innerHTML='<i></i>';
+  const paint=()=>{Object.entries(G).forEach(([k,g])=>g.querySelector('.gear-rot').style.transform=`rotate(${deg[k]}deg)`);
+    G.C.setAttribute('transform',`translate(${cxC} ${cy+(hooked?0:rS*.9)})`);lever.classList.toggle('off',!hooked)};
+  const turn=(k,u)=>{st[k]=((st[k]+u)%8+8)%8;deg[k]+=u*45};
+  function tap(k){if(done)return;a.buzz(8);
+    if(k==='A'){turn('A',2);turn('B',-1);if(hooked)turn('C',2)}
+    if(k==='B'){turn('B',1);turn('A',-2);if(hooked)turn('C',-2)}
+    if(k==='C'){turn('C',2);if(hooked){turn('B',-1);turn('A',2)}}
+    paint();if(st.A===0&&st.B===0&&st.C===0){done=true;setTimeout(()=>a.solve(cxB+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top),450)}}
+  lever.onclick=()=>{if(done)return;hooked=!hooked;a.buzz(10);paint()};
+  paint();a.stage._gear=k=>k==='k'?lever.onclick():tap(k);
+ }},
+/* 46 — hold the door */
+{hints:['The gates only open for you.','Keep a finger on the round button below while you tilt the ball through.','Hold the button with your thumb and tilt the phone forward. Go around the block in the middle and through the lower gate.'],
+ init(a){return tiltLevel(a,['S......','.x...x.','.......','###h###','.......','.x.#.x.','.......','###h###','.......','.x...x.','...O...'])}},
+/* 47 — stars */
+{hints:['The small drawing on the card is hidden among the stars.','It is bigger and turned on its side. Drag from star to star to draw a line; draw the same line again to remove it.','Look in the lower left: five stars form a house pointing right. Connect its outline, five lines.'],
+ init(a){
+  const tpl=[[0,0],[2,0],[2,-2],[0,-2],[1,-3]],tplE=[[0,1],[1,2],[2,4],[4,3],[3,0]];
+  const card=a.el('div','abs starcard');card.innerHTML=`<svg width="56" height="64" viewBox="-1 -4 4 5"><polyline points="0,0 2,0 2,-2 1,-3 0,-2 0,0" fill="none" stroke="var(--fg)" stroke-width=".18" stroke-linejoin="round"/></svg>`;
+  const top=96,H=a.h-top-24,W=a.w-32,u=Math.min(W,H)*.12;
+  const hx=16+W*.12,hy=top+H*.55;
+  const house=[[0,0],[0,2],[2,2],[2,0],[3,1]].map(([x,y])=>[hx+x*u,hy+y*u]);
+  let s=29;const rr=()=>{s=(s*16807)%2147483647;return s/2147483647};
+  const pts=house.slice();
+  while(pts.length<15){const p=[16+rr()*W,top+rr()*H];if(pts.every(q=>Math.hypot(q[0]-p[0],q[1]-p[1])>u*.95))pts.push(p)}
+  pts.sort(()=>rr()-.5);
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',a.w);svg.setAttribute('height',a.h);svg.style.cssText='position:absolute;left:0;top:0;overflow:visible;touch-action:none';a.stage.appendChild(svg);
+  const edges=new Set();let drag=null,done=false;
+  const paint=(tmp)=>{svg.innerHTML=[...edges].map(e=>{const[i,j]=e.split('-').map(Number);return`<line x1="${pts[i][0]}" y1="${pts[i][1]}" x2="${pts[j][0]}" y2="${pts[j][1]}" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>`}).join('')
+    +(tmp?`<line x1="${pts[tmp.i][0]}" y1="${pts[tmp.i][1]}" x2="${tmp.x}" y2="${tmp.y}" stroke="var(--muted)" stroke-width="3" stroke-dasharray="4 6"/>`:'')
+    +pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="var(--fg)"/>`).join('')};
+  paint();
+  const near=(x,y)=>{let b=-1,bd=30;pts.forEach((p,i)=>{const d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;b=i}});return b};
+  const loc=e=>{const r=a.stage.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  svg.onpointerdown=e=>{if(done)return;const[x,y]=loc(e);const i=near(x,y);if(i<0)return;svg.setPointerCapture(e.pointerId);drag={i,x,y};a.buzz(4)};
+  svg.onpointermove=e=>{if(!drag)return;const[x,y]=loc(e);drag.x=x;drag.y=y;paint(drag)};
+  svg.onpointerup=e=>{if(!drag)return;const[x,y]=loc(e);const j=near(x,y);const i=drag.i;drag=null;
+    if(j>=0&&j!==i){toggle(i,j)}paint()};
+  function toggle(i,j){const k=Math.min(i,j)+'-'+Math.max(i,j);if(edges.has(k))edges.delete(k);else edges.add(k);a.buzz(8);paint();check()}
+  function check(){if(edges.size!==5)return;const E=[...edges].map(e=>e.split('-').map(Number));const vs=[...new Set(E.flat())];if(vs.length!==5)return;
+    const perm=(arr)=>arr.length<=1?[arr]:arr.flatMap((x,i)=>perm([...arr.slice(0,i),...arr.slice(i+1)]).map(p=>[x,...p]));
+    for(const p of perm(vs)){const okE=tplE.every(([x,y])=>edges.has(Math.min(p[x],p[y])+'-'+Math.max(p[x],p[y])));if(!okE)continue;
+      for(const flip of [1,-1]){const z=tpl.map(([x,y])=>[x,y*flip]);const w=p.map(i=>pts[i]);
+        const dz=[z[1][0]-z[0][0],z[1][1]-z[0][1]],dw=[w[1][0]-w[0][0],w[1][1]-w[0][1]];const den=dz[0]**2+dz[1]**2;
+        const ar=(dw[0]*dz[0]+dw[1]*dz[1])/den,ai=(dw[1]*dz[0]-dw[0]*dz[1])/den;const sc=Math.hypot(ar,ai);
+        const ok=z.every(([x,y],i)=>{const X=w[0][0]+ar*(x-z[0][0])-ai*(y-z[0][1]),Y=w[0][1]+ai*(x-z[0][0])+ar*(y-z[0][1]);return Math.hypot(X-w[i][0],Y-w[i][1])<sc*.2});
+        if(ok){done=true;const c=w.reduce((s,q)=>[s[0]+q[0]/5,s[1]+q[1]/5],[0,0]);const r=a.stage.getBoundingClientRect();setTimeout(()=>a.solve(r.left+c[0],r.top+c[1]),400);return}}}}
+  a.stage._stars=()=>{const idx=house.map(h=>pts.findIndex(p=>p===h));[[0,1],[1,2],[2,4],[4,3],[3,0]].forEach(([x,y])=>toggle(idx[x],idx[y]))};
+ }},
+/* 48 — closer */
+{hints:['Look closer at the dot.','Use two fingers to zoom in, like on a photo. Drag with one finger to look around.','Zoom all the way into the dot: the code is 4 1 9 6.'],
+ init(a){
+  const D=10,cx0=a.w/2,cy0=(a.h-150)/2;
+  const dot=a.el('div','abs');Object.assign(dot.style,{borderRadius:'50%',background:'var(--accent)'});
+  dot.innerHTML=`<svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block"><text x="50" y="58" text-anchor="middle" font-size="22" font-family="JetBrains Mono, monospace" font-weight="700" fill="var(--on-accent)">4196</text></svg>`;
+  let s=1,tx=0,ty=0;const apply=()=>{const z=D*s;Object.assign(dot.style,{width:z+'px',height:z+'px',left:tx+cx0*s-z/2+'px',top:ty+cy0*s-z/2+'px'})};apply();
+  const ptrs=new Map();let pin=null,pan=null;
+  const loc=e=>{const r=a.stage.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};
+  const zoomAt=(ns,m)=>{ns=Math.max(1,Math.min(120,ns));const wx=(m.x-tx)/s,wy=(m.y-ty)/s;s=ns;tx=m.x-wx*s;ty=m.y-wy*s;if(s===1){tx=0;ty=0}apply()};
+  const down=e=>{if(e.target.closest('.dials'))return;ptrs.set(e.pointerId,loc(e));
+    if(ptrs.size===2){const[p1,p2]=[...ptrs.values()];pin={d:Math.hypot(p1.x-p2.x,p1.y-p2.y),s0:s};pan=null}else if(ptrs.size===1)pan=loc(e)};
+  const move=e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,loc(e));
+    if(ptrs.size===2&&pin){const[p1,p2]=[...ptrs.values()];const d=Math.hypot(p1.x-p2.x,p1.y-p2.y);zoomAt(pin.s0*d/pin.d,{x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2})}
+    else if(ptrs.size===1&&pan&&s>1){const p=loc(e);tx+=p.x-pan.x;ty+=p.y-pan.y;pan=p;apply()}};
+  const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pin=null;if(ptrs.size===1)pan=[...ptrs.values()][0];if(!ptrs.size)pan=null};
+  const wheel=e=>{e.preventDefault();zoomAt(s*Math.exp(-e.deltaY*.004),loc(e))};
+  a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointermove',move);a.stage.addEventListener('pointerup',up);a.stage.addEventListener('pointercancel',up);a.stage.addEventListener('wheel',wheel,{passive:false});
+  dials(a,4,{onChange:v=>{if(v.join('')==='4196')a.solve()}});
+  a.stage._zoom=ns=>{zoomAt(ns,{x:a.w/2,y:(a.h-150)/2})};
+  return()=>{a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointermove',move);a.stage.removeEventListener('pointerup',up);a.stage.removeEventListener('pointercancel',up);a.stage.removeEventListener('wheel',wheel)};
+ }},
+/* 49 — safe */
+{hints:['The card has something on its back.','Double-tap the card. Then turn the dial like a safe: turn one way, stop on a number, turn back the other way.','Turn clockwise to 12, back anticlockwise to 30, then clockwise to 7 and let go.'],
+ init(a){
+  const card=a.el('div','abs flipcard');card.innerHTML='<div class="face back"></div><div class="face front"><span>→ 12</span><span>← 30</span><span>→ 7</span></div>';
+  let lastTap=0;card.onclick=()=>{const t=performance.now();if(t-lastTap<380){card.classList.toggle('flipped');a.buzz(10);lastTap=0}else{lastTap=t;card.classList.remove('nudge');void card.offsetWidth;card.classList.add('nudge')}};
+  const S=Math.min(a.w-48,a.h-200),cx=a.w/2,cy=150+S/2;
+  const box=a.el('div','abs');Object.assign(box.style,{left:cx-S/2+'px',top:cy-S/2+'px',width:S+'px',height:S+'px',touchAction:'none'});
+  const R=S/2-4;let ticks='';for(let i=0;i<40;i++){const t=i*Math.PI/20,l=i%5?R*.9:R*.82;ticks+=`<line x1="${S/2+Math.sin(t)*R}" y1="${S/2-Math.cos(t)*R}" x2="${S/2+Math.sin(t)*l}" y2="${S/2-Math.cos(t)*l}" stroke="var(--muted)" stroke-width="${i%5?2:3}"/>`;
+    if(i%5===0)ticks+=`<text x="${S/2+Math.sin(t)*R*.68}" y="${S/2-Math.cos(t)*R*.68+5}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="var(--muted)">${i}</text>`}
+  box.innerHTML=`<svg width="${S}" height="${S}"><circle cx="${S/2}" cy="${S/2}" r="${R}" fill="var(--surface)" stroke="var(--fg)" stroke-width="3"/>${ticks}
+    <g class="knob" style="transform-origin:${S/2}px ${S/2}px"><line x1="${S/2}" y1="${S/2}" x2="${S/2}" y2="${S/2-R*.86}" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/><circle cx="${S/2}" cy="${S/2-R*.86}" r="9" fill="var(--accent)"/></g>
+    <text class="num big" x="${S/2}" y="${S/2+18}" text-anchor="middle" font-size="52" fill="var(--fg)" font-family="Archivo, sans-serif" font-weight="900" font-stretch="125%">0</text></svg>`;
+  const knob=box.querySelector('.knob'),numEl=box.querySelector('.num');
+  let num=0,dir=0,seq=[],ang=0,done=false,dragging=false;
+  const setNum=n=>{const d=((n-num)%40+40)%40;const step=d===0?0:(d<20?1:-1);if(!step)return;
+    if(dir&&step!==dir)seq.push([dir,num]);dir=step;num=n;numEl.textContent=n;a.buzz(3)};
+  const angOf=e=>{const r=box.getBoundingClientRect();return(Math.atan2(e.clientX-r.left-S/2,-(e.clientY-r.top-S/2))*180/Math.PI+360)%360};
+  box.onpointerdown=e=>{if(done)return;box.setPointerCapture(e.pointerId);dragging=true};
+  box.onpointermove=e=>{if(!dragging)return;ang=angOf(e);knob.style.transform=`rotate(${ang}deg)`;setNum(Math.round(ang/9)%40)};
+  box.onpointerup=()=>{dragging=false;const t=[...seq,[dir,num]].slice(-3);
+    if(t.length===3&&t[0][0]===1&&t[0][1]===12&&t[1][0]===-1&&t[1][1]===30&&t[2][0]===1&&t[2][1]===7){done=true;a.buzz(16);setTimeout(()=>a.solve(cx+a.stage.getBoundingClientRect().left,cy+a.stage.getBoundingClientRect().top),300)}};
+  a.stage._safe=(steps)=>{for(const n of steps){setNum(n);knob.style.transform=`rotate(${n*9}deg)`}box.onpointerup()};
+ }},
+/* 50 — undo */
+{hints:['This is level 1, backwards.','Pinch the colour together with two fingers, like zooming out of a photo. It grows back if you let go too early.','Pinch it down to a small dot, then press and hold the dot until the ring around it closes.'],
+ init(a){
+  const full=Math.hypot(a.w,a.h)*1.05,small=56;
+  const disc=a.el('div','abs');Object.assign(disc.style,{width:full+'px',height:full+'px',left:a.w/2-full/2+'px',top:a.h/2-full/2+'px',borderRadius:'50%',background:'var(--accent)'});
+  const ringBox=a.el('div','abs');ringBox.hidden=true;const RS=small+44;Object.assign(ringBox.style,{width:RS+'px',height:RS+'px',left:a.w/2-RS/2+'px',top:a.h/2-RS/2+'px',pointerEvents:'none'});
+  const L=2*Math.PI*(RS/2-6);ringBox.innerHTML=`<svg width="${RS}" height="${RS}" style="transform:rotate(-90deg)"><circle cx="${RS/2}" cy="${RS/2}" r="${RS/2-6}" fill="none" stroke="var(--line)" stroke-width="4"/><circle class="p" cx="${RS/2}" cy="${RS/2}" r="${RS/2-6}" fill="none" stroke="var(--accent)" stroke-width="6" stroke-dasharray="${L}" stroke-dashoffset="${L}"/></svg>`;
+  const prog=ringBox.querySelector('.p');
+  let s=1,mode='big',held=false,hp=0,done=false;
+  const paint=()=>{disc.style.transform=`scale(${s})`};
+  const ptrs=new Map();let pin=null;
+  const loc=e=>({x:e.clientX,y:e.clientY});
+  const down=e=>{if(done)return;ptrs.set(e.pointerId,loc(e));
+    if(mode==='small'){const r=disc.getBoundingClientRect();if(Math.hypot(e.clientX-r.left-r.width/2,e.clientY-r.top-r.height/2)<small){held=true;a.buzz(8)}return}
+    if(ptrs.size===2){const[p1,p2]=[...ptrs.values()];pin={d:Math.hypot(p1.x-p2.x,p1.y-p2.y),s0:s}}
+    else{disc.animate([{transform:`scale(${s})`},{transform:`scale(${Math.min(1.03,s*1.03)})`},{transform:`scale(${s})`}],{duration:200})}};
+  const move=e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,loc(e));
+    if(mode==='big'&&ptrs.size===2&&pin){const[p1,p2]=[...ptrs.values()];s=Math.max(small/full*.8,Math.min(1,pin.s0*Math.hypot(p1.x-p2.x,p1.y-p2.y)/pin.d));paint()}};
+  const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pin=null;held=false;
+    if(mode==='big'&&!ptrs.size){if(s*full<=small*1.3){mode='small';s=small/full;disc.style.transition='transform .25s var(--ease)';paint();ringBox.hidden=false;a.buzz(12)}}};
+  const wheel=e=>{e.preventDefault();if(mode!=='big')return;s=Math.max(small/full*.8,Math.min(1,s*Math.exp(-e.deltaY*.003)));paint();clearTimeout(wheel.t);wheel.t=setTimeout(()=>up({pointerId:-1}),400)};
+  a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointermove',move);a.stage.addEventListener('pointerup',up);a.stage.addEventListener('pointercancel',up);a.stage.addEventListener('wheel',wheel,{passive:false});
+  let last=performance.now(),raf;
+  const tick=t=>{const dt=(t-last)/1000;last=t;
+    if(mode==='big'&&!pin&&s<1){s=Math.min(1,s+dt*.35);paint()}
+    if(mode==='small'){hp=held?Math.min(1,hp+dt/2):Math.max(0,hp-dt*1.5);prog.setAttribute('stroke-dashoffset',L*(1-hp));
+      disc.style.transition='none';disc.style.transform=`scale(${small/full*(1-hp*.9)})`;
+      if(hp>=1&&!done){done=true;disc.style.transform='scale(0)';ringBox.hidden=true;const r=a.stage.getBoundingClientRect();setTimeout(()=>a.solve(r.left+a.w/2,r.top+a.h/2),150);return}}
+    raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);paint();
+  a.stage._undo={shrink(){s=small/full;paint();up({pointerId:-1})},hold(v){held=v}};
+  return()=>{cancelAnimationFrame(raf);a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointermove',move);a.stage.removeEventListener('pointerup',up);a.stage.removeEventListener('pointercancel',up);a.stage.removeEventListener('wheel',wheel)};
+ }},
 ];
 
 renderAll();
