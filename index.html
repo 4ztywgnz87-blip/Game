@@ -8,7 +8,7 @@
    and the chapter colour reserved for the things you can touch and for the solve flood. */
 :root{
   --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
-  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE; --ch7:#FF5FA2;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE; --ch7:#FF5FA2; --ch8:#FF8A3D;
   --accent:var(--ch1); --on-accent:#0C0D11;
   --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
   --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -18,7 +18,7 @@
 }
 :root.light{
   --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
-  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --ch7:#DB2777; --on-accent:#FFFFFF;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --ch7:#DB2777; --ch8:#EA580C; --on-accent:#FFFFFF;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -42,7 +42,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
 .wordmark>span{display:block}
 .wordmark .dot{color:var(--accent)}
-.chapters{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.chapters{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
 .chapter-bar{display:flex;flex-direction:column;gap:8px}
 .chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
 .chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
@@ -372,6 +372,30 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .domino b+b{border-left:2px solid var(--muted)}
 .domino.sel{box-shadow:0 0 0 4px var(--accent)}
 .domino.ok{box-shadow:4px 0 0 0 var(--accent)}
+.echo{position:absolute;border-radius:50%;border:3px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;opacity:.8;transition:left .12s,top .12s}
+.echo.solid{background:var(--accent);color:var(--on-accent);opacity:.55}
+.echo.dead{border-style:dashed;opacity:.5}
+.plate{border:3px solid var(--accent)}
+.plate.g2{border-color:var(--fg)}
+.gate.g1{border-color:var(--accent)}
+.gate.closed.g1{background:var(--accent);border-color:var(--accent)}
+.echo-bar{left:16px;right:16px;display:flex;align-items:center;justify-content:space-between}
+.guard{position:absolute;background:var(--ch2);transition:left .15s,top .15s}
+.queue{left:50%;transform:translateX(-50%);display:flex;gap:10px}
+.queue i{width:56px;height:56px;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-family:var(--display);font-weight:900;font-size:28px;color:var(--fg)}
+.queue i:first-child{border-color:var(--accent);color:var(--accent)}
+.timeline{height:36px;background:var(--surface);overflow:hidden}
+.timeline .playhead{position:absolute;top:0;bottom:0;width:3px;background:var(--fg);z-index:1}
+.timeline .seg{position:absolute;height:6px;background:var(--accent)}
+.beatgrid{left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:5px}
+.beatgrid div{display:flex;gap:5px}
+.beatgrid i{width:30px;height:18px;border:2px solid var(--line)}
+.beatgrid i.want{border-color:var(--fg)}
+.beatgrid i.got{background:var(--accent)}
+.beatgrid i.got:not(.want){background:var(--ch2)}
+.pad3{border-radius:50%;border:3px solid var(--fg);touch-action:none;transition:background .08s}
+.pad3.echo{background:color-mix(in srgb,var(--accent) 45%,transparent);border-color:var(--accent)}
+.pad3.live{background:var(--accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -434,7 +458,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">70 / 70</span>
+    <span class="label">80 / 80</span>
     <div class="big">All<br>solved.</div>
     <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
@@ -459,7 +483,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <script>
 (()=>{
-const TOTAL=70, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'},{name:'Pink',c:'--ch7'}], ROMAN=['I','II','III','IV','V','VI','VII'];
+const TOTAL=80, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'},{name:'Pink',c:'--ch7'},{name:'Orange',c:'--ch8'}], ROMAN=['I','II','III','IV','V','VI','VII','VIII'];
 const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const chapterOf=id=>Math.floor((id-1)/10);
@@ -641,6 +665,7 @@ const api={
   buzz,
   onHeaderTap(fn){headerTap=fn},
   headerNumber:()=>$('#lvlnum'),
+  restartLevel(){if(current!==null&&!solving)runLevel(true)},
   solve(x,y){ // x,y in viewport px; defaults to stage centre
     if(solving)return;solving=true;
     const r=stage.getBoundingClientRect();
@@ -1046,6 +1071,102 @@ function iceLevel(a,map){
       if(hit>=0){boxes[hit]=bres.end;a.buzz(12);anim(bEls[hit],bres.path,bi,fin)}else fin()});
   };
   return swipes(a.stage,go);
+}
+
+/* echo engine: every restart turns your last attempt into an echo that repeats it, move for move.
+   # wall, S start, O exit, 1/2 plates, a/b doors (open while someone stands on plate 1/2), x hidden trap.
+   Swipe = move, tap = wait one beat. Echoes act first (oldest first), then you; doors use the state at the start of the beat.
+   ice: everything slides and echoes are solid. fog: only you and your echoes give light. */
+function echoLevel(a,store,map,{ice=false,fog=false,max=4}={}){
+  if(!a.restart||!store._echoes)store._echoes=[];
+  const echoes=store._echoes;
+  const R=map.length,C=map[0].length,g=grid(a,R,C,{below:70});g.b.style.background='var(--surface)';
+  let S,O;const plates=[],doors=[],traps=new Set();
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='S')S=[r,c];
+    if(ch==='x'){traps.add(r+','+c);g.put('trap',r,c,Math.round(g.cell*.16))}
+    if(ch==='1'||ch==='2')plates.push({r,c,grp:ch,el:g.put('plate g'+ch,r,c,Math.round(g.cell*.18))});
+    if(ch==='a'||ch==='b')doors.push({r,c,grp:ch==='a'?'1':'2',el:g.put('gate closed g'+(ch==='a'?'1':'2'),r,c,0)});
+  }));
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='O'){O=[r,c];g.put('hole',r,c,Math.round(g.cell*.14)).style.zIndex=2}}));
+  let cv=null,ctx=null;
+  if(fog){cv=document.createElement('canvas');cv.width=g.W*devicePixelRatio;cv.height=g.H*devicePixelRatio;Object.assign(cv.style,{position:'absolute',left:0,top:0,width:g.W+'px',height:g.H+'px',pointerEvents:'none',zIndex:1});g.b.appendChild(cv);ctx=cv.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio)}
+  const ents=[...echoes.map((rec,i)=>({rec,ghost:true,i})),{rec:[],ghost:false}];
+  ents.forEach(e=>{e.p=S.slice();e.dead=false;e.el=a.el('div',e.ghost?'echo'+(ice?' solid':''):'sdot',g.b);e.el.style.zIndex=3;if(e.ghost)e.el.textContent=e.i+1});
+  const me=ents[ents.length-1];me.el.style.zIndex=4;
+  const ins=Math.round(g.cell*.18);
+  const draw=()=>{ents.forEach(e=>{g.at(e.el,e.p[0],e.p[1],ins);e.el.classList.toggle('dead',e.dead)});
+    if(ctx){const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#0C0D11';ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,g.W,g.H);ctx.fillStyle=bg;ctx.fillRect(0,0,g.W,g.H);
+      ctx.globalCompositeOperation='destination-out';ents.forEach(e=>{const x=(e.p[1]+.5)*g.cell,y=(e.p[0]+.5)*g.cell,r=g.cell*(e.ghost?1.25:1.6);
+        const gr=ctx.createRadialGradient(x,y,r*.35,x,y,r);gr.addColorStop(0,'rgba(0,0,0,1)');gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.fillRect(x-r,y-r,r*2,r*2)})}};
+  let open={};const upd=()=>{for(const k of ['1','2'])open[k]=plates.some(p=>p.grp===k&&ents.some(e=>!e.dead&&e.p[0]===p.r&&e.p[1]===p.c));doors.forEach(d=>d.el.classList.toggle('closed',!open[d.grp]))};
+  const blocked=(r,c,self)=>{if(r<0||c<0||r>=R||c>=C||map[r][c]==='#')return true;const d=doors.find(d=>d.r===r&&d.c===c);if(d&&!open[d.grp])return true;
+    return ice&&ents.some(e=>e!==self&&e.p[0]===r&&e.p[1]===c)};
+  const act=(e,k)=>{if(e.dead||!k||k==='W')return;const[dr,dc]=DIRS[k];
+    if(!ice){const n=[e.p[0]+dr,e.p[1]+dc];if(!blocked(n[0],n[1],e))e.p=n}
+    else for(let s=0;s<40;s++){const n=[e.p[0]+dr,e.p[1]+dc];if(blocked(n[0],n[1],e))break;e.p=n;if(traps.has(n+''))break}
+    if(traps.has(e.p+''))e.dead=true};
+  upd();draw();
+  // echo counter + clear button
+  const bar=a.el('div','abs echo-bar');bar.style.bottom=`calc(18px + env(safe-area-inset-bottom,0px))`;
+  bar.innerHTML=`<span class="pipsrow">${[...Array(max)].map((_,i)=>`<i class="${i<echoes.length?'on':''}"></i>`).join('')}</span>`;
+  const clr=a.el('button','icon-btn',bar);clr.setAttribute('aria-label','Clear echoes');clr.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>';
+  let t=0,done=false,ending=false;
+  clr.onpointerdown=e=>e.stopPropagation();
+  clr.onclick=e=>{e.stopPropagation();echoes.length=0;me.rec=[];a.buzz(10);a.restartLevel()};
+  function beat(k){if(done||ending)return;me.rec.push(k);ents.forEach(e=>act(e,e.ghost?e.rec[t]:k));t++;upd();draw();a.buzz(k==='W'?3:6);
+    if(me.p[0]===O[0]&&me.p[1]===O[1]){done=true;const r=me.el.getBoundingClientRect();setTimeout(()=>a.solve(r.left+r.width/2,r.top+r.height/2),200);return}
+    if(me.dead){ending=true;a.buzz([30,40,30]);setTimeout(()=>a.restartLevel(),650)}}
+  // input: swipe moves, tap waits
+  let sx,sy,pid=null;
+  const down=e=>{if(e.target.closest&&e.target.closest('button'))return;pid=e.pointerId;sx=e.clientX;sy=e.clientY};
+  const up=e=>{if(e.pointerId!==pid)return;pid=null;const dx=e.clientX-sx,dy=e.clientY-sy;
+    if(Math.max(Math.abs(dx),Math.abs(dy))<24){beat('W');return}beat(Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'))};
+  const key=e=>{const m={ArrowUp:'U',ArrowDown:'D',ArrowLeft:'L',ArrowRight:'R',' ':'W'}[e.key];if(m){e.preventDefault();beat(m)}};
+  a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointerup',up);addEventListener('keydown',key);
+  return()=>{a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointerup',up);removeEventListener('keydown',key);
+    if(!done&&me.rec.length){echoes.push(me.rec);while(echoes.length>max)echoes.shift()}};
+}
+
+/* loop pedal: a bar loops every few seconds; what you press in one round plays back in the next rounds. Only one finger counts. */
+function pedalLevel(a,{max=2,target=null}={}){
+  const L=3200,n=3,layers=[];let cur=[],live=null,pid=null,t0=performance.now(),prev=0,hold=0,done=false;
+  const W=a.w-32;
+  const tl=a.el('div','abs timeline');Object.assign(tl.style,{left:'16px',width:W+'px',top:'16px'});
+  const head=a.el('i','playhead',tl);
+  let tgt=null;
+  if(target){tgt=a.el('div','abs beatgrid');tgt.style.top='70px';
+    tgt.innerHTML=target.map(row=>`<div>${row.map(v=>`<i class="${v?'want':''}"></i>`).join('')}</div>`).join('')}
+  const pz=Math.min(110,(a.w-32-32)/3);const pads=[...Array(n)].map((_,i)=>{const p=a.el('div','abs pad3');const ang=i*2*Math.PI/3-Math.PI/2,R=pz*.85;
+    Object.assign(p.style,{width:pz+'px',height:pz+'px',left:a.w/2+Math.cos(ang)*R-pz/2+'px',top:a.h*.58+Math.sin(ang)*R-pz/2+'px'});
+    p.onpointerdown=e=>{if(done||pid!==null)return;pid=e.pointerId;try{p.setPointerCapture(e.pointerId)}catch(_){}live={p:i,s:(performance.now()-t0)%L};a.buzz(8)};
+    const rel=e=>{if(e.pointerId!==pid)return;pid=null;if(live){cur.push({p:live.p,s:live.s,e:(performance.now()-t0)%L});live=null}};
+    p.onpointerup=rel;p.onpointercancel=rel;p.oncontextmenu=e=>e.preventDefault();return p});
+  const bar=a.el('div','abs echo-bar');bar.style.bottom=`calc(18px + env(safe-area-inset-bottom,0px))`;
+  const pipsEl=a.el('span','pipsrow',bar);
+  const clr=a.el('button','icon-btn',bar);clr.setAttribute('aria-label','Clear echoes');clr.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>';
+  clr.onclick=()=>{layers.length=0;cur=[];a.buzz(10)};
+  const on=(i,tt,list)=>list.some(l=>l.some(v=>v.p===i&&tt>=v.s&&tt<=v.e));
+  const cover=(list)=>[...Array(n)].map((_,i)=>[0,1,2,3].map(b=>{let c=0;for(let k=0;k<20;k++){const tt=(b+(k+.5)/20)*L/4;if(on(i,tt,list))c++}return c>=10?1:0}));
+  const drawTl=()=>{tl.querySelectorAll('.seg').forEach(x=>x.remove());[...layers,cur].forEach((l,li)=>l.forEach(v=>{const s=document.createElement('b');s.className='seg';
+      Object.assign(s.style,{left:v.s/L*100+'%',width:Math.max(1,(v.e-v.s)/L*100)+'%',top:4+v.p*10+'px',opacity:li===layers.length?1:.5});tl.appendChild(s)}))};
+  let raf,last=performance.now();
+  const tick=now=>{const dt=(now-last)/1000;last=now;const tt=(now-t0)%L;
+    if(tt<prev){if(live){cur.push({p:live.p,s:live.s,e:L});live={p:live.p,s:0}}
+      if(cur.length){layers.push(cur);while(layers.length>max)layers.shift()}cur=[];
+      if(target&&!done){const cv=cover(layers);if(JSON.stringify(cv)===JSON.stringify(target)){done=true;a.solve();return}}drawTl()}
+    prev=tt;head.style.left=tt/L*100+'%';
+    const act=[...Array(n)].map((_,i)=>(live&&live.p===i)||on(i,tt,layers));
+    pads.forEach((p,i)=>{p.classList.toggle('live',!!(live&&live.p===i));p.classList.toggle('echo',on(i,tt,layers))});
+    if(target){const cv=cover(layers);tgt.querySelectorAll('div').forEach((row,i)=>row.querySelectorAll('i').forEach((c,b)=>c.classList.toggle('got',!!cv[i][b])))}
+    else{hold=act.every(Boolean)?hold+dt:0;if(hold>.4&&!done){done=true;a.solve(a.w/2+a.stage.getBoundingClientRect().left,a.h*.58+a.stage.getBoundingClientRect().top);return}}
+    pipsEl.innerHTML=[...Array(max)].map((_,i)=>`<i class="${i<layers.length?'on':''}"></i>`).join('');
+    if(live||Math.random()<.05)drawTl();
+    raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  a.stage._pedal={L,layers,set(list){layers.length=0;list.forEach(l=>layers.push(l))},start(){return t0}};
+  return()=>cancelAnimationFrame(raf);
 }
 
 function cleanCount(upto){return Object.entries(state.solved).filter(([id,v])=>+id<upto&&v&&v.hints===0).length}
@@ -2209,6 +2330,58 @@ const LEVELS=[
 /* 70 — ice and rings */
 {hints:['Two blocks, two squares and a pair of rings, all on ice.','Everything slides until stopped. A ring sends anything that slides into it out of its twin, still sliding the same way.','Swipe: up, right, up, left, down, left, up, right, left, up, right ×2, up, right, up, left, up ×2, right, up, left ×2, down, left, down, left, up.'],
  init(a){return iceLevel(a,['....a..','..B....','#..B..#','#..#..#','T...#..','...#...','A.....#','.#...T#','....P#.'])}},
+/* 71 — echo */
+{hints:['The square plate opens the door, but only while someone stands on it.','Press restart: your last attempt comes back as an echo and repeats every move you made. Leave your echo on the plate.','Swipe up, left, left onto the plate, then press restart. Now walk straight up through the door.'],
+ init(a){return echoLevel(a,this,['...O...','###a###','.......','.......','.......','.1.....','...S...'])}},
+/* 72 — two echoes */
+{hints:['Two doors, two plates. You will need two echoes.','A tap makes you wait one beat. Doors only open once an echo actually stands on the plate.','First run: up, left ×3, restart. Second run: up, right ×3, restart. Third run: up, up, tap, tap, then up until you are out.'],
+ init(a){return echoLevel(a,this,['...O...','###b###','.......','###a###','.......','1.....2','...S...'])}},
+/* 73 — chain */
+{hints:['The second plate is behind the first door.','Your echoes replay together, so one echo can hold a door open for another.','Run 1: left ×3, restart. Run 2: up, tap, tap, up, up, right, right, restart. Run 3: up, tap, tap, up ×3, left ×3, up, up.'],
+ init(a){return echoLevel(a,this,['O......','b######','.......','.....2.','###a###','.......','1..S...'])}},
+/* 74 — loop pedal */
+{hints:['All three pads have to be lit at the same moment, but only one finger counts.','The bar at the top loops. Everything you press in one round plays back in the next rounds.','Hold one pad in the middle of a round. Next round, hold another pad at the same moment. Then hold the third.'],
+ init(a){return pedalLevel(a,{max:2})}},
+/* 75 — stack */
+{hints:['On ice you slide until something stops you. Here, your echoes are solid.','The ring is in the middle of nowhere. You need something to stop against.','Swipe up and restart. Swipe up and restart. Swipe up.'],
+ init(a){return echoLevel(a,this,['.......','.......','...O...','.......','.......','.......','...S...'],{ice:true,max:3})}},
+/* 76 — late */
+{hints:['Your moves arrive two beats late. The two boxes below show what is still coming.','Every swipe or tap moves the queue on: the oldest move happens and both guards take a step. A tap queues a pause.','Swipe up three times, tap, up twice, tap, then keep swiping up.'],
+ init(a){
+  const map=['...O...','###.###','.......','###.###','.......','###.###','.......','.......','...S...'];const R=9,C=7;
+  const g=grid(a,R,C,{below:96});g.b.style.background='var(--surface)';
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='#')g.put('wall',r,c);if(ch==='O')g.put('hole',r,c,Math.round(g.cell*.14))}));
+  const me=a.el('div','sdot',g.b),gA=a.el('div','guard',g.b),gB=a.el('div','guard',g.b);
+  const qEl=a.el('div','abs queue');qEl.style.bottom=`calc(22px + env(safe-area-inset-bottom,0px))`;
+  const icon={U:'↑',D:'↓',L:'←',R:'→',W:'·'};
+  let pos,q,A,B,busy=false,done=false;
+  const reset=()=>{pos=[8,3];q=['W','W'];A={c:3,d:1};B={c:0,d:1}};reset();
+  const step=gd=>{let{c,d}=gd;if(c+d<0||c+d>6)d=-d;return{c:c+d,d}};
+  const draw=()=>{g.at(me,pos[0],pos[1],Math.round(g.cell*.2));g.at(gA,4,A.c,Math.round(g.cell*.12));g.at(gB,2,B.c,Math.round(g.cell*.12));qEl.innerHTML=q.map(k=>`<i>${icon[k]}</i>`).join('')};
+  draw();
+  const beat=k=>{if(busy||done)return;q.push(k);const x=q.shift();const n=[pos[0]+(x==='U'?-1:x==='D'?1:0),pos[1]+(x==='L'?-1:x==='R'?1:0)];
+    if(n[0]>=0&&n[1]>=0&&n[0]<R&&n[1]<C&&map[n[0]][n[1]]!=='#')pos=n;A=step(A);B=step(B);draw();a.buzz(x==='W'?3:6);
+    if((pos[0]===4&&A.c===pos[1])||(pos[0]===2&&B.c===pos[1])){busy=true;me.classList.add('fail');a.buzz([30,40,30]);setTimeout(()=>{me.classList.remove('fail');reset();draw();busy=false},700);return}
+    if(pos[0]===0&&pos[1]===3){done=true;const r=me.getBoundingClientRect();setTimeout(()=>a.solve(r.left+r.width/2,r.top+r.height/2),200)}};
+  let sx,sy,pid=null;
+  const down=e=>{pid=e.pointerId;sx=e.clientX;sy=e.clientY};
+  const up=e=>{if(e.pointerId!==pid)return;pid=null;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<24){beat('W');return}beat(Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'))};
+  const key=e=>{const m={ArrowUp:'U',ArrowDown:'D',ArrowLeft:'L',ArrowRight:'R',' ':'W'}[e.key];if(m){e.preventDefault();beat(m)}};
+  a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointerup',up);addEventListener('keydown',key);
+  return()=>{a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointerup',up);removeEventListener('keydown',key)};
+ }},
+/* 77 — ice and plate */
+{hints:['On ice, with a plate and a door. Your echoes are solid here.','An echo can slide onto the plate and stay there. Give it time before you slide through.','Run 1: up, left, down, then restart. Run 2: tap three times, then swipe up.'],
+ init(a){return echoLevel(a,this,['###O###','...a...','.......','.......','1......','#......','...S...'],{ice:true,max:3})}},
+/* 78 — rhythm */
+{hints:['Build the pattern at the top: each row is a pad, each column a beat of the loop.','You can only play one pad at a time, but every round is remembered. Layer the rounds. The trash can starts over.','Round 1: pad 1, pad 2, pad 1, pad 3 (one per beat). Round 2: pad 3, pad 3, pad 2, nothing. Pads are counted clockwise from the top.'],
+ init(a){return pedalLevel(a,{max:3,target:[[1,0,1,0],[0,1,1,0],[1,1,0,1]]})}},
+/* 79 — dark */
+{hints:['It is dark, and some squares are traps. The ring is top right.','When you fall into a trap, that attempt becomes an echo. It walks the same way, falls in the same trap and keeps glowing there.','Right ×2, up ×2, right, up ×2, right, up ×4, right ×2.'],
+ init(a){return echoLevel(a,this,['......O','.x.x...','.x...x.','...x.x.','x.x...x','..x.x..','x...x..','.x.x..x','S......'],{fog:true,max:6})}},
+/* 80 — finale */
+{hints:['Dark, traps, a plate and a door. Everything you have learned.','Find the plate in the dark first. Fallen echoes keep showing you the traps.','Run 1: up, right ×2, up ×2, right ×4 onto the plate, then restart. Run 2: up, right ×2, up ×5, right, up, up.'],
+ init(a){return echoLevel(a,this,['...O...','###a###','.x...x.','...x...','.x.x.x.','x.....1','.x.x...','...x.x.','S......'],{fog:true,max:6})}},
 ];
 
 renderAll();
