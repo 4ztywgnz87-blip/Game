@@ -8,7 +8,8 @@
    and the chapter colour reserved for the things you can touch and for the solve flood. */
 :root{
   --bg:#0C0D11; --surface:#17191F; --line:#2A2D36; --fg:#F2F3F7; --muted:#7D8294;
-  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE; --ch7:#FF5FA2; --ch8:#FF8A3D;
+  --ch1:#2F6BFF; --ch2:#FF3D2E; --ch3:#19D27A; --ch4:#A56EFF; --ch5:#FFC533; --ch6:#22D3EE; --ch7:#FF5FA2; --ch8:#FF8A3D; --ch9:#A3E635;
+  --cr:#FF4D4D; --cb:#3D7BFF; --cy:#FFD23D; --cg:#2FD07A; --cp:#A45CFF; --cn:#FF9A3D; --cm:#6B5A4A;
   --accent:var(--ch1); --on-accent:#0C0D11;
   --display:"Archivo","Arial Black","Helvetica Neue",Arial,sans-serif;
   --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -18,7 +19,7 @@
 }
 :root.light{
   --bg:#F3F4F7; --surface:#E3E5EB; --line:#CBCED8; --fg:#0C0D11; --muted:#666B7C;
-  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --ch7:#DB2777; --ch8:#EA580C; --on-accent:#FFFFFF;
+  --ch1:#1E54F0; --ch2:#E8321F; --ch3:#0E9F5E; --ch4:#7C3AED; --ch5:#B98200; --ch6:#0891B2; --ch7:#DB2777; --ch8:#EA580C; --ch9:#65A30D; --on-accent:#FFFFFF;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -42,7 +43,8 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .wordmark{font-size:clamp(88px,30vw,190px);margin-top:auto}
 .wordmark>span{display:block}
 .wordmark .dot{color:var(--accent)}
-.chapters{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+.chapters{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+.chapters .label{font-size:9px;letter-spacing:.06em}
 .chapter-bar{display:flex;flex-direction:column;gap:8px}
 .chapter-bar .track{height:6px;background:var(--surface);overflow:hidden}
 .chapter-bar .fill{height:100%;background:var(--c);width:0;transition:width .6s var(--ease)}
@@ -374,7 +376,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .domino.ok{box-shadow:4px 0 0 0 var(--accent)}
 .echo{position:absolute;border-radius:50%;border:3px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;opacity:.8;transition:left .12s,top .12s}
 .echo.solid{background:var(--accent);color:var(--on-accent);opacity:.55}
-.echo.dead{border-style:dashed;opacity:.5}
+.echo.dead{background:var(--accent);border-color:var(--accent);color:var(--on-accent);border-radius:6px;opacity:.6}
 .plate{border:3px solid var(--accent)}
 .plate.g2{border-color:var(--fg)}
 .gate.g1{border-color:var(--accent)}
@@ -396,6 +398,27 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .pad3{border-radius:50%;border:3px solid var(--fg);touch-action:none;transition:background .08s}
 .pad3.echo{background:color-mix(in srgb,var(--accent) 45%,transparent);border-color:var(--accent)}
 .pad3.live{background:var(--accent);border-color:var(--accent)}
+.ice{background:repeating-linear-gradient(135deg,var(--line) 0 3px,transparent 3px 9px)}
+.cwall{background:repeating-linear-gradient(45deg,var(--c) 0 6px,transparent 6px 11px);box-shadow:inset 0 0 0 3px var(--c)}
+.pot{border-radius:50%;background:var(--c)}
+.wash{border-radius:50%;border:3px solid var(--fg);background:radial-gradient(circle,var(--fg) 0 25%,transparent 26%)}
+.prism-me{background:var(--c);box-shadow:0 0 0 3px var(--fg)}
+.prism-me.clear{background:var(--bg)}
+.fslot{border:2px dashed var(--muted)}
+.fsrc{width:14px;height:20px;background:#fff;border-radius:2px}
+.fsensor{width:34px;height:34px;border-radius:50%;border:5px solid var(--want)}
+.ftray{left:16px;right:16px;height:84px;border-top:2px solid var(--line)}
+.filter{background:var(--f);opacity:.85;border-radius:4px;transition:left .2s var(--ease),top .2s var(--ease);z-index:2}
+.filter.sel{outline:3px solid var(--fg);outline-offset:3px}
+.lightpane{background:#050507;touch-action:none}
+.spot{border-radius:50%;mix-blend-mode:screen;opacity:.92;pointer-events:none}
+.ldot{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 4px #050507,0 0 0 7px var(--want);z-index:2;pointer-events:none}
+.ldot.dark{box-shadow:0 0 0 4px #050507;outline:2px dashed #B4B9C6;outline-offset:5px}
+.brushprev{left:50%;top:8px;transform:translateX(-50%);display:flex;flex-direction:column;gap:2px}
+.brushprev div{display:flex;gap:2px}.brushprev i{display:block;width:14px;height:14px}
+.bcell{background:var(--line)}
+.bcell.well{background:var(--surface);box-shadow:inset 0 0 0 4px var(--c)}
+.bcell.nope{animation:wiggle .3s}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -458,7 +481,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   </section>
 
   <section id="end" class="view" hidden>
-    <span class="label">80 / 80</span>
+    <span class="label">90 / 90</span>
     <div class="big">All<br>solved.</div>
     <p id="endText">You finished every level that exists so far. New chapters will show up in the level list when they are added.</p>
     <button class="btn-ghost" data-back="levels"><span>Back to levels</span><span aria-hidden="true">→</span></button>
@@ -483,7 +506,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 <script>
 (()=>{
-const TOTAL=80, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'},{name:'Pink',c:'--ch7'},{name:'Orange',c:'--ch8'}], ROMAN=['I','II','III','IV','V','VI','VII','VIII'];
+const TOTAL=90, CHAPTERS=[{name:'Blue',c:'--ch1'},{name:'Red',c:'--ch2'},{name:'Green',c:'--ch3'},{name:'Violet',c:'--ch4'},{name:'Yellow',c:'--ch5'},{name:'Cyan',c:'--ch6'},{name:'Pink',c:'--ch7'},{name:'Orange',c:'--ch8'},{name:'Lime',c:'--ch9'}], ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX'];
 const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const chapterOf=id=>Math.floor((id-1)/10);
@@ -795,7 +818,7 @@ function slideLevel(a,map,{chevrons=false}={}){
   const next=()=>{if(!done&&queue.length)go(queue.shift())};
   // Swipes made while the dot is still sliding are queued, never dropped.
   const go=d=>{
-    if(done)return;if(busy){if(queue.length<20)queue.push(d);return}
+    if(done)return;if(busy){if(queue.length<60)queue.push(d);return}
     const[dr,dc]=DIRS[d];const cur=dots.map(p=>p.slice());let moved=true,steps=0;
     while(moved){moved=false;for(let i=0;i<cur.length;i++){const nr=cur[i][0]+dr,nc=cur[i][1]+dc;
       if(solid(nr,nc,gs)||cur.some((p,j)=>j!==i&&p[0]===nr&&p[1]===nc))continue;cur[i]=[nr,nc];moved=true}if(moved)steps++}
@@ -1057,7 +1080,7 @@ function iceLevel(a,map){
   const slide=(pos,dr,dc,blocked)=>{let[r,c]=pos;const path=[];for(let s=0;s<60;s++){const nr=r+dr,nc=c+dc;if(wall(nr,nc)||blocked(nr,nc))break;
       const pp=partner(nr,nc);if(pp){if(blocked(pp[0],pp[1]))break;path.push({r:nr,c:nc},{r:pp[0],c:pp[1],jump:true});[r,c]=pp;continue}path.push({r:nr,c:nc});r=nr;c=nc}return{end:[r,c],path}};
   let busy=false,done=false;const queue=[];
-  const go=d=>{if(done)return;if(busy){if(queue.length<20)queue.push(d);return}
+  const go=d=>{if(done)return;if(busy){if(queue.length<60)queue.push(d);return}
     const[dr,dc]=DIRS[d];let[r,c]=P;const ppath=[];let hit=-1,bres=null;
     for(let s=0;s<60;s++){const nr=r+dr,nc=c+dc;if(wall(nr,nc))break;const k=boxes.findIndex(b=>b[0]===nr&&b[1]===nc);
       if(k>=0){const res=slide(boxes[k],dr,dc,(x,y)=>boxes.some((b,j)=>j!==k&&b[0]===x&&b[1]===y)||(x===r&&y===c));if(res.path.length){hit=k;bres=res}break}
@@ -1105,19 +1128,19 @@ function echoLevel(a,store,map,{ice=false,fog=false,max=4}={}){
     return ice&&ents.some(e=>e!==self&&e.p[0]===r&&e.p[1]===c)};
   const act=(e,k)=>{if(e.dead||!k||k==='W')return;const[dr,dc]=DIRS[k];
     if(!ice){const n=[e.p[0]+dr,e.p[1]+dc];if(!blocked(n[0],n[1],e))e.p=n}
-    else for(let s=0;s<40;s++){const n=[e.p[0]+dr,e.p[1]+dc];if(blocked(n[0],n[1],e))break;e.p=n;if(traps.has(n+''))break}
-    if(traps.has(e.p+''))e.dead=true};
+    else for(let s=0;s<40;s++){const n=[e.p[0]+dr,e.p[1]+dc];if(blocked(n[0],n[1],e))break;e.p=n;if(traps.has(n+'')&&!ents.some(o=>o!==e&&o.dead&&o.p[0]===n[0]&&o.p[1]===n[1]))break}
+    if(traps.has(e.p+'')&&!ents.some(o=>o!==e&&o.dead&&o.p[0]===e.p[0]&&o.p[1]===e.p[1]))e.dead=true};
   upd();draw();
   // echo counter + clear button
   const bar=a.el('div','abs echo-bar');bar.style.bottom=`calc(18px + env(safe-area-inset-bottom,0px))`;
   bar.innerHTML=`<span class="pipsrow">${[...Array(max)].map((_,i)=>`<i class="${i<echoes.length?'on':''}"></i>`).join('')}</span>`;
   const clr=a.el('button','icon-btn',bar);clr.setAttribute('aria-label','Clear echoes');clr.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>';
-  let t=0,done=false,ending=false;
+  let t=0,done=false,ending=false,endT=null;
   clr.onpointerdown=e=>e.stopPropagation();
   clr.onclick=e=>{e.stopPropagation();echoes.length=0;me.rec=[];a.buzz(10);a.restartLevel()};
   function beat(k){if(done||ending)return;me.rec.push(k);ents.forEach(e=>act(e,e.ghost?e.rec[t]:k));t++;upd();draw();a.buzz(k==='W'?3:6);
     if(me.p[0]===O[0]&&me.p[1]===O[1]){done=true;const r=me.el.getBoundingClientRect();setTimeout(()=>a.solve(r.left+r.width/2,r.top+r.height/2),200);return}
-    if(me.dead){ending=true;a.buzz([30,40,30]);setTimeout(()=>a.restartLevel(),650)}}
+    if(me.dead){ending=true;a.buzz([30,40,30]);endT=setTimeout(()=>a.restartLevel(),650)}}
   // input: swipe moves, tap waits
   let sx,sy,pid=null;
   const down=e=>{if(e.target.closest&&e.target.closest('button'))return;pid=e.pointerId;sx=e.clientX;sy=e.clientY};
@@ -1125,7 +1148,7 @@ function echoLevel(a,store,map,{ice=false,fog=false,max=4}={}){
     if(Math.max(Math.abs(dx),Math.abs(dy))<24){beat('W');return}beat(Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'))};
   const key=e=>{const m={ArrowUp:'U',ArrowDown:'D',ArrowLeft:'L',ArrowRight:'R',' ':'W'}[e.key];if(m){e.preventDefault();beat(m)}};
   a.stage.addEventListener('pointerdown',down);a.stage.addEventListener('pointerup',up);addEventListener('keydown',key);
-  return()=>{a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointerup',up);removeEventListener('keydown',key);
+  return()=>{clearTimeout(endT);a.stage.removeEventListener('pointerdown',down);a.stage.removeEventListener('pointerup',up);removeEventListener('keydown',key);
     if(!done&&me.rec.length){echoes.push(me.rec);while(echoes.length>max)echoes.shift()}};
 }
 
@@ -1167,6 +1190,37 @@ function pedalLevel(a,{max=2,target=null}={}){
   raf=requestAnimationFrame(tick);
   a.stage._pedal={L,layers,set(list){layers.length=0;list.forEach(l=>layers.push(l))},start(){return t0}};
   return()=>cancelAnimationFrame(raf);
+}
+
+/* prism: you carry a colour. Paint pots r/b/y mix in (a third colour makes mud), w washes you clean,
+   coloured walls R B Y G(blue+yellow) P(red+blue) N(red+yellow) only let you through in exactly that colour, ~ is ice. */
+const PCOL={r:'var(--cr)',b:'var(--cb)',y:'var(--cy)',by:'var(--cg)',br:'var(--cp)',ry:'var(--cn)',m:'var(--cm)'};
+const PWALL={R:'r',B:'b',Y:'y',G:'by',P:'br',N:'ry'};
+const pmix=(c,p)=>c==='m'?'m':c===''?p:c.includes(p)?c:c.length===1?[...(c+p)].sort().join(''):'m';
+const swipeText=p=>{const n={U:'up',D:'down',L:'left',R:'right',W:'tap'};let o=[],i=0;while(i<p.length){let j=i;while(p[j]===p[i])j++;o.push(n[p[i]]+(j-i>1?' ×'+(j-i):''));i=j}return o.join(', ')};
+function prismLevel(a,map){
+  const R=map.length,C=map[0].length,g=grid(a,R,C);g.b.style.background='var(--surface)';
+  let P,O;
+  map.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='#')g.put('wall',r,c);
+    if(ch==='~')g.put('ice',r,c,0);
+    if(PWALL[ch]){const e=g.put('cwall',r,c,0);e.style.setProperty('--c',PCOL[PWALL[ch]])}
+    if('rby'.includes(ch)&&ch!=='.'){const e=g.put('pot',r,c,Math.round(g.cell*.22));e.style.setProperty('--c',PCOL[ch])}
+    if(ch==='w')g.put('wash',r,c,Math.round(g.cell*.22));
+    if(ch==='O'){O=[r,c];g.put('hole',r,c,Math.round(g.cell*.14))}
+    if(ch==='S')P=[r,c];
+  }));
+  const me=a.el('div','sdot prism-me',g.b);let col='';const ins=Math.round(g.cell*.2);
+  const paint=()=>{g.at(me,P[0],P[1],ins);me.style.setProperty('--c',col?PCOL[col]:'transparent');me.classList.toggle('clear',!col)};paint();
+  const pass=(r,c)=>{if(r<0||c<0||r>=R||c>=C)return false;const ch=map[r][c];if(ch==='#')return false;if(PWALL[ch])return PWALL[ch]===col;return true};
+  let busy=false,done=false;const queue=[];
+  const go=d=>{if(done)return;if(busy){if(queue.length<60)queue.push(d);return}
+    const[dr,dc]=DIRS[d];let[r,c]=P;if(!pass(r+dr,c+dc)){a.buzz(5);if(queue.length)go(queue.shift());return}
+    r+=dr;c+=dc;let n=1;while(map[r][c]==='~'&&pass(r+dr,c+dc)){r+=dr;c+=dc;n++}
+    const ch=map[r][c];if('rby'.includes(ch)&&ch!=='.')col=pmix(col,ch);if(ch==='w')col='';
+    busy=true;me.style.transitionDuration=(.06*n+.08)+'s';P=[r,c];paint();a.buzz(ch==='w'||'rby'.includes(ch)?12:6);
+    setTimeout(()=>{busy=false;if(P[0]===O[0]&&P[1]===O[1]){done=true;const rr=me.getBoundingClientRect();a.solve(rr.left+rr.width/2,rr.top+rr.height/2);return}if(queue.length)go(queue.shift())},60*n+100)};
+  return swipes(a.stage,go);
 }
 
 function cleanCount(upto){return Object.entries(state.solved).filter(([id,v])=>+id<upto&&v&&v.hints===0).length}
@@ -2376,12 +2430,102 @@ const LEVELS=[
 /* 78 — rhythm */
 {hints:['Build the pattern at the top: each row is a pad, each column a beat of the loop.','You can only play one pad at a time, but every round is remembered. Layer the rounds. The trash can starts over.','Round 1: pad 1, pad 2, pad 1, pad 3 (one per beat). Round 2: pad 3, pad 3, pad 2, nothing. Pads are counted clockwise from the top.'],
  init(a){return pedalLevel(a,{max:3,target:[[1,0,1,0],[0,1,1,0],[1,1,0,1]]})}},
-/* 79 — dark */
-{hints:['It is dark, and some squares are traps. The ring is top right.','When you fall into a trap, that attempt becomes an echo. It walks the same way, falls in the same trap and keeps glowing there.','Right ×2, up ×2, right, up ×2, right, up ×4, right ×2.'],
- init(a){return echoLevel(a,this,['......O','.x.x...','.x...x.','...x.x.','x.x...x','..x.x..','x...x..','.x.x..x','S......'],{fog:true,max:6})}},
+/* 79 — bridge */
+{hints:['Too many holes to walk around. You get exactly three echoes.','An echo that falls into a hole fills it: your later attempts walk right over it. Find the route that crosses the fewest holes.','Route: right ×3, up ×2, left ×2, up, left ×4, up ×2, right ×2, up ×3, right. Fall into its first hole, then its second, then its third, then walk it.'],
+ init(a){return echoLevel(a,this,['xx.O.xx','x.xxxxx','x..xxx.','...x...','..x...x','..x.x#x','.x.x...','xx#.xx.','xx.S...'],{max:3})}},
 /* 80 — finale */
-{hints:['Dark, traps, a plate and a door. Everything you have learned.','Find the plate in the dark first. Fallen echoes keep showing you the traps.','Run 1: up, right ×2, up ×2, right ×4 onto the plate, then restart. Run 2: up, right ×2, up ×5, right, up, up.'],
- init(a){return echoLevel(a,this,['...O...','###a###','.x...x.','...x...','.x.x.x.','x.....1','.x.x...','...x.x.','S......'],{fog:true,max:6})}},
+{hints:['Two rows of holes, a plate, a door. Three echoes.','Two echoes have to become a bridge. The third crosses it and holds the door open for you.','Run 1: up ×3. Run 2: up ×5. Run 3: up ×8, right ×3. Run 4: up ×6, left ×2, tap ×3, left, up, up.'],
+ init(a){return echoLevel(a,this,['O#....1','.#.....','a......','#xxxxxx','#......','#xxxxxx','#......','#......','#..S...'],{max:3})}},
+/* 81 — paint */
+{hints:['The red wall only lets red things through.','Walk over a paint pot to take its colour.','Up twice, right twice onto the red pot, back left twice, then straight up.'],
+ init(a){return prismLevel(a,['...O...','###R###','.......','.......','.....r.','.......','...S...'])}},
+/* 82 — mix */
+{hints:['The last wall is purple. There is no purple pot.','Colours mix: red and blue make purple, blue and yellow make green, red and yellow make orange.','Take the red, go through the red wall, take the blue, then go through the purple wall.'],
+ init(a){return prismLevel(a,['...O...','###P###','.b.....','.......','###R###','.....r.','...S...'])}},
+/* 83 — filters */
+{hints:['Each beam must reach its ring in the colour of the ring.','A filter takes one colour out of white light: cyan takes out red, magenta takes out green, yellow takes out blue.','Top: magenta and yellow. Middle: cyan and magenta. Bottom: cyan and yellow.'],
+ init(a){
+  const want=['#FF3B3B','#3D6BFF','#2BE05A'],F={c:'#22E5FF',m:'#FF3DF2',y:'#FFE53D'};
+  const beamCol=fs=>{let r=1,gg=1,b=1;fs.forEach(f=>{if(f==='c')r=0;if(f==='m')gg=0;if(f==='y')b=0});const k=''+r+gg+b;
+    return{'111':'#FFFFFF','100':'#FF3B3B','010':'#2BE05A','001':'#3D6BFF','011':'#22E5FF','101':'#FF3DF2','110':'#FFE53D','000':'var(--line)'}[k]};
+  const ys=[.18,.38,.58].map(f=>a.h*f),x0=28,x1=a.w-40,sx=[a.w*.42,a.w*.62],z=Math.min(52,a.w*.13);
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',a.w);svg.setAttribute('height',a.h);svg.style.cssText='position:absolute;left:0;top:0;pointer-events:none';a.stage.appendChild(svg);
+  const slots=[[null,null],[null,null],[null,null]];
+  const filters=['m','c','y','c','m','y'].map((k,i)=>({k,i,at:null}));let sel=null,done=false;
+  const slotEls=[];ys.forEach((y,b)=>sx.forEach((x,s)=>{const e=a.el('button','abs fslot');Object.assign(e.style,{width:z+'px',height:z*1.3+'px',left:x-z/2+'px',top:y-z*.65+'px'});e.onclick=ev=>{ev.stopPropagation();place(b,s)};slotEls.push(e)}));
+  ys.forEach((y,b)=>{const e=a.el('div','abs fsrc');Object.assign(e.style,{left:x0-14+'px',top:y-10+'px'});const t=a.el('div','abs fsensor');Object.assign(t.style,{left:x1-6+'px',top:y-17+'px'});t.style.setProperty('--want',want[b]);t.dataset.b=b});
+  const tray=a.el('div','abs ftray');tray.style.bottom=`calc(24px + env(safe-area-inset-bottom,0px))`;tray.onclick=()=>{if(sel){sel.at=null;sel=null;paint()}};
+  const fEls=filters.map(f=>{const e=a.el('button','abs filter');e.style.setProperty('--f',F[f.k]);Object.assign(e.style,{width:z*.8+'px',height:z*1.1+'px'});e.onclick=ev=>{ev.stopPropagation();if(done)return;sel=sel===f?null:f;a.buzz(5);paint()};return e});
+  function place(b,s){if(done||!sel)return;const other=filters.find(f=>f.at&&f.at[0]===b&&f.at[1]===s);if(other&&other!==sel)other.at=sel.at;sel.at=[b,s];sel=null;a.buzz(8);paint()}
+  function paint(){const trayF=filters.filter(f=>!f.at);const tr=tray.getBoundingClientRect(),sr=a.stage.getBoundingClientRect();
+    filters.forEach((f,i)=>{const e=fEls[i];e.classList.toggle('sel',sel===f);
+      if(f.at){Object.assign(e.style,{left:sx[f.at[1]]-z*.4+'px',top:ys[f.at[0]]-z*.55+'px'})}
+      else{const k=trayF.indexOf(f);Object.assign(e.style,{left:a.w/2-(trayF.length*(z*.8+10))/2+k*(z*.8+10)+'px',top:tr.top-sr.top+8+'px'})}});
+    let out='';const got=[];ys.forEach((y,b)=>{const f1=filters.filter(f=>f.at&&f.at[0]===b&&f.at[1]===0).map(f=>f.k),f2=filters.filter(f=>f.at&&f.at[0]===b&&f.at[1]===1).map(f=>f.k);
+      const c0='#FFFFFF',c1=beamCol(f1),c2=beamCol([...f1,...f2]);got.push(c2);
+      out+=`<line x1="${x0}" y1="${y}" x2="${sx[0]}" y2="${y}" stroke="${c0}" stroke-width="5"/><line x1="${sx[0]}" y1="${y}" x2="${sx[1]}" y2="${y}" stroke="${c1}" stroke-width="5"/><line x1="${sx[1]}" y1="${y}" x2="${x1}" y2="${y}" stroke="${c2}" stroke-width="5"/>`});
+    svg.innerHTML=out;a.stage.querySelectorAll('.fsensor').forEach((t,b)=>t.style.background=got[b]);
+    if(got.every((c,b)=>c===want[b])){done=true;a.buzz(14);setTimeout(()=>a.solve(),400)}}
+  paint();
+  a.stage._filters=()=>{const plan=[[0,'m'],[0,'y'],[1,'c'],[1,'m'],[2,'c'],[2,'y']];const used=new Set();plan.forEach(([b,k],i)=>{const f=filters.find(f=>f.k===k&&!used.has(f));used.add(f);sel=f;place(b,i%2)})};
+ }},
+/* 84 — ice and paint */
+{hints:['Ice keeps you sliding until you reach a tile that is not ice.','You can only stop on a pot, a normal tile or against something solid. The green wall needs blue and yellow.','Swipe: '+swipeText('ULLUURUDDRRUURURU')+'.'],
+ init(a){return prismLevel(a,['.~..#OB','...#.G.','.b#.~Y.','.~#.y..','..#...#','.B.....','......~','..~...~','.YS.~.~'])}},
+/* 85 — green */
+{hints:['Find the colours the walls ask for, in the right order.','Red is a trap here: once a colour is in, it does not come out.','Swipe: '+swipeText('URRUUUURRRDDDLLLDLLULUUUUUURRRRR')+'.'],
+ init(a){return prismLevel(a,['...G.O.','..G...#','...G##.','y##...b','B.#....','.R#....','..#....','....r..','.S#..Y.'])}},
+/* 86 — spotlights */
+{hints:['Light adds up: red and green make yellow, green and blue make cyan, red and blue make magenta, all three make white.','Drag the three lights. Each dot shows the colour it needs on its ring; the empty ring has to stay dark.','Make a triangle: red top left, green top right, blue in the middle below, all three overlapping in the centre.'],
+ init(a){
+  const H=a.h-40,rr=Math.min(a.w,H)*.24;
+  const sol={r:[a.w*.36,H*.36],g:[a.w*.64,H*.36],b:[a.w*.5,H*.36+rr*.95]};
+  const pane=a.el('div','abs lightpane');pane.style.inset='0';
+  const L=[['r','#FF2A2A'],['g','#2AFF4A'],['b','#2A5BFF']].map(([k,c],i)=>{const e=a.el('div','abs spot',pane);Object.assign(e.style,{width:rr*2+'px',height:rr*2+'px',background:`radial-gradient(circle,${c} 0,${c} 96%,transparent 100%)`});
+    return{k,e,p:[a.w*(.3+i*.2),H*.8]}});
+  const cen=[(sol.r[0]+sol.g[0]+sol.b[0])/3,(sol.r[1]+sol.g[1]+sol.b[1])/3];
+  const pts=[cen,[ (sol.r[0]+sol.g[0])/2,sol.r[1]-rr*.55],[(sol.g[0]+sol.b[0])/2+rr*.35,(sol.g[1]+sol.b[1])/2+rr*.1],[(sol.r[0]+sol.b[0])/2-rr*.35,(sol.r[1]+sol.b[1])/2+rr*.1],[sol.r[0]-rr*.6,sol.r[1]-rr*.25],[a.w*.5,H*.36-rr*1.15]];
+  const inL=(p,c)=>Math.hypot(p[0]-c[0],p[1]-c[1])<rr;
+  const colOf=(p,pos)=>{const s=['r','g','b'].map(k=>inL(p,pos[k])?1:0).join('');return{'000':'#000000','100':'#FF2A2A','010':'#2AFF4A','001':'#2A5BFF','110':'#FFE02A','011':'#2AF0FF','101':'#FF2AF0','111':'#FFFFFF'}[s]};
+  const target=pts.map(p=>colOf(p,sol));
+  const dots=pts.map((p,i)=>{const e=a.el('div','abs ldot'+(target[i]==='#000000'?' dark':''));Object.assign(e.style,{left:p[0]-11+'px',top:p[1]-11+'px'});e.style.setProperty('--want',target[i]);return e});
+  let drag=null,done=false;
+  const paint=()=>{const pos={};L.forEach(l=>{pos[l.k]=l.p;Object.assign(l.e.style,{left:l.p[0]-rr+'px',top:l.p[1]-rr+'px'})});
+    const got=pts.map(p=>colOf(p,pos));dots.forEach((d,i)=>d.style.background=got[i]);return got.every((c,i)=>c===target[i])};
+  paint();
+  const loc=e=>{const r=a.stage.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  pane.onpointerdown=e=>{if(done)return;const[x,y]=loc(e);let best=null,bd=rr;L.forEach(l=>{const d=Math.hypot(l.p[0]-x,l.p[1]-y);if(d<bd){bd=d;best=l}});if(!best)return;pane.setPointerCapture(e.pointerId);drag={l:best,ox:x-best.p[0],oy:y-best.p[1]}};
+  pane.onpointermove=e=>{if(!drag)return;const[x,y]=loc(e);drag.l.p=[x-drag.ox,y-drag.oy];paint()};
+  pane.onpointerup=()=>{if(!drag)return;drag=null;if(paint()){done=true;a.buzz(14);setTimeout(()=>a.solve(),400)}};
+  a.stage._lights=()=>{L.forEach(l=>l.p=sol[l.k].slice());drag={l:L[0]};pane.onpointerup()};
+ }},
+/* 87 — wash */
+{hints:['Sometimes you need to start over with a clean colour.','The white basin washes your colour off completely.','Swipe: '+swipeText('URURURURURUUUDDDDLDDRRUDLDLLUULLUUUUU')+'.'],
+ init(a){return prismLevel(a,['#O#R.b.','R...#..','#...#..','...#...','.w#...N','.P...#r','#...B..','......y','S.P....'])}},
+/* 88 — brush */
+{hints:['Paint the floor exactly like the small picture. Every square you step on takes your colour.','The two pots change your brush. Wet paint can not be walked on again, but the pots can.','Swipe: '+swipeText('DRDRUUULDLULDDDDRURDR')+'.'],
+ init(a){
+  const target=['rrbb','rRbb','rrrb','rrBb','rrbb'],R=5,C=4;const isW=(r,c)=>'RB'.includes(target[r][c]);
+  const prev=a.el('div','abs brushprev');prev.innerHTML=target.map(row=>`<div>${[...row].map(ch=>`<i style="background:${ch==='R'||ch==='B'?'var(--surface)':ch==='r'?'var(--cr)':'var(--cb)'};${ch==='R'||ch==='B'?`box-shadow:inset 0 0 0 2px ${ch==='R'?'var(--cr)':'var(--cb)'}`:''}"></i>`).join('')}</div>`).join('');
+  const g=grid(a,R,C,{pad:28});g.b.style.top=parseFloat(g.b.style.top)+36+'px';
+  const cells=target.map((row,r)=>[...row].map((ch,c)=>{const e=g.put('bcell',r,c,2);if(isW(r,c)){e.classList.add('well');e.style.setProperty('--c',ch==='R'?'var(--cr)':'var(--cb)')}return e}));
+  let P,col,painted,done=false;const me=a.el('div','sdot prism-me',g.b);
+  const reset=()=>{P=[1,1];col='r';painted=new Map();cells.flat().forEach(e=>e.style.removeProperty('background'));draw()};
+  const draw=()=>{g.at(me,P[0],P[1],Math.round(g.cell*.24));me.style.setProperty('--c',PCOL[col])};
+  reset();
+  const go=d=>{if(done)return;const[dr,dc]=DIRS[d];const r=P[0]+dr,c=P[1]+dc;if(r<0||c<0||r>=R||c>=C||painted.has(r+','+c)){a.buzz(5);return}
+    P=[r,c];if(isW(r,c)){col=target[r][c]==='R'?'r':'b';a.buzz(10);draw();return}
+    painted.set(r+','+c,col);cells[r][c].style.background=PCOL[col];a.buzz(6);draw();
+    if(col!==target[r][c]){a.buzz([30,40,30]);done=true;cells[r][c].classList.add('nope');setTimeout(()=>{cells[r][c].classList.remove('nope');done=false;reset()},700);return}
+    if(painted.size===R*C-2){done=true;const rr=g.b.getBoundingClientRect();setTimeout(()=>a.solve(rr.left+rr.width/2,rr.top+rr.height/2),300)}};
+  return swipes(a.stage,go);
+ }},
+/* 89 — colour maze */
+{hints:['Every rule at once: pots, mixing, mud and a wash basin.','Mud is not the end: the basin cleans it. Plan which wall needs which colour.','Swipe: '+swipeText('ULULURRUUURUDRDDLLLDDLUUULUUU')+'.'],
+ init(a){return prismLevel(a,['O...#..','..P#w..','.#N.bB.','G..NG..','......Y','...r.wP','#y.#.#.','....#..','.R.S...'])}},
+/* 90 — prism finale */
+{hints:['Ice, pots, a basin and walls of every colour.','Count your colours before you slide: you can not stop halfway across the ice.','Swipe: '+swipeText('UUURRRUULLULLLDDRRDDDLLDDUURRUURUURRUU')+'.'],
+ init(a){return prismLevel(a,['~y...#O','.~.P~BG','..#r...','...YGNw','#~P....','.##....','.~...N.','.w.~...','b.RS...'])}},
 ];
 
 renderAll();
